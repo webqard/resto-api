@@ -1,0 +1,9 @@
+framework:
+    default_locale: en_GB
+    enabled_locales: ['en_GB', 'fr_FR']
+    set_content_language_from_locale: true
+    set_locale_from_accept_language: true
+    translator:
+        default_path: '%kernel.project_dir%/translations'
+        fallbacks:
+            - en_GB
