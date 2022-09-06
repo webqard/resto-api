@@ -7,4 +7,9 @@
 /vendor/
 ###< symfony/framework-bundle ###
 
+/ci/infection/
+/ci/phpdoc/
+/ci/phpunit/
+/ci/psalm/
 /migrations-test/*.php
+/tools/
