@@ -4,5 +4,5 @@
   <phar name="phpdocumentor" version="^3.3.1" installed="3.3.1" location="./tools/phpdocumentor" copy="false"/>
   <phar name="phpcbf" version="^3.7.1" installed="3.7.1" location="./tools/phpcbf" copy="false"/>
   <phar name="psalm" version="^4.27.0" installed="4.27.0" location="./tools/psalm" copy="false"/>
-  <phar name="infection" version="^0.26.14" installed="0.26.14" location="./tools/infection" copy="false"/>
+  <phar name="infection" version="^0.26.14" installed="0.26.15" location="./tools/infection" copy="false"/>
 </phive>
