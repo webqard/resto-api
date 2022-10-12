@@ -26,6 +26,15 @@ user@host resto-api$ composer install -o [--no-dev]
 ```
 The "--no-dev" option is for the production environment.
 
+### Create the database
+
+```shellsession
+user@host symfony-demo$ ./bin/console doctrine:database:create [-e test]
+user@host symfony-demo$ ./bin/console make:migration [-e test]
+user@host symfony-demo$ ./bin/console doctrine:migrations:migrate [--no-interaction] [-e test]
+```
+The "-e test" option is to for the test environment which uses Sqlite.
+
 
 ## Continuous integration
 
