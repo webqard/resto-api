@@ -18,7 +18,7 @@ jobs:
       id: composer-cache
       uses: actions/cache@v3
       with:
-        path: app/vendor
+        path: vendor
         key: composer-lock-${{ hashFiles('**/composer.lock') }}
 
     - name: Install composer dependencies
@@ -29,12 +29,12 @@ jobs:
       id: phive-tools-cache
       uses: actions/cache@v3
       with:
-        path: app/tools
+        path: tools
         key: phive-tools-${{ hashFiles('**/phive.xml') }}
 
     - name: Install phive tools
       if: steps.phive-tools-cache.outputs.cache-hit != 'true'
-      run: cd app/ && wget -O phive https://phar.io/releases/phive.phar && chmod +x phive && ./phive install --trust-gpg-keys 4AA394086372C20A,12CE0F1D262429A5,31C7E470E2138192,67F861C3D889C656,C5095986493B4AA0 && chmod -R +x ./tools/
+      run: wget -O phive https://phar.io/releases/phive.phar && chmod +x phive && ./phive install --trust-gpg-keys 4AA394086372C20A,12CE0F1D262429A5,31C7E470E2138192,67F861C3D889C656,C5095986493B4AA0 && chmod -R +x ./tools/
 
     - name: 'Tar project'
       run: tar -cf project.tar .
@@ -57,7 +57,7 @@ jobs:
       run:  tar -xf project.tar
 
     - name: Run php lint
-      run: cd app/ && find ./src/ ./tests/ -type f -name '*.php' -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )
+      run: find ./src/ ./tests/ -type f -name '*.php' -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )
 
   phpcs:
     needs: phplint
@@ -72,7 +72,7 @@ jobs:
       run:  tar -xf project.tar
 
     - name: Run phpcs
-      run: cd app/ && ./tools/phpcs --standard=PSR12 --extensions=php --ignore=*/Kernel.php ./src/
+      run: ./tools/phpcs --standard=PSR12 --extensions=php --ignore=*/Kernel.php ./src/
 
   test:
     needs: phplint
@@ -90,19 +90,19 @@ jobs:
       id: npm-cache
       uses: actions/cache@v3
       with:
-        path: app/node_modules
+        path: node_modules
         key: npm-${{ hashFiles('**/package-lock.json') }}
 
     - uses: actions/setup-node@v3
     - name: Install npm package
       if: steps.npm-cache.outputs.cache-hit != 'true'
-      run: cd app/ && npm i
+      run: npm i
 
     - name: Install assets
-      run: cd app/ && npm run dev
+      run: npm run dev
 
     - name: Run PHPUnit test
-      run: cd app/ && ./bin/console doctrine:database:create -e test && ./bin/console doctrine:migrations:migrate --no-interaction -e test && ./tools/phpunit -c ./ci/phpunit.xml
+      run: ./bin/console doctrine:database:create -e test && ./bin/console doctrine:migrations:migrate --no-interaction -e test && ./tools/phpunit -c ./ci/phpunit.xml
 
   static-analysis:
     needs: phplint
@@ -117,4 +117,4 @@ jobs:
       run:  tar -xf project.tar
 
     - name: Run Psalm
-      run: cd app/ci/ && ../tools/psalm --shepherd --no-cache
+      run: cd ci/ && ../tools/psalm --shepherd --no-cache
