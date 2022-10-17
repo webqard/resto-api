@@ -87,7 +87,7 @@ jobs:
       run:  tar -xf project.tar
 
     - name: Run PHPUnit test
-      run: ./bin/console doctrine:database:create -e test && ./bin/console doctrine:migrations:migrate --no-interaction -e test && ./tools/phpunit -c ./ci/phpunit.xml
+      run: ./bin/console doctrine:database:create -e test && ./bin/console make:migration -e test && ./bin/console doctrine:migrations:migrate --no-interaction -e test && ./tools/phpunit -c ./ci/phpunit.xml
 
   static-analysis:
     needs: phplint
