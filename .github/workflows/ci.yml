@@ -86,21 +86,6 @@ jobs:
     - name: Untar project.
       run:  tar -xf project.tar
 
-    - name: Cache npm packages
-      id: npm-cache
-      uses: actions/cache@v3
-      with:
-        path: node_modules
-        key: npm-${{ hashFiles('**/package-lock.json') }}
-
-    - uses: actions/setup-node@v3
-    - name: Install npm package
-      if: steps.npm-cache.outputs.cache-hit != 'true'
-      run: npm i
-
-    - name: Install assets
-      run: npm run dev
-
     - name: Run PHPUnit test
       run: ./bin/console doctrine:database:create -e test && ./bin/console doctrine:migrations:migrate --no-interaction -e test && ./tools/phpunit -c ./ci/phpunit.xml
 
