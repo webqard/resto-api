@@ -26,6 +26,12 @@ user@host resto-api$ composer install -o [--no-dev]
 ```
 The "--no-dev" option is for the production environment.
 
+### Generate API
+
+```shellsession
+user@host resto-api$ ./vendor/bin/openapi -o ./public/api.json ./src/
+```
+
 ### Create the database
 
 ```shellsession

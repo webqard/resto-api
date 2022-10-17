@@ -22,7 +22,8 @@
         "symfony/runtime": "*",
         "symfony/translation": "6.1.*",
         "symfony/validator": "6.1.*",
-        "symfony/yaml": "*"
+        "symfony/yaml": "*",
+        "zircote/swagger-php": "^4.4"
     },
     "require-dev": {
         "dama/doctrine-test-bundle": "^7.1",
