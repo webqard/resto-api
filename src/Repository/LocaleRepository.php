@@ -29,9 +29,9 @@ class LocaleRepository extends ServiceEntityRepository
 
     /**
      * Deletes a locale.
-     * @param \App\Entity\Locale $locale the locale.
+     * @param object $locale the locale.
      */
-    public function delete(Locale $locale): void
+    public function delete(object $locale): void
     {
         $this->_em->remove($locale);
         $this->_em->flush();
