@@ -19,7 +19,8 @@ final class ApiTest extends WebTestCase
     // Methods :
 
     /**
-     * Tests that the API.
+     * Tests that the root of the API
+     * is redirecting to the API documentation.
      */
     public function testCanRedirectToApiDocumentation(): void
     {
