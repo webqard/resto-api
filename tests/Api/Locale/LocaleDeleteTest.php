@@ -13,12 +13,10 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  * @coversDefaultClass \App\Controller\Locale\LocaleDeleteController
  * @covers ::__construct
  * @covers ::delete
+ * @uses \App\Repository\LocaleRepository::__construct
  * @group api
  * @group api_locales
  * @group api_locales_delete
- * @uses \App\ApiResource\ApiResponse::__construct
- * @uses \App\ApiResource\ApiResponse::jsonSerialize
- * @uses \App\Repository\LocaleRepository::__construct
  */
 final class LocaleDeleteTest extends WebTestCase
 {
@@ -68,6 +66,8 @@ final class LocaleDeleteTest extends WebTestCase
      * from an invalid type identifier.
      * @param mixed $invalidTypeId an invalid type identifier.
      *
+     * @uses \App\ApiResource\ApiResponse::__construct
+     * @uses \App\ApiResource\ApiResponse::jsonSerialize
      * @dataProvider getInvalidTypeId
      */
     public function testCanNotDeleteALocaleFromAnInvalidTypeId(mixed $invalidTypeId): void
@@ -95,6 +95,9 @@ final class LocaleDeleteTest extends WebTestCase
     /**
      * Tests that a locale can not be deleted
      * from an non existant identifier.
+     *
+     * @uses \App\ApiResource\ApiResponse::__construct
+     * @uses \App\ApiResource\ApiResponse::jsonSerialize
      */
     public function testCanNotDeleteALocaleFromAnNonExistantId(): void
     {
