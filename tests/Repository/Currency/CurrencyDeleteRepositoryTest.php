@@ -15,8 +15,8 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  * @covers ::__construct
  * @covers ::delete
  * @group repositories
- * @group repository_currencys
- * @group repository_currencys_delete
+ * @group repository_currencies
+ * @group repository_currencies_delete
  * @group currency
  */
 final class CurrencyDeleteRepositoryTest extends WebTestCase
