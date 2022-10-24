@@ -5,5 +5,5 @@
   <phar name="phpcbf" version="^3.7.1" installed="3.7.1" location="./tools/phpcbf" copy="true"/>
   <phar name="phpcs" version="^3.7.1" installed="3.7.1" location="./tools/phpcs" copy="true"/>
   <phar name="psalm" version="^4.27.0" installed="4.29.0" location="./tools/psalm" copy="true"/>
-  <phar name="infection" version="^0.26.14" installed="0.26.15" location="./tools/infection" copy="true"/>
+  <phar name="infection" version="^0.26.14" installed="0.26.16" location="./tools/infection" copy="true"/>
 </phive>
