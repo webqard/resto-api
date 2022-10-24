@@ -9,7 +9,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * Repository for the Currency entity.
+ * Repository for the delete method of the Currency entity.
  */
 class CurrencyDeleteRepository extends ServiceEntityRepository
 {
