@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Locale;
 
 use App\ApiResource\ApiResponse;
-use App\Repository\LocaleRepository;
+use App\Repository\Locale\LocaleDeleteRepository;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,9 +21,9 @@ final class LocaleDeleteController extends AbstractController
     // Properties :
 
     /**
-     * @var \App\Repository\LocaleRepository the locale's repository.
+     * @var \App\Repository\Locale\LocaleDeleteRepository the locale's repository.
      */
-    private LocaleRepository $repository;
+    private LocaleDeleteRepository $repository;
 
     /**
      * @var \Symfony\Contracts\Translation\TranslatorInterface the translator.
@@ -35,11 +35,11 @@ final class LocaleDeleteController extends AbstractController
 
     /**
      * The constructor.
-     * @param \App\Repository\LocaleRepository $repository the locale's repository.
+     * @param \App\Repository\Locale\LocaleDeleteRepository $repository the locale's repository.
      * @param \Symfony\Contracts\Translation\TranslatorInterface $translator the translator.
      */
     public function __construct(
-        LocaleRepository $repository,
+        LocaleDeleteRepository $repository,
         TranslatorInterface $translator
     ) {
         $this->repository = $repository;

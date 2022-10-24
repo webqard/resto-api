@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  * @coversDefaultClass \App\Controller\Locale\LocaleDeleteController
  * @covers ::__construct
  * @covers ::delete
- * @uses \App\Repository\LocaleRepository::__construct
+ * @uses \App\Repository\Locale\LocaleDeleteRepository::__construct
  * @group api
  * @group api_locales
  * @group api_locales_delete
@@ -26,7 +26,7 @@ final class LocaleDeleteTest extends WebTestCase
      * Tests that a locale can be deleted.
      *
      * @uses \App\Entity\Locale::__construct
-     * @uses \App\Repository\LocaleRepository::delete
+     * @uses \App\Repository\Locale\LocaleDeleteRepository::delete
      */
     public function testCanDeleteALocale(): void
     {

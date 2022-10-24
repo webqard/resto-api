@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Currency;
 
 use App\ApiResource\ApiResponse;
-use App\Repository\CurrencyRepository;
+use App\Repository\Currency\CurrencyDeleteRepository;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,9 +21,9 @@ final class CurrencyDeleteController extends AbstractController
     // Properties :
 
     /**
-     * @var \App\Repository\CurrencyRepository the currency's repository.
+     * @var \App\Repository\Currency\CurrencyDeleteRepository the currency's repository.
      */
-    private CurrencyRepository $repository;
+    private CurrencyDeleteRepository $repository;
 
     /**
      * @var \Symfony\Contracts\Translation\TranslatorInterface the translator.
@@ -35,11 +35,11 @@ final class CurrencyDeleteController extends AbstractController
 
     /**
      * The constructor.
-     * @param \App\Repository\CurrencyRepository $repository the currency's repository.
+     * @param \App\Repository\Currency\CurrencyDeleteRepository $repository the currency's repository.
      * @param \Symfony\Contracts\Translation\TranslatorInterface $translator the translator.
      */
     public function __construct(
-        CurrencyRepository $repository,
+        CurrencyDeleteRepository $repository,
         TranslatorInterface $translator
     ) {
         $this->repository = $repository;

@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  * @coversDefaultClass \App\Controller\Currency\CurrencyDeleteController
  * @covers ::__construct
  * @covers ::delete
- * @uses \App\Repository\CurrencyRepository::__construct
+ * @uses \App\Repository\Currency\CurrencyDeleteRepository::__construct
  * @group api
  * @group api_currencies
  * @group api_currencies_delete
@@ -26,7 +26,7 @@ final class CurrencyDeleteTest extends WebTestCase
      * Tests that a currency can be deleted.
      *
      * @uses \App\Entity\Currency::__construct
-     * @uses \App\Repository\CurrencyRepository::delete
+     * @uses \App\Repository\Currency\CurrencyDeleteRepository::delete
      */
     public function testCanDeleteACurrency(): void
     {

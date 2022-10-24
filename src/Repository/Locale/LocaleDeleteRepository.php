@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\Repository\Locale;
 
-use App\Entity\Currency;
+use App\Entity\Locale;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * Repository for the Currency entity.
+ * Repository for the delete method of the Locale entity.
  */
-class CurrencyRepository extends ServiceEntityRepository
+class LocaleDeleteRepository extends ServiceEntityRepository
 {
     // Magic methods :
 
@@ -21,19 +21,19 @@ class CurrencyRepository extends ServiceEntityRepository
      */
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Currency::class);
+        parent::__construct($registry, Locale::class);
     }
 
 
     // Methods :
 
     /**
-     * Deletes a currency.
-     * @param object $currency the currency.
+     * Deletes a locale.
+     * @param object $locale the locale.
      */
-    public function delete(object $currency): void
+    public function delete(object $locale): void
     {
-        $this->_em->remove($currency);
+        $this->_em->remove($locale);
         $this->_em->flush();
     }
 }
