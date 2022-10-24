@@ -17,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  * @group api
  * @group api_currencies
  * @group api_currencies_delete
+ * @group currency
  */
 final class CurrencyDeleteTest extends WebTestCase
 {

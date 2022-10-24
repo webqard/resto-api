@@ -17,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  * @group api
  * @group api_locales
  * @group api_locales_delete
+ * @group locale
  */
 final class LocaleDeleteTest extends WebTestCase
 {
