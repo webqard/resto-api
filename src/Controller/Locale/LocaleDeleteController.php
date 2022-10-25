@@ -56,6 +56,7 @@ final class LocaleDeleteController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\Response the response.
      */
     #[
+        /** @infection-ignore-all */
         OA\Delete(
             description: 'Deletes a locale.',
             path: '/locales/{id}',

@@ -65,6 +65,7 @@ final class LocaleGetController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\Response the response.
      */
     #[
+        /** @infection-ignore-all */
         OA\Get(
             description: 'Fetches a locale.',
             path: '/locales/{id}',
