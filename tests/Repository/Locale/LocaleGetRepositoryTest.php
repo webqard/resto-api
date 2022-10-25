@@ -5,21 +5,20 @@ declare(strict_types=1);
 namespace App\Tests\Api\Locale;
 
 use App\Entity\Locale;
-use App\Repository\Locale\LocaleDeleteRepository;
+use App\Repository\Locale\LocaleGetRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * Tests the locale DELETE repository.
+ * Tests the locale GET repository.
  *
- * @coversDefaultClass \App\Repository\Locale\LocaleDeleteRepository
+ * @coversDefaultClass \App\Repository\Locale\LocaleGetRepository
  * @covers ::__construct
- * @covers ::delete
  * @group repositories
  * @group repository_locales
- * @group repository_locales_delete
+ * @group repository_locales_get
  * @group locale
  */
-final class LocaleDeleteRepositoryTest extends WebTestCase
+final class LocaleGetRepositoryTest extends WebTestCase
 {
     // Methods :
 
@@ -28,7 +27,7 @@ final class LocaleDeleteRepositoryTest extends WebTestCase
      *
      * @uses \App\Entity\Locale::__construct
      */
-    public function testCanDeleteALocale(): void
+    public function testCanFindALocale(): void
     {
         static::createClient();
         $locale = new Locale('en_GB');
@@ -37,11 +36,9 @@ final class LocaleDeleteRepositoryTest extends WebTestCase
         $entityManager->persist($locale);
         $entityManager->flush();
 
-        $localeRepository = static::getContainer()->get(LocaleDeleteRepository::class);
-        $localeRepository->delete($locale);
+        $localeRepository = static::getContainer()->get(LocaleGetRepository::class);
+        $foundLocale = $localeRepository->find(1);
 
-        $deletedLocale = $entityManager->find(Locale::class, 1);
-
-        self::assertNull($deletedLocale, 'The Locale has not been deleted.');
+        self::assertInstanceOf(Locale::class, $foundLocale);
     }
 }

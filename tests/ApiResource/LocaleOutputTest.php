@@ -4,34 +4,32 @@ declare(strict_types=1);
 
 namespace App\Tests\ApiResource;
 
-use App\ApiResource\ApiResponse;
+use App\ApiResource\LocaleOutput;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests "\App\ApiResource\ApiResponse".
+ * Tests the API locale output.
  *
- * @coversDefaultClass \App\ApiResource\ApiResponse
+ * @coversDefaultClass \App\ApiResource\LocaleOutput
  * @covers ::__construct
  * @covers ::jsonSerialize
- * @group ApiResource
- * @group ApiResource_ApiResponse
+ * @group apiResource
+ * @group apiResource_localeOutput
  */
-final class ApiResponseTest extends TestCase
+final class LocaleOutputTest extends TestCase
 {
     // Méthodes :
 
     /**
-     * Tests that the message can be serialised.
-     * @return void
-     *
+     * Tests that the locale can be serialised.
      */
-    public function testCanSerialiseMessage(): void
+    public function testCanSerialiseLocale(): void
     {
-        $apiResponse = new ApiResponse('test-message');
+        $localeOutput = new LocaleOutput('en_GB');
 
-        $unserialisedResponse = json_decode(json_encode($apiResponse));
+        $unserialisedLocale = json_decode(json_encode($localeOutput));
 
-        self::assertObjectHasAttribute('message', $unserialisedResponse, 'The response does not have a message attribute.');
-        self::assertSame('test-message', $unserialisedResponse->message, 'The message has been altered.');
+        self::assertObjectHasAttribute('code', $unserialisedLocale);
+        self::assertSame('en_GB', $unserialisedLocale->code);
     }
 }
