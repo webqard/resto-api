@@ -13,8 +13,8 @@ use PHPUnit\Framework\TestCase;
  * @coversDefaultClass \App\ApiResource\ApiResponse
  * @covers ::__construct
  * @covers ::jsonSerialize
- * @group apiResource
- * @group apiResource_apiResponse
+ * @group ApiResource
+ * @group ApiResource_ApiResponse
  */
 final class ApiResponseTest extends TestCase
 {
