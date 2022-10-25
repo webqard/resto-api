@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller\Locale;
 
 use App\ApiResource\ApiResponse;
-use App\Entity\Locale;
 use App\Repository\Locale\LocaleGetRepository;
 use App\State\LocaleProvider;
 use OpenApi\Attributes as OA;
