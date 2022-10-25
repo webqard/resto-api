@@ -30,7 +30,7 @@ final class LocaleProviderTest extends TestCase
      * @uses \App\Entity\Locale::__construct
      * @uses \App\Entity\Locale::getCode
      */
-    public function testCanGetApiResource(): void
+    public function testCanGetProvideLocaleOutput(): void
     {
         $locale = new Locale('en_GB');
         $localeProvider = new LocaleProvider();
