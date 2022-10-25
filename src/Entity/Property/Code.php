@@ -18,4 +18,16 @@ trait Code
      */
     #[ORM\Column(unique: true)]
     private string $code;
+
+
+    // Accessors :
+
+    /**
+     * Returns the code.
+     * @return string the code.
+     */
+    public function getCode(): string
+    {
+        return $this->code;
+    }
 }

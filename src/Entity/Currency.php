@@ -58,4 +58,16 @@ class Currency extends IntId
         $this->code = $code;
         $this->decimals = $decimals;
     }
+
+
+    // Accessors :
+
+    /**
+     * Returns the number of decimals.
+     * @return int the number of decimals.
+     */
+    public function getDecimals(): int
+    {
+        return $this->decimals;
+    }
 }

@@ -43,16 +43,4 @@ class Locale extends IntId
 
         $this->code = $code;
     }
-
-
-    // Accessors :
-
-    /**
-     * Returns the code.
-     * @return string the code.
-     */
-    public function getCode(): string
-    {
-        return $this->code;
-    }
 }
