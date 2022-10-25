@@ -8,7 +8,7 @@ use App\ApiResource\ApiResponse;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Tests "\App\ApiResource\ApiResponse".
+ * Tests the API response.
  *
  * @coversDefaultClass \App\ApiResource\ApiResponse
  * @covers ::__construct
