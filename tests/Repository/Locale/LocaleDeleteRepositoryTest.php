@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Api\Locale;
+namespace App\Tests\Repository\Locale;
 
 use App\Entity\Locale;
 use App\Repository\Locale\LocaleDeleteRepository;

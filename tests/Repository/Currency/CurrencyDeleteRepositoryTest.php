@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Api\Currency;
+namespace App\Tests\Repository\Currency;
 
 use App\Entity\Currency;
 use App\Repository\Currency\CurrencyDeleteRepository;
