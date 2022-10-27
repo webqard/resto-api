@@ -81,6 +81,7 @@ final class LocaleDeleteController extends AbstractController
             ref: '#/components/responses/500',
             response: '500'
         ),
+        /** @infection-ignore-all */
         Route('/locales/{id}', methods: ['DELETE'], name: 'locale_delete')
     ]
     public function delete(Request $request, string $id): Response

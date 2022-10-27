@@ -91,6 +91,7 @@ final class CurrencyGetController extends AbstractController
             ref: '#/components/responses/500',
             response: '500'
         ),
+        /** @infection-ignore-all */
         Route('/currencies/{id}', methods: ['GET'], name: 'currency_get')
     ]
     public function get(Request $request, string $id): Response

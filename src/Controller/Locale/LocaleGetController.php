@@ -91,6 +91,7 @@ final class LocaleGetController extends AbstractController
             ref: '#/components/responses/500',
             response: '500'
         ),
+        /** @infection-ignore-all */
         Route('/locales/{id}', methods: ['GET'], name: 'locale_get')
     ]
     public function get(Request $request, string $id): Response

@@ -81,6 +81,7 @@ final class CurrencyDeleteController extends AbstractController
             ref: '#/components/responses/500',
             response: '500'
         ),
+        /** @infection-ignore-all */
         Route('/currencies/{id}', methods: ['DELETE'], name: 'currency_delete')
     ]
     public function delete(Request $request, string $id): Response
