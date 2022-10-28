@@ -6,13 +6,13 @@ namespace App\Tests\State;
 
 use App\ApiResource\LocaleOutput;
 use App\Entity\Locale;
-use App\State\LocaleProvider;
+use App\State\Locale\LocaleProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the locale provider.
  *
- * @coversDefaultClass \App\State\LocaleProvider
+ * @coversDefaultClass \App\State\Locale\LocaleProvider
  * @covers ::provideLocaleOutput
  * @group state
  * @group state_localeProvider

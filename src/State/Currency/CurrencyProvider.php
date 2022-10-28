@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\State;
+namespace App\State\Currency;
 
 use App\ApiResource\CurrencyOutput;
 use App\Entity\Currency;

@@ -6,7 +6,7 @@ namespace App\Controller\Locale;
 
 use App\ApiResource\ApiResponse;
 use App\Repository\Locale\LocaleGetRepository;
-use App\State\LocaleProvider;
+use App\State\Locale\LocaleProvider;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +27,7 @@ final class LocaleGetController extends AbstractController
     private LocaleGetRepository $repository;
 
     /**
-     * @var \App\State\LocaleProvider the data transformer.
+     * @var \App\State\Locale\LocaleProvider the data transformer.
      */
     private LocaleProvider $outputProvider;
 
@@ -42,7 +42,7 @@ final class LocaleGetController extends AbstractController
     /**
      * The constructor.
      * @param \App\Repository\Locale\LocaleGetRepository $repository the locale's repository.
-     * @param \App\State\LocaleProvider $outputProvider the data transformer.
+     * @param \App\State\Locale\LocaleProvider $outputProvider the data transformer.
      * @param \Symfony\Contracts\Translation\TranslatorInterface $translator the translator.
      */
     public function __construct(

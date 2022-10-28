@@ -31,7 +31,7 @@ final class CurrencyGetTest extends WebTestCase
      * @uses \App\Entity\Currency::__construct
      * @uses \App\Entity\Currency::getCode
      * @uses \App\Entity\Currency::getDecimals
-     * @uses \App\State\CurrencyProvider::provideCurrencyOutput
+     * @uses \App\State\Currency\CurrencyProvider::provideCurrencyOutput
      */
     public function testCanGetACurrency(): void
     {

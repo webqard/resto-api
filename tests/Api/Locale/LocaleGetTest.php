@@ -30,7 +30,7 @@ final class LocaleGetTest extends WebTestCase
      * @uses \App\ApiResource\LocaleOutput::jsonSerialize
      * @uses \App\Entity\Locale::__construct
      * @uses \App\Entity\Locale::getCode
-     * @uses \App\State\LocaleProvider::provideLocaleOutput
+     * @uses \App\State\Locale\LocaleProvider::provideLocaleOutput
      */
     public function testCanGetALocale(): void
     {

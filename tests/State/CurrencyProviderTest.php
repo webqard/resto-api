@@ -6,13 +6,13 @@ namespace App\Tests\State;
 
 use App\ApiResource\CurrencyOutput;
 use App\Entity\Currency;
-use App\State\CurrencyProvider;
+use App\State\Currency\CurrencyProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the currency provider.
  *
- * @coversDefaultClass \App\State\CurrencyProvider
+ * @coversDefaultClass \App\State\Currency\CurrencyProvider
  * @covers ::provideCurrencyOutput
  * @group state
  * @group state_currencyProvider

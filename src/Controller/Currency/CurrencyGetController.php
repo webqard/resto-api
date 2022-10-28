@@ -6,7 +6,7 @@ namespace App\Controller\Currency;
 
 use App\ApiResource\ApiResponse;
 use App\Repository\Currency\CurrencyGetRepository;
-use App\State\CurrencyProvider;
+use App\State\Currency\CurrencyProvider;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +27,7 @@ final class CurrencyGetController extends AbstractController
     private CurrencyGetRepository $repository;
 
     /**
-     * @var \App\State\CurrencyProvider the data transformer.
+     * @var \App\State\Currency\CurrencyProvider the data transformer.
      */
     private CurrencyProvider $outputProvider;
 
@@ -42,7 +42,7 @@ final class CurrencyGetController extends AbstractController
     /**
      * The constructor.
      * @param \App\Repository\Currency\CurrencyGetRepository $repository the currency's repository.
-     * @param \App\State\CurrencyProvider $outputProvider the data transformer.
+     * @param \App\State\Currency\CurrencyProvider $outputProvider the data transformer.
      * @param \Symfony\Contracts\Translation\TranslatorInterface $translator the translator.
      */
     public function __construct(
