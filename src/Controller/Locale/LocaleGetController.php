@@ -27,7 +27,7 @@ final class LocaleGetController extends AbstractController
     private LocaleGetRepository $repository;
 
     /**
-     * @var \App\State\Locale\LocaleProvider the data transformer.
+     * @var \App\State\Locale\LocaleProvider the provider.
      */
     private LocaleProvider $outputProvider;
 
@@ -42,7 +42,7 @@ final class LocaleGetController extends AbstractController
     /**
      * The constructor.
      * @param \App\Repository\Locale\LocaleGetRepository $repository the locale's repository.
-     * @param \App\State\Locale\LocaleProvider $outputProvider the data transformer.
+     * @param \App\State\Locale\LocaleProvider $outputProvider the provider.
      * @param \Symfony\Contracts\Translation\TranslatorInterface $translator the translator.
      */
     public function __construct(

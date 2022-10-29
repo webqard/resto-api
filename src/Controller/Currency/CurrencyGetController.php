@@ -27,7 +27,7 @@ final class CurrencyGetController extends AbstractController
     private CurrencyGetRepository $repository;
 
     /**
-     * @var \App\State\Currency\CurrencyProvider the data transformer.
+     * @var \App\State\Currency\CurrencyProvider the provider.
      */
     private CurrencyProvider $outputProvider;
 
@@ -42,7 +42,7 @@ final class CurrencyGetController extends AbstractController
     /**
      * The constructor.
      * @param \App\Repository\Currency\CurrencyGetRepository $repository the currency's repository.
-     * @param \App\State\Currency\CurrencyProvider $outputProvider the data transformer.
+     * @param \App\State\Currency\CurrencyProvider $outputProvider the provider.
      * @param \Symfony\Contracts\Translation\TranslatorInterface $translator the translator.
      */
     public function __construct(
