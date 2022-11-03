@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class LocaleOutputTest extends TestCase
 {
-    // Méthodes :
+    // Methods :
 
     /**
      * Tests that the locale can be serialised.

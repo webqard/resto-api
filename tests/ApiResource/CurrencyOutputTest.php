@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class CurrencyOutputTest extends TestCase
 {
-    // Méthodes :
+    // Methods :
 
     /**
      * Tests that the currency can be serialised.

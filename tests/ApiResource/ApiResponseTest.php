@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
  */
 final class ApiResponseTest extends TestCase
 {
-    // Méthodes :
+    // Methods :
 
     /**
      * Tests that the message can be serialised.
