@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\State;
+namespace App\Tests\State\Locale;
 
 use App\ApiResource\LocaleOutput;
 use App\Entity\Locale;
