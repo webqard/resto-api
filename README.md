@@ -35,9 +35,9 @@ user@host resto-api$ ./vendor/bin/openapi -o ./public/api.json ./src/
 ### Create the database
 
 ```shellsession
-user@host symfony-demo$ ./bin/console doctrine:database:create [-e test]
-user@host symfony-demo$ ./bin/console make:migration [-e test]
-user@host symfony-demo$ ./bin/console doctrine:migrations:migrate [--no-interaction] [-e test]
+user@host resto-api$ ./bin/console doctrine:database:create [-e test]
+user@host resto-api$ ./bin/console make:migration [-e test]
+user@host resto-api$ ./bin/console doctrine:migrations:migrate [--no-interaction] [-e test]
 ```
 The "-e test" option is to for the test environment which uses Sqlite.
 
