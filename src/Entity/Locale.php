@@ -7,13 +7,18 @@ namespace App\Entity;
 use App\Entity\Property\Code;
 use CyrilVerloop\DoctrineEntities\IntId;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * The locale entity.
  */
 #[
     ORM\Entity(),
-    ORM\UniqueConstraint(columns: ["code"])
+    ORM\UniqueConstraint(columns: ["code"]),
+    UniqueEntity(
+        fields: ["code"],
+        message: "code.alreadyExist"
+    )
 ]
 class Locale extends IntId
 {

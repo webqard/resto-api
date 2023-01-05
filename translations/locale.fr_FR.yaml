@@ -1,1 +1,5 @@
+code:
+    alreadyExist: Le code existe déjà.
+    blankError: Le code est vide.
+    invalid: Le code est invalide.
 notFound: La localisation n'a pas été trouvée.

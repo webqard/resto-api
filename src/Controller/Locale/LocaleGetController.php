@@ -75,7 +75,7 @@ final class LocaleGetController extends AbstractController
         OA\Parameter(ref: '#/components/parameters/id'),
         OA\Parameter(ref: '#/components/parameters/Accept-Language'),
         OA\Response(
-            content: new OA\JsonContent(ref: '#/components/schemas/Locale'),
+            content: new OA\JsonContent(ref: '#/components/schemas/LocaleOutput'),
             description: 'When the locale is found.',
             response: '200'
         ),

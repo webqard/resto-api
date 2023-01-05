@@ -32,8 +32,18 @@ use Symfony\Component\Routing\Annotation\Route;
         required: true
     ),
     OA\Response(
+        content: new OA\JsonContent(ref: '#/components/schemas/ResourceLink'),
+        description: 'When the item is added successfully.',
+        response: '201'
+    ),
+    OA\Response(
         description: 'When the item is deleted successfully.',
         response: '204'
+    ),
+    OA\Response(
+        content: new OA\JsonContent(ref: '#/components/schemas/ApiResponse'),
+        description: 'When the request body is an invalid or empty json.',
+        response: 'InvalidJsonBody'
     ),
     OA\Response(
         content: new OA\JsonContent(ref: '#/components/schemas/ApiResponse'),
@@ -50,6 +60,33 @@ use Symfony\Component\Routing\Annotation\Route;
             )
         ],
         response: 'POSTNotAllowed'
+    ),
+    OA\Response(
+        description: "When the method is not allowed.",
+        headers: [
+            new OA\Header(
+                description: 'POST',
+                header: 'Allow',
+                schema: new OA\Schema(type: 'string')
+            )
+        ],
+        response: 'DELETE_GET_PUTNotAllowed'
+    ),
+    OA\Response(
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items('#/components/schemas/Violation')
+        ),
+        description: 'When the item is already added.',
+        response: '409'
+    ),
+    OA\Response(
+        content: new OA\JsonContent(
+            type: 'array',
+            items: new OA\Items('#/components/schemas/Violation')
+        ),
+        description: 'When there is an error in the datas.',
+        response: '422'
     ),
     OA\Response(
         description: 'When an unexpected error occured.',

@@ -7,34 +7,34 @@ namespace App\ApiResource;
 use OpenApi\Attributes as OA;
 
 /**
- * The locale output.
+ * The link to a resource.
  */
 #[
     OA\Schema(
         type: "object",
-        schema: "LocaleOutput"
+        schema: "ResourceLink"
     )
 ]
-class LocaleOutput implements \JsonSerializable
+class ResourceLink implements \JsonSerializable
 {
     // Properties :
 
     /**
-     * @var string the code.
+     * @var string the link to a resource.
      */
-    #[OA\Property(example : "en_GB")]
-    private string $code;
+    #[OA\Property(example : "/courses/1")]
+    private string $link;
 
 
     // Magic methods :
 
     /**
      * The constructor.
-     * @param string $code the code.
+     * @param string $link the link to a resource.
      */
-    public function __construct(string $code)
+    public function __construct(string $link)
     {
-        $this->code = $code;
+        $this->link = $link;
     }
 
 
@@ -46,7 +46,7 @@ class LocaleOutput implements \JsonSerializable
     public function jsonSerialize(): mixed
     {
         return [
-            'code' => $this->code
+            'link' => $this->link
         ];
     }
 }

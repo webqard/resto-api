@@ -1,1 +1,5 @@
+code:
+    alreadyExist: The code already exist.
+    blankError: The code is blank.
+    invalid: The code is invalid.
 notFound: The locale has not been found.
