@@ -1,1 +1,7 @@
+code:
+    alreadyExist: Le code existe déjà.
+    blankError: Le code est vide.
+    invalid: Le code est invalide.
+decimals:
+    invalid: Les décimales sont négatives.
 notFound: La devise n'a pas été trouvée.

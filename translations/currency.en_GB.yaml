@@ -1,1 +1,7 @@
+code:
+    alreadyExist: The code already exist.
+    blankError: The code is blank.
+    invalid: The code is invalid.
+decimals:
+    invalid: The decimals are negative.
 notFound: The currency has not been found.

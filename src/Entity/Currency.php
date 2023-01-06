@@ -7,13 +7,18 @@ namespace App\Entity;
 use App\Entity\Property\Code;
 use CyrilVerloop\DoctrineEntities\IntId;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * The currency entity.
  */
 #[
     ORM\Entity(),
-    ORM\UniqueConstraint(columns: ["code"])
+    ORM\UniqueConstraint(columns: ["code"]),
+    UniqueEntity(
+        fields: ["code"],
+        message: "code.alreadyExist"
+    )
 ]
 class Currency extends IntId
 {
@@ -23,9 +28,6 @@ class Currency extends IntId
 
     // Properties :
 
-    /**
-     * @var string the code.
-     */
     #[
         ORM\Column(
             length: 3,
