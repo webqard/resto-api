@@ -29,7 +29,8 @@ class LocaleInput
             message: "code.invalid"
         ),
         Assert\NotBlank(message: "code.blankError"),
-        OA\Property(example : "en_GB")]
+        OA\Property(example : "en_GB")
+    ]
     private string $code;
 
 
