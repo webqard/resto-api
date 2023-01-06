@@ -135,7 +135,9 @@ final class LocalePostController extends AbstractController
     {
         try {
             $localeInput = $this->serializer->deserialize($request->getContent(), LocaleInput::class, 'json');
-        } catch (NotEncodableValueException | MissingConstructorArgumentsException | NotNormalizableValueException $exception) {
+        } catch (
+            NotEncodableValueException | MissingConstructorArgumentsException | NotNormalizableValueException $exception
+        ) {
             return $this->respondToBadRequest($exception, $request->getLocale());
         }
 
