@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
  * @covers ::jsonSerialize
  * @group apiResource
  * @group apiResource_localeOutput
+ * @group locale
  */
 final class LocaleOutputTest extends TestCase
 {

@@ -14,6 +14,7 @@ use PHPUnit\Framework\TestCase;
  * @covers ::__construct
  * @group apiResource
  * @group apiResource_localeInput
+ * @group locale
  */
 final class LocaleInputTest extends TestCase
 {

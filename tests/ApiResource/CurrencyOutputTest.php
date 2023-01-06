@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
  * @covers ::jsonSerialize
  * @group apiResource
  * @group apiResource_currencyOutput
+ * @group currency
  */
 final class CurrencyOutputTest extends TestCase
 {
