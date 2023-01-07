@@ -12,7 +12,7 @@ use OpenApi\Attributes as OA;
 #[
     OA\Schema(
         type: "object",
-        schema: "Currency"
+        schema: "CurrencyOutput"
     )
 ]
 class CurrencyOutput implements \JsonSerializable
@@ -28,7 +28,7 @@ class CurrencyOutput implements \JsonSerializable
     /**
      * @var int the number of decimals.
      */
-    #[OA\Property(example : "2")]
+    #[OA\Property(example : 2)]
     private int $decimals;
 
 

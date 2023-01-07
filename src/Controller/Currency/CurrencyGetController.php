@@ -75,7 +75,7 @@ final class CurrencyGetController extends AbstractController
         OA\Parameter(ref: '#/components/parameters/id'),
         OA\Parameter(ref: '#/components/parameters/Accept-Language'),
         OA\Response(
-            content: new OA\JsonContent(ref: '#/components/schemas/Currency'),
+            content: new OA\JsonContent(ref: '#/components/schemas/CurrencyOutput'),
             description: 'When the currency is found.',
             response: '200'
         ),
