@@ -35,6 +35,7 @@ class CurrencyInput
      */
     #[
         Assert\PositiveOrZero(message: "decimals.negativeError"),
+        OA\Property(example : 2)
     ]
     private int $decimals;
 
