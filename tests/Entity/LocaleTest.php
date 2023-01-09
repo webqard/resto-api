@@ -33,14 +33,19 @@ final class LocaleTest extends TestCase
 
 
     /**
-     * Test that the code can be returned.
+     * Test that the code can be returned and changed.
      *
      * @covers ::getCode
+     * @covers ::setCode
      */
-    public function testCanGetCode(): void
+    public function testCanGetAndCode(): void
     {
         $locale = new Locale('en_GB');
 
         self::assertSame('en_GB', $locale->getCode());
+
+        $locale->setCode('fr_FR');
+
+        self::assertSame('fr_FR', $locale->getCode());
     }
 }

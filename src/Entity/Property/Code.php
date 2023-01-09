@@ -30,4 +30,16 @@ trait Code
     {
         return $this->code;
     }
+
+
+    // Mutators :
+
+    /**
+     * Changes the code.
+     * @param string $code the code.
+     */
+    public function setCode(string $code): void
+    {
+        $this->code = $code;
+    }
 }
