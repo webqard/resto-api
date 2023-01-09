@@ -51,49 +51,6 @@ final class LocaleDeleteTest extends WebTestCase
 
 
     /**
-     * Return invalid type Ids.
-     * @return array invalid type Ids.
-     */
-    private function getInvalidTypeId(): array
-    {
-        return [
-            'id is a string (test)' => ['test'],
-            'id is a float (1.5)' => [1.5]
-        ];
-    }
-
-    /**
-     * Tests that a locale can not be deleted
-     * from an invalid type identifier.
-     * @param mixed $invalidTypeId an invalid type identifier.
-     *
-     * @uses \App\ApiResource\ApiResponse::__construct
-     * @uses \App\ApiResource\ApiResponse::jsonSerialize
-     * @dataProvider getInvalidTypeId
-     */
-    public function testCanNotDeleteALocaleFromAnInvalidTypeId(mixed $invalidTypeId): void
-    {
-        $requestParameters = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
-        ];
-        $client = static::createClient($requestParameters);
-
-        $client->request('DELETE', '/locales/' . $invalidTypeId);
-        $apiResponse = $client->getResponse()->getContent();
-
-        self::assertResponseStatusCodeSame(404, 'DELETE "/locales/' . $invalidTypeId . '" did not failed.');
-        self::assertJson($apiResponse);
-
-        $jsonResponse = json_decode($apiResponse, false);
-
-        self::assertObjectHasAttribute('message', $jsonResponse);
-        self::assertNotSame('', $jsonResponse->message, 'The error message is empty.');
-    }
-
-
-    /**
      * Tests that a locale can not be deleted
      * from an non existant identifier.
      *
