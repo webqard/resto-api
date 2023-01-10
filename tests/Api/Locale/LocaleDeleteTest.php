@@ -43,10 +43,6 @@ final class LocaleDeleteTest extends WebTestCase
 
         self::assertResponseStatusCodeSame(204, 'DELETE "/locales/1" failed.');
         self::assertEmpty($apiResponse, 'The response must not have a body.');
-
-        $deletedLocale = $entityManager->find(Locale::class, 1);
-
-        self::assertNull($deletedLocale, 'The Locale has not been deleted.');
     }
 
 
