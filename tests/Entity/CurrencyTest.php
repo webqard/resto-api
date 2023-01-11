@@ -33,27 +33,37 @@ final class CurrencyTest extends TestCase
 
 
     /**
-     * Test that the code can be returned.
+     * Test that the code can be returned and changed.
      *
      * @covers ::getCode
+     * @covers ::setCode
      */
-    public function testCanGetCode(): void
+    public function testCanGetAndSetCode(): void
     {
         $currency = new Currency('EUR', 2);
 
         self::assertSame('EUR', $currency->getCode());
+
+        $currency->setCode('GBP');
+
+        self::assertSame('GBP', $currency->getCode());
     }
 
 
     /**
-     * Test that the decimals can be returned.
+     * Test that the decimals can be returned and changed.
      *
      * @covers ::getDecimals
+     * @covers ::setDecimals
      */
-    public function testCanGetDecimals(): void
+    public function testCanGetAndSetDecimals(): void
     {
         $currency = new Currency('EUR', 2);
 
         self::assertSame(2, $currency->getDecimals());
+
+        $currency->setDecimals(3);
+
+        self::assertSame(3, $currency->getDecimals());
     }
 }

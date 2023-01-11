@@ -72,4 +72,16 @@ class Currency extends IntId
     {
         return $this->decimals;
     }
+
+
+    // Mutators :
+
+    /**
+     * Changes the number of decimals.
+     * @param int $decimals the number of decimals.
+     */
+    public function setDecimals(int $decimals): void
+    {
+        $this->decimals = $decimals;
+    }
 }
