@@ -192,7 +192,7 @@ final class CurrencyPostTest extends WebTestCase
             'decimal is null' => ['decimals', null],
             'decimal is a string ("test")' => ['decimals', 'test'],
             'decimal is a float (1.5)' => ['decimals', 1.5],
-            'decimal is an array ([])' => ['decimals', []],
+            'decimal is an array ([])' => ['decimals', []]
         ];
     }
 
