@@ -239,8 +239,8 @@ final class CurrencyPostTest extends WebTestCase
 
 
     /**
-     * Returns properties to set blank.
-     * @return array properties to set blank.
+     * Returns invalid values.
+     * @return array invalid values.
      */
     private function getValidTypeInvalidValues(): array
     {
