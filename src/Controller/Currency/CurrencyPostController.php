@@ -165,10 +165,10 @@ final class CurrencyPostController extends AbstractController
     /**
      * Respond to a syntactically erroneous request.
      * @param \Exception $exception
-     * @param string $currency the currency.
+     * @param string $locale the locale.
      * @return \Symfony\Component\HttpFoundation\Response the response.
      */
-    private function respondToBadRequest(\Exception $exception, string $currency): Response
+    private function respondToBadRequest(\Exception $exception, string $locale): Response
     {
         $message = 'invalidJson'; // NotEncodableValueException
 
@@ -181,7 +181,7 @@ final class CurrencyPostController extends AbstractController
         }
 
         return $this->json(
-            new ApiResponse($this->translator->trans($message, locale: $currency)),
+            new ApiResponse($this->translator->trans($message, locale: $locale)),
             Response::HTTP_BAD_REQUEST
         );
     }
@@ -189,13 +189,13 @@ final class CurrencyPostController extends AbstractController
     /**
      * Sends the violations.
      * @param \Symfony\Component\Validator\ConstraintViolationListInterface $violations the violations.
-     * @param string $currency the currency.
+     * @param string $locale the locale.
      * @param int $httpStatusCode the http status code.
      * @return \Symfony\Component\HttpFoundation\Response the response.
      */
     private function sendViolations(
         ConstraintViolationListInterface $violations,
-        string $currency,
+        string $locale,
         int $httpStatusCode = Response::HTTP_UNPROCESSABLE_ENTITY
     ): Response {
         $violationMessages = new Violations();
@@ -206,7 +206,7 @@ final class CurrencyPostController extends AbstractController
 
             $violationMessages->add(new Violation(
                 $violation->getPropertyPath(),
-                $this->translator->trans($violationMessage, [], 'currency', $currency)
+                $this->translator->trans($violationMessage, [], 'currency', $locale)
             ));
         }
 
