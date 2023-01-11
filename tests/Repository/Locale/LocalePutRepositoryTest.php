@@ -9,7 +9,7 @@ use App\Repository\Locale\LocalePutRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * Tests the locale POST repository.
+ * Tests the locale PUT repository.
  *
  * @coversDefaultClass \App\Repository\Locale\LocalePutRepository
  * @covers ::__construct
