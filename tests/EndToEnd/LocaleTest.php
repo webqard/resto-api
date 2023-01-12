@@ -25,19 +25,13 @@ final class LocaleTest extends WebTestCase
      * @covers \App\Controller\Locale\LocalePostController::post
      * @uses \App\ApiResource\LocaleInput::__construct
      * @uses \App\ApiResource\LocaleInput::getCode
-     * @uses \App\ApiResource\LocaleOutput::__construct
-     * @uses \App\ApiResource\LocaleOutput::jsonSerialize
      * @uses \App\ApiResource\ResourceLink::__construct
      * @uses \App\ApiResource\ResourceLink::jsonSerialize
-     * @uses \App\Controller\Locale\LocaleGetController::__construct
-     * @uses \App\Controller\Locale\LocaleGetController::get
      * @uses \App\Controller\Locale\LocalePostController::__construct
      * @uses \App\Entity\Property\Code::getCode
-     * @uses \App\Repository\Locale\LocaleGetRepository::__construct
      * @uses \App\Repository\Locale\LocalePostRepository::__construct
      * @uses \App\Repository\Locale\LocalePostRepository::save
      * @uses \App\State\Locale\LocalePostProcessor::getEntity
-     * @uses \App\State\Locale\LocaleProvider::provideLocaleOutput
      */
     public function testIsCreatedInTheDatabaseWithPost(): void
     {
@@ -48,34 +42,54 @@ final class LocaleTest extends WebTestCase
         ];
         $client = static::createClient($params);
 
-        $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
-        $noLocale = $entityManager->find(Locale::class, 1);
-
-        self::assertNull($noLocale);
-
         $localeToPost = [
             'code' => 'en_GB'
         ];
 
         $client->request('POST', '/locales', content: json_encode($localeToPost));
-        $postResponse = $client->getResponse()->getContent();
-        $jsonPostResponse = json_decode($postResponse, false);
+        $jsonResponse = json_decode($client->getResponse()->getContent(), false);
 
-        $client->request('GET', $jsonPostResponse->link);
-        $getResponse = $client->getResponse()->getContent();
-        $jsonGetResponse = json_decode($getResponse, false);
-
-        $localeLink = explode('/', $jsonPostResponse->link);
+        $localeLink = explode('/', $jsonResponse->link);
         $localeLinkLastKey = array_key_last($localeLink);
         $localeLinkId = (int)$localeLink[$localeLinkLastKey];
 
-        $postedLocale = $entityManager->find(Locale::class, 1);
-        $entityManager->refresh($postedLocale);
+        $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
+        $postedLocale = $entityManager->find(Locale::class, $localeLinkId);
 
-        self::assertSame(1, $localeLinkId);
-        self::assertSame(1, $postedLocale->getId());
-        self::assertSame('en_GB', $jsonGetResponse->code);
+        self::assertSame($localeLinkId, $postedLocale->getId());
         self::assertSame('en_GB', $postedLocale->getCode());
+    }
+
+
+    /**
+     * Tests that a locale can be read from the database.
+     *
+     * @covers \App\Controller\Locale\LocaleGetController::get
+     * @uses \App\ApiResource\LocaleOutput::__construct
+     * @uses \App\ApiResource\LocaleOutput::jsonSerialize
+     * @uses \App\Controller\Locale\LocaleGetController::__construct
+     * @uses \App\Entity\Property\Code::getCode
+     * @uses \App\Repository\Locale\LocaleGetRepository::__construct
+     * @uses \App\State\Locale\LocaleProvider::provideLocaleOutput
+     */
+    public function testIsReadFromTheDatabaseWithGet(): void
+    {
+        $params = [
+            'headers' => [
+                'Accept-Language' => 'en-GB',
+            ],
+        ];
+        $client = static::createClient($params);
+
+        $locale = new Locale('en_GB');
+        $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
+        $entityManager->persist($locale);
+        $entityManager->flush();
+
+        $client->request('GET', '/locales/' . $locale->getId());
+        $jsonResponse = json_decode($client->getResponse()->getContent(), false);
+
+        self::assertSame('en_GB', $jsonResponse->code);
     }
 
 
@@ -85,17 +99,11 @@ final class LocaleTest extends WebTestCase
      * @covers \App\Controller\Locale\LocalePutController::put
      * @uses \App\ApiResource\LocaleInput::__construct
      * @uses \App\ApiResource\LocaleInput::getCode
-     * @uses \App\ApiResource\LocaleOutput::__construct
-     * @uses \App\ApiResource\LocaleOutput::jsonSerialize
-     * @uses \App\Controller\Locale\LocaleGetController::__construct
-     * @uses \App\Controller\Locale\LocaleGetController::get
      * @uses \App\Controller\Locale\LocalePutController::__construct
      * @uses \App\Entity\Property\Code::getCode
      * @uses \App\Entity\Property\Code::setCode
-     * @uses \App\Repository\Locale\LocaleGetRepository::__construct
      * @uses \App\Repository\Locale\LocalePutRepository::__construct
      * @uses \App\Repository\Locale\LocalePutRepository::save
-     * @uses \App\State\Locale\LocaleProvider::provideLocaleOutput
      * @uses \App\State\Locale\LocalePutProcessor::getEntity
      */
     public function testIsUpdatedInTheDatabaseWithPut(): void
@@ -112,43 +120,26 @@ final class LocaleTest extends WebTestCase
         $entityManager->persist($locale);
         $entityManager->flush();
 
-        self::assertSame(1, $locale->getId());
-
-        $client->request('GET', '/locales/1');
-        $getResponse = $client->getResponse()->getContent();
-        $jsonGetResponse = json_decode($getResponse, false);
-
-        self::assertSame('en_GB', $jsonGetResponse->code);
-
-
         $localeToPut = [
             'code' => 'fr_FR'
         ];
-        $client->request('PUT', '/locales/1', content: json_encode($localeToPut));
+        $client->request('PUT', '/locales/' . $locale->getId(), content: json_encode($localeToPut));
 
+        $entityManager->refresh($locale);
 
-        $client->request('GET', '/locales/1');
-        $getResponseAfterPut = $client->getResponse()->getContent();
-        $jsonGetResponseAfterPut = json_decode($getResponseAfterPut, false);
-
-        self::assertSame('fr_FR', $jsonGetResponseAfterPut->code);
-
-        $localeAfterPut = $entityManager->find(Locale::class, 1);
-        $entityManager->refresh($localeAfterPut);
-        self::assertSame(1, $localeAfterPut->getId());
-        self::assertSame('fr_FR', $localeAfterPut->getCode());
+        self::assertSame('fr_FR', $locale->getCode());
     }
 
 
     /**
-     * Tests that a locale can be deleted in the database.
+     * Tests that a locale can be deleted from the database.
      *
      * @covers \App\Controller\Locale\LocaleDeleteController::delete
      * @uses \App\Controller\Locale\LocaleDeleteController::__construct
      * @uses \App\Repository\Locale\LocaleDeleteRepository::__construct
      * @uses \App\Repository\Locale\LocaleDeleteRepository::delete
      */
-    public function testIsDeletedInTheDatabaseWithDelete(): void
+    public function testIsDeletedFromTheDatabaseWithDelete(): void
     {
         $params = [
             'headers' => [
@@ -161,12 +152,11 @@ final class LocaleTest extends WebTestCase
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
         $entityManager->persist($locale);
         $entityManager->flush();
+        $localeId = $locale->getId();
 
-        self::assertSame(1, $locale->getId());
+        $client->request('DELETE', '/locales/' . $locale->getId());
 
-        $client->request('DELETE', '/locales/1');
-
-        $localeAfterDelete = $entityManager->find(Locale::class, 1);
+        $localeAfterDelete = $entityManager->find(Locale::class, $localeId);
 
         self::assertNull($localeAfterDelete, 'The Locale has not been deleted.');
     }
