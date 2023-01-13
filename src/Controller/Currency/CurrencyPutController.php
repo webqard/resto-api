@@ -140,7 +140,7 @@ final class CurrencyPutController extends AbstractController
         $currency = $this->repository->find($id);
 
         if ($currency === null) {
-            $message = $this->translator->trans('currency.notFound', [], 'currency', $request->getLocale());
+            $message = $this->translator->trans('notFound', [], 'currency', $request->getLocale());
 
             return $this->json(
                 new ApiResponse($message),
