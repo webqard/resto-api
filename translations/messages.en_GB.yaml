@@ -1,3 +1,4 @@
 invalidJson: Invalid json.
 missingProperties: Properties are missing.
 typeError: type error.
+notFound: The resource has not been found.

@@ -89,7 +89,7 @@ final class CurrencyDeleteController extends AbstractController
         $currency = $this->repository->find($id);
 
         if ($currency === null) {
-            $message = $this->translator->trans('notFound', domain: 'currency', locale: $request->getLocale());
+            $message = $this->translator->trans('notFound', locale: $request->getLocale());
 
             return $this->json(
                 new ApiResponse($message),

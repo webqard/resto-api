@@ -102,7 +102,7 @@ final class LocaleGetController extends AbstractController
         $locale = $this->repository->find($id);
 
         if ($locale === null) {
-            $message = $this->translator->trans('notFound', [], 'locale', $request->getLocale());
+            $message = $this->translator->trans('notFound', locale: $request->getLocale());
 
             return $this->json(
                 new ApiResponse($message),
