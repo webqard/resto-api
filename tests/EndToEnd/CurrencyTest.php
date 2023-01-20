@@ -145,6 +145,8 @@ final class CurrencyTest extends WebTestCase
     /**
      * Tests that a currency can be deleted from the database.
      *
+     * @covers \App\Controller\DeleteController::__construct
+     * @covers \App\Controller\DeleteController::delete
      * @covers \App\Controller\Currency\CurrencyDeleteController::delete
      * @uses \App\Controller\Currency\CurrencyDeleteController::__construct
      * @uses \App\Repository\Currency\CurrencyDeleteRepository::__construct

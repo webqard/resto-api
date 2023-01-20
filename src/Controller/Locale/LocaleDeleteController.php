@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller\Locale;
 
-use App\ApiResource\ApiResponse;
+use App\Controller\DeleteController;
 use App\Repository\Locale\LocaleDeleteRepository;
 use OpenApi\Attributes as OA;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,34 +15,18 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * A controller to DELETE a locale.
  */
-final class LocaleDeleteController extends AbstractController
+final class LocaleDeleteController extends DeleteController
 {
-    // Properties :
-
-    /**
-     * @var \App\Repository\Locale\LocaleDeleteRepository the locale's repository.
-     */
-    private LocaleDeleteRepository $repository;
-
-    /**
-     * @var \Symfony\Contracts\Translation\TranslatorInterface the translator.
-     */
-    private TranslatorInterface $translator;
-
-
     // Magic methods :
 
     /**
-     * The constructor.
      * @param \App\Repository\Locale\LocaleDeleteRepository $repository the locale's repository.
-     * @param \Symfony\Contracts\Translation\TranslatorInterface $translator the translator.
      */
     public function __construct(
         LocaleDeleteRepository $repository,
         TranslatorInterface $translator
     ) {
-        $this->repository = $repository;
-        $this->translator = $translator;
+        parent::__construct($repository, $translator);
     }
 
 
@@ -51,9 +34,6 @@ final class LocaleDeleteController extends AbstractController
 
     /**
      * Deletes a locale.
-     * @param \Symfony\Component\HttpFoundation\Request $request the request.
-     * @param string $id the identifier.
-     * @return \Symfony\Component\HttpFoundation\Response the response.
      */
     #[
         /** @infection-ignore-all */
@@ -86,19 +66,6 @@ final class LocaleDeleteController extends AbstractController
     ]
     public function delete(Request $request, string $id): Response
     {
-        $locale = $this->repository->find($id);
-
-        if ($locale === null) {
-            $message = $this->translator->trans('notFound', locale: $request->getLocale());
-
-            return $this->json(
-                new ApiResponse($message),
-                Response::HTTP_NOT_FOUND
-            );
-        }
-
-        $this->repository->delete($locale);
-
-        return new Response(status: Response::HTTP_NO_CONTENT);
+        return parent::delete($request, $id);
     }
 }

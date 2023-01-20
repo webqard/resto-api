@@ -13,6 +13,8 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  * @coversDefaultClass \App\Controller\Currency\CurrencyDeleteController
  * @covers ::__construct
  * @covers ::delete
+ * @covers \App\Controller\DeleteController::__construct
+ * @covers \App\Controller\DeleteController::delete
  * @uses \App\Repository\Currency\CurrencyDeleteRepository::__construct
  * @group api
  * @group api_currencies

@@ -134,6 +134,8 @@ final class LocaleTest extends WebTestCase
     /**
      * Tests that a locale can be deleted from the database.
      *
+     * @covers \App\Controller\DeleteController::__construct
+     * @covers \App\Controller\DeleteController::delete
      * @covers \App\Controller\Locale\LocaleDeleteController::delete
      * @uses \App\Controller\Locale\LocaleDeleteController::__construct
      * @uses \App\Repository\Locale\LocaleDeleteRepository::__construct
