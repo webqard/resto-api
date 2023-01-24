@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\ApiResource\ApiResponse;
-use Doctrine\ORM\EntityRepository;
+use App\Repository\DeleteRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,9 +19,9 @@ abstract class DeleteController extends AbstractController
     // Properties :
 
     /**
-     * @var \Doctrine\ORM\EntityRepository the repository.
+     * @var \App\Repository\DeleteRepository the delete repository.
      */
-    private EntityRepository $repository;
+    private DeleteRepository $repository;
 
     /**
      * @var \Symfony\Contracts\Translation\TranslatorInterface the translator.
@@ -33,11 +33,11 @@ abstract class DeleteController extends AbstractController
 
     /**
      * The constructor.
-     * @param \Doctrine\ORM\EntityRepository $repository the entity's repository.
+     * @param \App\Repository\DeleteRepository $repository the delete repository.
      * @param \Symfony\Contracts\Translation\TranslatorInterface $translator the translator.
      */
     protected function __construct(
-        EntityRepository $repository,
+        DeleteRepository $repository,
         TranslatorInterface $translator
     ) {
         $this->repository = $repository;
