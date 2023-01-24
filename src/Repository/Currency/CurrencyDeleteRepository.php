@@ -4,23 +4,14 @@ declare(strict_types=1);
 
 namespace App\Repository\Currency;
 
-use App\Entity\Currency;
 use App\Repository\DeleteRepository;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Repository for the delete method of the Currency entity.
  */
 class CurrencyDeleteRepository extends DeleteRepository
 {
-    // Magic methods :
+    // Traits :
 
-    /**
-     * The constructor.
-     * @param \Doctrine\Persistence\ManagerRegistry $registry the registry manager.
-     */
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Currency::class);
-    }
+    use CurrencyRepository;
 }
