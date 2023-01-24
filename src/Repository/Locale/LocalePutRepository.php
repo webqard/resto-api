@@ -8,9 +8,9 @@ use App\Entity\Locale;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
- * Repository for the post and put methods of the Locale entity.
+ * Repository for the put method of the Locale entity.
  */
-class LocaleSaveRepository extends ServiceEntityRepository
+class LocalePutRepository extends ServiceEntityRepository
 {
     // Traits :
 

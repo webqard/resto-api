@@ -5,21 +5,21 @@ declare(strict_types=1);
 namespace App\Tests\Repository\Currency;
 
 use App\Entity\Currency;
-use App\Repository\Currency\CurrencyPostRepository;
+use App\Repository\Currency\CurrencyPutRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * Tests the currency POST repository.
+ * Tests the currency PUT repository.
  *
- * @coversDefaultClass \App\Repository\Currency\CurrencyPostRepository
+ * @coversDefaultClass \App\Repository\Currency\CurrencyPutRepository
  * @covers ::__construct
  * @covers ::save
  * @group repositories
  * @group repository_currencies
- * @group repository_currencies_post
+ * @group repository_currencies_put
  * @group currency
  */
-final class CurrencyPostRepositoryTest extends WebTestCase
+final class CurrencyPutRepositoryTest extends WebTestCase
 {
     // Methods :
 
@@ -30,12 +30,12 @@ final class CurrencyPostRepositoryTest extends WebTestCase
      * @uses \App\Entity\Currency::getDecimals
      * @uses \App\Entity\Property\Code::getCode
      */
-    public function testCanPostACurrency(): void
+    public function testCanPutACurrency(): void
     {
         $currency = new Currency('EUR', 2);
 
         static::createClient();
-        $currencyRepository = static::getContainer()->get(CurrencyPostRepository::class);
+        $currencyRepository = static::getContainer()->get(CurrencyPutRepository::class);
         $currencyRepository->save($currency);
 
         self::assertSame(1, $currency->getId(), 'The currency must have an identifier.');

@@ -9,7 +9,7 @@ use App\ApiResource\LocaleInput;
 use App\ApiResource\ResourceLink;
 use App\ApiResource\Violation;
 use App\ApiResource\Violations;
-use App\Repository\Locale\LocaleSaveRepository;
+use App\Repository\Locale\LocalePostRepository;
 use App\State\Locale\LocalePostProcessor;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -47,9 +47,9 @@ final class LocalePostController extends AbstractController
     private LocalePostProcessor $postProcessor;
 
     /**
-     * @var \App\Repository\Locale\LocaleSaveRepository the locale's repository.
+     * @var \App\Repository\Locale\LocalePostRepository the locale's repository.
      */
-    private LocaleSaveRepository $repository;
+    private LocalePostRepository $repository;
 
     /**
      * @var \Symfony\Contracts\Translation\TranslatorInterface the translator.
@@ -64,14 +64,14 @@ final class LocalePostController extends AbstractController
      * @param \Symfony\Component\Serializer\SerializerInterface $serializer the serializer.
      * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator the validator.
      * @param \App\State\Locale\LocalePostProcessor $postProcessor the processor.
-     * @param \App\Repository\Locale\LocaleSaveRepository $repository the locale's repository.
+     * @param \App\Repository\Locale\LocalePostRepository $repository the locale's repository.
      * @param \Symfony\Contracts\Translation\TranslatorInterface $translator the translator.
      */
     public function __construct(
         SerializerInterface $serializer,
         ValidatorInterface $validator,
         LocalePostProcessor $postProcessor,
-        LocaleSaveRepository $repository,
+        LocalePostRepository $repository,
         TranslatorInterface $translator
     ) {
         $this->serializer = $serializer;

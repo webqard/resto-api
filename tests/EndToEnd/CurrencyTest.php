@@ -31,8 +31,8 @@ final class CurrencyTest extends WebTestCase
      * @uses \App\Controller\Currency\CurrencyPostController::__construct
      * @uses \App\Entity\Currency::getDecimals
      * @uses \App\Entity\Property\Code::getCode
-     * @uses \App\Repository\Currency\CurrencySaveRepository::__construct
-     * @uses \App\Repository\Currency\CurrencySaveRepository::save
+     * @uses \App\Repository\Currency\CurrencyPostRepository::__construct
+     * @uses \App\Repository\Currency\CurrencyPostRepository::save
      * @uses \App\State\Currency\CurrencyPostProcessor::getEntity
      */
     public function testIsCreatedInTheDatabaseWithPost(): void
@@ -111,8 +111,8 @@ final class CurrencyTest extends WebTestCase
      * @uses \App\Entity\Currency::setDecimals
      * @uses \App\Entity\Property\Code::getCode
      * @uses \App\Entity\Property\Code::setCode
-     * @uses \App\Repository\Currency\CurrencySaveRepository::__construct
-     * @uses \App\Repository\Currency\CurrencySaveRepository::save
+     * @uses \App\Repository\Currency\CurrencyPutRepository::__construct
+     * @uses \App\Repository\Currency\CurrencyPutRepository::save
      * @uses \App\State\Currency\CurrencyPutProcessor::getEntity
      */
     public function testIsUpdatedInTheDatabaseWithPut(): void

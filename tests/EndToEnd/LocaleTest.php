@@ -29,8 +29,8 @@ final class LocaleTest extends WebTestCase
      * @uses \App\ApiResource\ResourceLink::jsonSerialize
      * @uses \App\Controller\Locale\LocalePostController::__construct
      * @uses \App\Entity\Property\Code::getCode
-     * @uses \App\Repository\Locale\LocaleSaveRepository::__construct
-     * @uses \App\Repository\Locale\LocaleSaveRepository::save
+     * @uses \App\Repository\Locale\LocalePostRepository::__construct
+     * @uses \App\Repository\Locale\LocalePostRepository::save
      * @uses \App\State\Locale\LocalePostProcessor::getEntity
      */
     public function testIsCreatedInTheDatabaseWithPost(): void
@@ -102,8 +102,8 @@ final class LocaleTest extends WebTestCase
      * @uses \App\Controller\Locale\LocalePutController::__construct
      * @uses \App\Entity\Property\Code::getCode
      * @uses \App\Entity\Property\Code::setCode
-     * @uses \App\Repository\Locale\LocaleSaveRepository::__construct
-     * @uses \App\Repository\Locale\LocaleSaveRepository::save
+     * @uses \App\Repository\Locale\LocalePutRepository::__construct
+     * @uses \App\Repository\Locale\LocalePutRepository::save
      * @uses \App\State\Locale\LocalePutProcessor::getEntity
      */
     public function testIsUpdatedInTheDatabaseWithPut(): void

@@ -9,7 +9,7 @@ use App\ApiResource\CurrencyInput;
 use App\ApiResource\ResourceLink;
 use App\ApiResource\Violation;
 use App\ApiResource\Violations;
-use App\Repository\Currency\CurrencySaveRepository;
+use App\Repository\Currency\CurrencyPostRepository;
 use App\State\Currency\CurrencyPostProcessor;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -47,9 +47,9 @@ final class CurrencyPostController extends AbstractController
     private CurrencyPostProcessor $postProcessor;
 
     /**
-     * @var \App\Repository\Currency\CurrencySaveRepository the currency's repository.
+     * @var \App\Repository\Currency\CurrencyPostRepository the currency's repository.
      */
-    private CurrencySaveRepository $repository;
+    private CurrencyPostRepository $repository;
 
     /**
      * @var \Symfony\Contracts\Translation\TranslatorInterface the translator.
@@ -64,14 +64,14 @@ final class CurrencyPostController extends AbstractController
      * @param \Symfony\Component\Serializer\SerializerInterface $serializer the serializer.
      * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator the validator.
      * @param \App\State\Currency\CurrencyPostProcessor $postProcessor the processor.
-     * @param \App\Repository\Currency\CurrencySaveRepository $repository the currency's repository.
+     * @param \App\Repository\Currency\CurrencyPostRepository $repository the currency's repository.
      * @param \Symfony\Contracts\Translation\TranslatorInterface $translator the translator.
      */
     public function __construct(
         SerializerInterface $serializer,
         ValidatorInterface $validator,
         CurrencyPostProcessor $postProcessor,
-        CurrencySaveRepository $repository,
+        CurrencyPostRepository $repository,
         TranslatorInterface $translator
     ) {
         $this->serializer = $serializer;
