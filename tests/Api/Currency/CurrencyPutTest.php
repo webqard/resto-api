@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  * @coversDefaultClass \App\Controller\Currency\CurrencyPutController
  * @covers ::__construct
  * @covers ::put
- * @uses \App\Repository\Currency\CurrencyPutRepository::__construct
+ * @uses \App\Repository\Currency\CurrencySaveRepository::__construct
  * @group api
  * @group api_currencies
  * @group api_currencies_put
@@ -33,7 +33,7 @@ final class CurrencyPutTest extends WebTestCase
      * @uses \App\Entity\Currency::setDecimals
      * @uses \App\Entity\Property\Code::getCode
      * @uses \App\Entity\Property\Code::setCode
-     * @uses \App\Repository\Currency\CurrencyPutRepository::save
+     * @uses \App\Repository\Currency\CurrencySaveRepository::save
      * @uses \App\State\Currency\CurrencyPutProcessor::getEntity
      */
     public function testCanPutACurrency(): void

@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  * @coversDefaultClass \App\Controller\Currency\CurrencyPostController
  * @covers ::__construct
  * @covers ::post
- * @uses \App\Repository\Currency\CurrencyPostRepository::__construct
+ * @uses \App\Repository\Currency\CurrencySaveRepository::__construct
  * @group api
  * @group api_currencies
  * @group api_currencies_post
@@ -32,7 +32,7 @@ final class CurrencyPostTest extends WebTestCase
      * @uses \App\ApiResource\ResourceLink::__construct
      * @uses \App\ApiResource\ResourceLink::jsonSerialize
      * @uses \App\Entity\Currency::__construct
-     * @uses \App\Repository\Currency\CurrencyPostRepository::save
+     * @uses \App\Repository\Currency\CurrencySaveRepository::save
      * @uses \App\State\Currency\CurrencyPostProcessor::getEntity
      */
     public function testCanPostACurrency(): void

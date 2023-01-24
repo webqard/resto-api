@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  * @coversDefaultClass \App\Controller\Locale\LocalePostController
  * @covers ::__construct
  * @covers ::post
- * @uses \App\Repository\Locale\LocalePostRepository::__construct
+ * @uses \App\Repository\Locale\LocaleSaveRepository::__construct
  * @group api
  * @group api_locales
  * @group api_locales_post
@@ -31,7 +31,7 @@ final class LocalePostTest extends WebTestCase
      * @uses \App\ApiResource\ResourceLink::__construct
      * @uses \App\ApiResource\ResourceLink::jsonSerialize
      * @uses \App\Entity\Locale::__construct
-     * @uses \App\Repository\Locale\LocalePostRepository::save
+     * @uses \App\Repository\Locale\LocaleSaveRepository::save
      * @uses \App\State\Locale\LocalePostProcessor::getEntity
      */
     public function testCanPostALocale(): void

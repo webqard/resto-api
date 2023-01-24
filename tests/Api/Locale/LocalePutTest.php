@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  * @coversDefaultClass \App\Controller\Locale\LocalePutController
  * @covers ::__construct
  * @covers ::put
- * @uses \App\Repository\Locale\LocalePutRepository::__construct
+ * @uses \App\Repository\Locale\LocaleSaveRepository::__construct
  * @group api
  * @group api_locales
  * @group api_locales_put
@@ -31,7 +31,7 @@ final class LocalePutTest extends WebTestCase
      * @uses \App\Entity\Locale::__construct
      * @uses \App\Entity\Property\Code::getCode
      * @uses \App\Entity\Property\Code::setCode
-     * @uses \App\Repository\Locale\LocalePutRepository::save
+     * @uses \App\Repository\Locale\LocaleSaveRepository::save
      * @uses \App\State\Locale\LocalePutProcessor::getEntity
      */
     public function testCanPutALocale(): void

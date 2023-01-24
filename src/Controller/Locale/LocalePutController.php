@@ -8,7 +8,7 @@ use App\ApiResource\ApiResponse;
 use App\ApiResource\LocaleInput;
 use App\ApiResource\Violation;
 use App\ApiResource\Violations;
-use App\Repository\Locale\LocalePutRepository;
+use App\Repository\Locale\LocaleSaveRepository;
 use App\State\Locale\LocalePutProcessor;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -46,9 +46,9 @@ final class LocalePutController extends AbstractController
     private LocalePutProcessor $putProcessor;
 
     /**
-     * @var \App\Repository\Locale\LocalePutRepository the locale's repository.
+     * @var \App\Repository\Locale\LocaleSaveRepository the locale's repository.
      */
-    private LocalePutRepository $repository;
+    private LocaleSaveRepository $repository;
 
     /**
      * @var \Symfony\Contracts\Translation\TranslatorInterface the translator.
@@ -63,14 +63,14 @@ final class LocalePutController extends AbstractController
      * @param \Symfony\Component\Serializer\SerializerInterface $serializer the serializer.
      * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator the validator.
      * @param \App\State\Locale\LocalePutProcessor $putProcessor the processor.
-     * @param \App\Repository\Locale\LocalePutRepository $repository the locale's repository.
+     * @param \App\Repository\Locale\LocaleSaveRepository $repository the locale's repository.
      * @param \Symfony\Contracts\Translation\TranslatorInterface $translator the translator.
      */
     public function __construct(
         SerializerInterface $serializer,
         ValidatorInterface $validator,
         LocalePutProcessor $putProcessor,
-        LocalePutRepository $repository,
+        LocaleSaveRepository $repository,
         TranslatorInterface $translator
     ) {
         $this->serializer = $serializer;

@@ -8,9 +8,9 @@ use App\Entity\Currency;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
- * Repository for the post method of the Currency entity.
+ * Repository for the post and put methods of the Currency entity.
  */
-class CurrencyPostRepository extends ServiceEntityRepository
+class CurrencySaveRepository extends ServiceEntityRepository
 {
     // Traits :
 
