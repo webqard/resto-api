@@ -20,6 +20,14 @@ class LocalePutRepository extends ServiceEntityRepository
     // Methods :
 
     /**
+     * @return \App\Entity\Locale|null a locale.
+     */
+    public function find($id, $lockMode = null, $lockVersion = null): ?Locale
+    {
+        return parent::find($id, $lockMode, $lockVersion);
+    }
+
+    /**
      * Saves a locale.
      * @param \App\Entity\Locale $locale the locale.
      */

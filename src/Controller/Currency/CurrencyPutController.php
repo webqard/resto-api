@@ -134,9 +134,6 @@ final class CurrencyPutController extends AbstractController
     ]
     public function put(Request $request, string $id): Response
     {
-        /**
-         * @var \App\Entity\Currency|null
-         */
         $currency = $this->repository->find($id);
 
         if ($currency === null) {

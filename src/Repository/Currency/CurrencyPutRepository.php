@@ -20,6 +20,14 @@ class CurrencyPutRepository extends ServiceEntityRepository
     // Methods :
 
     /**
+     * @return \App\Entity\Currency|null a currency.
+     */
+    public function find($id, $lockMode = null, $lockVersion = null): ?Currency
+    {
+        return parent::find($id, $lockMode, $lockVersion);
+    }
+
+    /**
      * Saves a currency.
      * @param \App\Entity\Currency $currency the currency.
      */

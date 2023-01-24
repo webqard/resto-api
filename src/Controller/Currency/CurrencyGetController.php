@@ -96,9 +96,6 @@ final class CurrencyGetController extends AbstractController
     ]
     public function get(Request $request, string $id): Response
     {
-        /**
-         * @var \App\Entity\Currency|null
-         */
         $currency = $this->repository->find($id);
 
         if ($currency === null) {

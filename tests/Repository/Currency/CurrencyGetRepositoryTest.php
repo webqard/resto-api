@@ -23,9 +23,12 @@ final class CurrencyGetRepositoryTest extends WebTestCase
     // Methods :
 
     /**
-     * Tests that a currency can be deleted.
+     * Tests that a currency can be found.
      *
+     * @covers ::find
      * @uses \App\Entity\Currency::__construct
+     * @uses \App\Entity\Currency::getDecimals
+     * @uses \App\Entity\Property\Code::getCode
      */
     public function testCanFindACurrency(): void
     {
@@ -39,6 +42,8 @@ final class CurrencyGetRepositoryTest extends WebTestCase
         $currencyRepository = static::getContainer()->get(CurrencyGetRepository::class);
         $foundCurrency = $currencyRepository->find(1);
 
-        self::assertInstanceOf(Currency::class, $foundCurrency);
+        self::assertSame(1, $foundCurrency->getId(), 'The currency must have an identifier.');
+        self::assertSame('EUR', $foundCurrency->getCode());
+        self::assertSame(2, $foundCurrency->getDecimals());
     }
 }

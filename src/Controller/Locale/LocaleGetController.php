@@ -96,9 +96,6 @@ final class LocaleGetController extends AbstractController
     ]
     public function get(Request $request, string $id): Response
     {
-        /**
-         * @var \App\Entity\Locale|null
-         */
         $locale = $this->repository->find($id);
 
         if ($locale === null) {

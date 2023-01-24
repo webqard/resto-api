@@ -23,9 +23,11 @@ final class LocaleGetRepositoryTest extends WebTestCase
     // Methods :
 
     /**
-     * Tests that a locale can be deleted.
+     * Tests that a locale can be found.
      *
+     * @covers ::find
      * @uses \App\Entity\Locale::__construct
+     * @uses \App\Entity\Property\Code::getCode
      */
     public function testCanFindALocale(): void
     {
@@ -39,6 +41,7 @@ final class LocaleGetRepositoryTest extends WebTestCase
         $localeRepository = static::getContainer()->get(LocaleGetRepository::class);
         $foundLocale = $localeRepository->find(1);
 
-        self::assertInstanceOf(Locale::class, $foundLocale);
+        self::assertSame(1, $foundLocale->getId(), 'The locale must have an identifier.');
+        self::assertSame('en_GB', $foundLocale->getCode());
     }
 }

@@ -134,9 +134,6 @@ final class LocalePutController extends AbstractController
     ]
     public function put(Request $request, string $id): Response
     {
-        /**
-         * @var \App\Entity\Locale|null
-         */
         $locale = $this->repository->find($id);
 
         if ($locale === null) {

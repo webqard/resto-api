@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  * @covers ::__construct
  * @covers ::get
  * @uses \App\Repository\Currency\CurrencyGetRepository::__construct
+ * @uses \App\Repository\Currency\CurrencyGetRepository::find
  * @group api
  * @group api_currencies
  * @group api_currencies_get

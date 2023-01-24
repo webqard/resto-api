@@ -13,7 +13,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  *
  * @coversDefaultClass \App\Repository\Currency\CurrencyPutRepository
  * @covers ::__construct
- * @covers ::save
  * @group repositories
  * @group repository_currencies
  * @group repository_currencies_put
@@ -24,13 +23,39 @@ final class CurrencyPutRepositoryTest extends WebTestCase
     // Methods :
 
     /**
-     * Tests that a currency can be saved.
+     * Tests that a currency can be found.
      *
+     * @covers ::find
      * @uses \App\Entity\Currency::__construct
      * @uses \App\Entity\Currency::getDecimals
      * @uses \App\Entity\Property\Code::getCode
      */
-    public function testCanPutACurrency(): void
+    public function testCanFindACurrency(): void
+    {
+        static::createClient();
+        $currency = new Currency('EUR', 2);
+
+        $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
+        $entityManager->persist($currency);
+        $entityManager->flush();
+
+        $currencyRepository = static::getContainer()->get(CurrencyPutRepository::class);
+        $foundCurrency = $currencyRepository->find($currency);
+
+        self::assertSame(1, $foundCurrency->getId(), 'The currency must have an identifier.');
+        self::assertSame('EUR', $foundCurrency->getCode());
+        self::assertSame(2, $foundCurrency->getDecimals());
+    }
+
+    /**
+     * Tests that a currency can be saved.
+     *
+     * @covers ::save
+     * @uses \App\Entity\Currency::__construct
+     * @uses \App\Entity\Currency::getDecimals
+     * @uses \App\Entity\Property\Code::getCode
+     */
+    public function testCanSaveACurrency(): void
     {
         $currency = new Currency('EUR', 2);
 

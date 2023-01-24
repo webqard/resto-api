@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  * @covers ::__construct
  * @covers ::put
  * @uses \App\Repository\Currency\CurrencyPutRepository::__construct
+ * @uses \App\Repository\Currency\CurrencyPutRepository::find
  * @group api
  * @group api_currencies
  * @group api_currencies_put

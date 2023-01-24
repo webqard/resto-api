@@ -70,6 +70,7 @@ final class LocaleTest extends WebTestCase
      * @uses \App\Controller\Locale\LocaleGetController::__construct
      * @uses \App\Entity\Property\Code::getCode
      * @uses \App\Repository\Locale\LocaleGetRepository::__construct
+     * @uses \App\Repository\Locale\LocaleGetRepository::find
      * @uses \App\State\Locale\LocaleProvider::provideLocaleOutput
      */
     public function testIsReadFromTheDatabaseWithGet(): void
@@ -103,6 +104,7 @@ final class LocaleTest extends WebTestCase
      * @uses \App\Entity\Property\Code::getCode
      * @uses \App\Entity\Property\Code::setCode
      * @uses \App\Repository\Locale\LocalePutRepository::__construct
+     * @uses \App\Repository\Locale\LocalePutRepository::find
      * @uses \App\Repository\Locale\LocalePutRepository::save
      * @uses \App\State\Locale\LocalePutProcessor::getEntity
      */

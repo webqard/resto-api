@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  * @covers ::__construct
  * @covers ::put
  * @uses \App\Repository\Locale\LocalePutRepository::__construct
+ * @uses \App\Repository\Locale\LocalePutRepository::find
  * @group api
  * @group api_locales
  * @group api_locales_put
