@@ -6,23 +6,15 @@ namespace App\Repository\Currency;
 
 use App\Entity\Currency;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Repository for the put method of the Currency entity.
  */
 class CurrencyPutRepository extends ServiceEntityRepository
 {
-    // Magic methods :
+    // Traits :
 
-    /**
-     * The constructor.
-     * @param \Doctrine\Persistence\ManagerRegistry $registry the registry manager.
-     */
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Currency::class);
-    }
+    use CurrencyRepository;
 
 
     // Methods :
