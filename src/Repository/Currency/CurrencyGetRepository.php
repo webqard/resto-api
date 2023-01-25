@@ -13,7 +13,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 class CurrencyGetRepository extends ServiceEntityRepository
 {
     // Traits :
-
     use CurrencyRepository;
 
 

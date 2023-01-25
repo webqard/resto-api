@@ -13,7 +13,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 class LocaleGetRepository extends ServiceEntityRepository
 {
     // Traits :
-
     use LocaleRepository;
 
 
