@@ -13,9 +13,8 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  * @coversDefaultClass \App\Controller\Locale\LocaleDeleteController
  * @covers ::__construct
  * @covers ::delete
- * @covers \App\Controller\DeleteController::__construct
- * @covers \App\Controller\DeleteController::delete
  * @uses \App\Repository\Locale\LocaleDeleteRepository::__construct
+ * @uses \App\Repository\Locale\LocaleGetRepository::find
  * @group api
  * @group api_locales
  * @group api_locales_delete

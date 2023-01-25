@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller\Currency;
 
-use App\Controller\DeleteController;
+use App\ApiResource\ApiResponse;
 use App\Repository\Currency\CurrencyDeleteRepository;
 use OpenApi\Attributes as OA;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,18 +16,34 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * A controller to DELETE a currency.
  */
-final class CurrencyDeleteController extends DeleteController
+final class CurrencyDeleteController extends AbstractController
 {
+    // Properties :
+
+    /**
+     * @var \App\Repository\Currency\CurrencyDeleteRepository the repository.
+     */
+    private CurrencyDeleteRepository $repository;
+
+    /**
+     * @var \Symfony\Contracts\Translation\TranslatorInterface the translator.
+     */
+    private TranslatorInterface $translator;
+
+
     // Magic methods :
 
     /**
-     * @param \App\Repository\Currency\CurrencyDeleteRepository $repository the currency's repository.
+     * The constructor.
+     * @param \App\Repository\Currency\CurrencyDeleteRepository $repository the repository.
+     * @param \Symfony\Contracts\Translation\TranslatorInterface $translator the translator.
      */
     public function __construct(
         CurrencyDeleteRepository $repository,
         TranslatorInterface $translator
     ) {
-        parent::__construct($repository, $translator);
+        $this->repository = $repository;
+        $this->translator = $translator;
     }
 
 
@@ -34,6 +51,9 @@ final class CurrencyDeleteController extends DeleteController
 
     /**
      * Deletes a currency.
+     * @param \Symfony\Component\HttpFoundation\Request $request the request.
+     * @param string $id the identifier.
+     * @return \Symfony\Component\HttpFoundation\Response the response.
      */
     #[
         /** @infection-ignore-all */
@@ -66,6 +86,19 @@ final class CurrencyDeleteController extends DeleteController
     ]
     public function delete(Request $request, string $id): Response
     {
-        return parent::delete($request, $id);
+        $currency = $this->repository->find($id);
+
+        if ($currency === null) {
+            $message = $this->translator->trans('notFound', locale: $request->getLocale());
+
+            return $this->json(
+                new ApiResponse($message),
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $this->repository->delete($currency);
+
+        return new Response(status: Response::HTTP_NO_CONTENT);
     }
 }

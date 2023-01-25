@@ -5,27 +5,13 @@ declare(strict_types=1);
 namespace App\Repository\Currency;
 
 use App\Entity\Currency;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * Repository for the put method of the Currency entity.
  */
-class CurrencyPutRepository extends ServiceEntityRepository
+class CurrencyPutRepository extends CurrencyGetRepository
 {
-    // Traits :
-
-    use CurrencyRepository;
-
-
     // Methods :
-
-    /**
-     * @return \App\Entity\Currency|null a currency.
-     */
-    public function find($id, $lockMode = null, $lockVersion = null): ?Currency
-    {
-        return parent::find($id, $lockMode, $lockVersion);
-    }
 
     /**
      * Saves a currency.

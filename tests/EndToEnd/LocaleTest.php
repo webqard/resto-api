@@ -103,8 +103,8 @@ final class LocaleTest extends WebTestCase
      * @uses \App\Controller\Locale\LocalePutController::__construct
      * @uses \App\Entity\Property\Code::getCode
      * @uses \App\Entity\Property\Code::setCode
+     * @uses \App\Repository\Locale\LocaleGetRepository::find
      * @uses \App\Repository\Locale\LocalePutRepository::__construct
-     * @uses \App\Repository\Locale\LocalePutRepository::find
      * @uses \App\Repository\Locale\LocalePutRepository::save
      * @uses \App\State\Locale\LocalePutProcessor::getEntity
      */
@@ -136,12 +136,11 @@ final class LocaleTest extends WebTestCase
     /**
      * Tests that a locale can be deleted from the database.
      *
-     * @covers \App\Controller\DeleteController::__construct
-     * @covers \App\Controller\DeleteController::delete
      * @covers \App\Controller\Locale\LocaleDeleteController::delete
      * @uses \App\Controller\Locale\LocaleDeleteController::__construct
      * @uses \App\Repository\Locale\LocaleDeleteRepository::__construct
      * @uses \App\Repository\Locale\LocaleDeleteRepository::delete
+     * @uses \App\Repository\Locale\LocaleGetRepository::find
      */
     public function testIsDeletedFromTheDatabaseWithDelete(): void
     {

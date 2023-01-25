@@ -23,29 +23,6 @@ final class LocalePutRepositoryTest extends WebTestCase
     // Methods :
 
     /**
-     * Tests that a locale can be found.
-     *
-     * @covers ::find
-     * @uses \App\Entity\Locale::__construct
-     * @uses \App\Entity\Property\Code::getCode
-     */
-    public function testCanFindALocale(): void
-    {
-        static::createClient();
-        $locale = new Locale('en_GB');
-
-        $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
-        $entityManager->persist($locale);
-        $entityManager->flush();
-
-        $localeRepository = static::getContainer()->get(LocalePutRepository::class);
-        $foundLocale = $localeRepository->find($locale);
-
-        self::assertSame(1, $foundLocale->getId(), 'The locale must have an identifier.');
-        self::assertSame('en_GB', $foundLocale->getCode());
-    }
-
-    /**
      * Tests that a locale can be saved.
      *
      * @covers ::save

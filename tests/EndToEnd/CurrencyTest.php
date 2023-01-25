@@ -112,8 +112,8 @@ final class CurrencyTest extends WebTestCase
      * @uses \App\Entity\Currency::setDecimals
      * @uses \App\Entity\Property\Code::getCode
      * @uses \App\Entity\Property\Code::setCode
+     * @uses \App\Repository\Currency\CurrencyGetRepository::find
      * @uses \App\Repository\Currency\CurrencyPutRepository::__construct
-     * @uses \App\Repository\Currency\CurrencyPutRepository::find
      * @uses \App\Repository\Currency\CurrencyPutRepository::save
      * @uses \App\State\Currency\CurrencyPutProcessor::getEntity
      */
@@ -147,12 +147,11 @@ final class CurrencyTest extends WebTestCase
     /**
      * Tests that a currency can be deleted from the database.
      *
-     * @covers \App\Controller\DeleteController::__construct
-     * @covers \App\Controller\DeleteController::delete
      * @covers \App\Controller\Currency\CurrencyDeleteController::delete
      * @uses \App\Controller\Currency\CurrencyDeleteController::__construct
      * @uses \App\Repository\Currency\CurrencyDeleteRepository::__construct
      * @uses \App\Repository\Currency\CurrencyDeleteRepository::delete
+     * @uses \App\Repository\Currency\CurrencyGetRepository::find
      */
     public function testIsDeletedFromTheDatabaseWithDelete(): void
     {

@@ -13,8 +13,8 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  * @coversDefaultClass \App\Controller\Locale\LocalePutController
  * @covers ::__construct
  * @covers ::put
+ * @uses \App\Repository\Locale\LocaleGetRepository::find
  * @uses \App\Repository\Locale\LocalePutRepository::__construct
- * @uses \App\Repository\Locale\LocalePutRepository::find
  * @group api
  * @group api_locales
  * @group api_locales_put
