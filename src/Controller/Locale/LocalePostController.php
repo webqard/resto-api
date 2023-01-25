@@ -44,7 +44,7 @@ final class LocalePostController extends AbstractController
     /**
      * @var \App\State\Locale\LocalePostProcessor the processor.
      */
-    private LocalePostProcessor $postProcessor;
+    private LocalePostProcessor $processor;
 
     /**
      * @var \App\Repository\Locale\LocalePostRepository the locale's repository.
@@ -63,20 +63,20 @@ final class LocalePostController extends AbstractController
      * The constructor.
      * @param \Symfony\Component\Serializer\SerializerInterface $serializer the serializer.
      * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator the validator.
-     * @param \App\State\Locale\LocalePostProcessor $postProcessor the processor.
+     * @param \App\State\Locale\LocalePostProcessor $processor the processor.
      * @param \App\Repository\Locale\LocalePostRepository $repository the locale's repository.
      * @param \Symfony\Contracts\Translation\TranslatorInterface $translator the translator.
      */
     public function __construct(
         SerializerInterface $serializer,
         ValidatorInterface $validator,
-        LocalePostProcessor $postProcessor,
+        LocalePostProcessor $processor,
         LocalePostRepository $repository,
         TranslatorInterface $translator
     ) {
         $this->serializer = $serializer;
         $this->validator = $validator;
-        $this->postProcessor = $postProcessor;
+        $this->processor = $processor;
         $this->repository = $repository;
         $this->translator = $translator;
     }
@@ -147,7 +147,7 @@ final class LocalePostController extends AbstractController
             return $this->sendViolations($violations, $request->getLocale());
         }
 
-        $locale = $this->postProcessor->getEntity($localeInput);
+        $locale = $this->processor->getEntity($localeInput);
         $unicityViolations = $this->validator->validate($locale);
 
         if (count($unicityViolations) > 0) {

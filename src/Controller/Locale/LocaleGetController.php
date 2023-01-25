@@ -29,7 +29,7 @@ final class LocaleGetController extends AbstractController
     /**
      * @var \App\State\Locale\LocaleProvider the provider.
      */
-    private LocaleProvider $outputProvider;
+    private LocaleProvider $provider;
 
     /**
      * @var \Symfony\Contracts\Translation\TranslatorInterface the translator.
@@ -42,16 +42,16 @@ final class LocaleGetController extends AbstractController
     /**
      * The constructor.
      * @param \App\Repository\Locale\LocaleGetRepository $repository the locale's repository.
-     * @param \App\State\Locale\LocaleProvider $outputProvider the provider.
+     * @param \App\State\Locale\LocaleProvider $provider the provider.
      * @param \Symfony\Contracts\Translation\TranslatorInterface $translator the translator.
      */
     public function __construct(
         LocaleGetRepository $repository,
-        LocaleProvider $outputProvider,
+        LocaleProvider $provider,
         TranslatorInterface $translator
     ) {
         $this->repository = $repository;
-        $this->outputProvider = $outputProvider;
+        $this->provider = $provider;
         $this->translator = $translator;
     }
 
@@ -107,6 +107,6 @@ final class LocaleGetController extends AbstractController
             );
         }
 
-        return $this->json($this->outputProvider->provideLocaleOutput($locale));
+        return $this->json($this->provider->provideLocaleOutput($locale));
     }
 }

@@ -44,7 +44,7 @@ final class CurrencyPostController extends AbstractController
     /**
      * @var \App\State\Currency\CurrencyPostProcessor the processor.
      */
-    private CurrencyPostProcessor $postProcessor;
+    private CurrencyPostProcessor $processor;
 
     /**
      * @var \App\Repository\Currency\CurrencyPostRepository the currency's repository.
@@ -63,20 +63,20 @@ final class CurrencyPostController extends AbstractController
      * The constructor.
      * @param \Symfony\Component\Serializer\SerializerInterface $serializer the serializer.
      * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator the validator.
-     * @param \App\State\Currency\CurrencyPostProcessor $postProcessor the processor.
+     * @param \App\State\Currency\CurrencyPostProcessor $processor the processor.
      * @param \App\Repository\Currency\CurrencyPostRepository $repository the currency's repository.
      * @param \Symfony\Contracts\Translation\TranslatorInterface $translator the translator.
      */
     public function __construct(
         SerializerInterface $serializer,
         ValidatorInterface $validator,
-        CurrencyPostProcessor $postProcessor,
+        CurrencyPostProcessor $processor,
         CurrencyPostRepository $repository,
         TranslatorInterface $translator
     ) {
         $this->serializer = $serializer;
         $this->validator = $validator;
-        $this->postProcessor = $postProcessor;
+        $this->processor = $processor;
         $this->repository = $repository;
         $this->translator = $translator;
     }
@@ -147,7 +147,7 @@ final class CurrencyPostController extends AbstractController
             return $this->sendViolations($violations, $request->getLocale());
         }
 
-        $currency = $this->postProcessor->getEntity($currencyInput);
+        $currency = $this->processor->getEntity($currencyInput);
         $unicityViolations = $this->validator->validate($currency);
 
         if (count($unicityViolations) > 0) {

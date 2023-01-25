@@ -43,7 +43,7 @@ final class CurrencyPutController extends AbstractController
     /**
      * @var \App\State\Currency\CurrencyPutProcessor the processor.
      */
-    private CurrencyPutProcessor $putProcessor;
+    private CurrencyPutProcessor $processor;
 
     /**
      * @var \App\Repository\Currency\CurrencyPutRepository the currency's repository.
@@ -62,20 +62,20 @@ final class CurrencyPutController extends AbstractController
      * The constructor.
      * @param \Symfony\Component\Serializer\SerializerInterface $serializer the serializer.
      * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator the validator.
-     * @param \App\State\Currency\CurrencyPutProcessor $putProcessor the processor.
+     * @param \App\State\Currency\CurrencyPutProcessor $processor the processor.
      * @param \App\Repository\Currency\CurrencyPutRepository $repository the currency's repository.
      * @param \Symfony\Contracts\Translation\TranslatorInterface $translator the translator.
      */
     public function __construct(
         SerializerInterface $serializer,
         ValidatorInterface $validator,
-        CurrencyPutProcessor $putProcessor,
+        CurrencyPutProcessor $processor,
         CurrencyPutRepository $repository,
         TranslatorInterface $translator
     ) {
         $this->serializer = $serializer;
         $this->validator = $validator;
-        $this->putProcessor = $putProcessor;
+        $this->processor = $processor;
         $this->repository = $repository;
         $this->translator = $translator;
     }
@@ -159,7 +159,7 @@ final class CurrencyPutController extends AbstractController
             return $this->sendViolations($violations, $request->getLocale());
         }
 
-        $updatedCurrency = $this->putProcessor->getEntity($currency, $currencyInput);
+        $updatedCurrency = $this->processor->getEntity($currency, $currencyInput);
         $unicityViolations = $this->validator->validate($updatedCurrency);
 
         if (count($unicityViolations) > 0) {
