@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  * @coversDefaultClass \App\Controller\Currency\CurrencyPostController
  * @covers ::__construct
  * @covers ::post
+ * @covers \App\Controller\SendErrorController::__construct
  * @uses \App\Repository\Currency\CurrencyPostRepository::__construct
  * @group api
  * @group api_currencies
@@ -60,7 +61,7 @@ final class CurrencyPostTest extends WebTestCase
      * Tests that a code of an already existing currency
      * can not be created.
      *
-     * @covers ::sendViolations
+     * @covers \App\Controller\SendErrorController::sendViolations
      * @uses \App\ApiResource\CurrencyInput::__construct
      * @uses \App\ApiResource\CurrencyInput::getCode
      * @uses \App\ApiResource\CurrencyInput::getDecimals
@@ -69,7 +70,6 @@ final class CurrencyPostTest extends WebTestCase
      * @uses \App\ApiResource\Violations::__construct
      * @uses \App\ApiResource\Violations::add
      * @uses \App\ApiResource\Violations::jsonSerialize
-     * @uses \App\Controller\Currency\CurrencyPostController::sendViolations
      * @uses \App\Entity\Currency::__construct
      * @uses \App\State\Currency\CurrencyPostProcessor::getEntity
      */
@@ -115,7 +115,7 @@ final class CurrencyPostTest extends WebTestCase
      * Tests that a currency can not be created
      * from invalid json.
      *
-     * @covers ::respondToBadRequest
+     * @covers \App\Controller\SendErrorController::respondToBadRequest
      * @uses \App\ApiResource\ApiResponse::__construct
      * @uses \App\ApiResource\ApiResponse::jsonSerialize
      */
@@ -149,7 +149,7 @@ final class CurrencyPostTest extends WebTestCase
      * Tests that an empty body request
      * can not create a currency.
      *
-     * @covers ::respondToBadRequest
+     * @covers \App\Controller\SendErrorController::respondToBadRequest
      * @uses \App\ApiResource\ApiResponse::__construct
      * @uses \App\ApiResource\ApiResponse::jsonSerialize
      */
@@ -202,7 +202,7 @@ final class CurrencyPostTest extends WebTestCase
      * @param string $property the property name.
      * @param mixed $invalidTypeValue an invalid type value.
      *
-     * @covers ::respondToBadRequest
+     * @covers \App\Controller\SendErrorController::respondToBadRequest
      * @uses \App\ApiResource\ApiResponse::__construct
      * @uses \App\ApiResource\ApiResponse::jsonSerialize
      * @dataProvider getInvalidTypeValues
@@ -256,7 +256,7 @@ final class CurrencyPostTest extends WebTestCase
      * @param string $property the property name.
      * @param mixed $value the value.
      *
-     * @covers ::sendViolations
+     * @covers \App\Controller\SendErrorController::sendViolations
      * @uses \App\ApiResource\CurrencyInput::__construct
      * @uses \App\ApiResource\Violation::__construct
      * @uses \App\ApiResource\Violation::jsonSerialize
@@ -304,7 +304,7 @@ final class CurrencyPostTest extends WebTestCase
      * Tests that a currency can not be created
      * with a blank code.
      *
-     * @covers ::sendViolations
+     * @covers \App\Controller\SendErrorController::sendViolations
      * @uses \App\ApiResource\CurrencyInput::__construct
      * @uses \App\ApiResource\Violation::__construct
      * @uses \App\ApiResource\Violation::jsonSerialize

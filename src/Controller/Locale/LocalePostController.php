@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace App\Controller\Locale;
 
-use App\ApiResource\ApiResponse;
 use App\ApiResource\LocaleInput;
 use App\ApiResource\ResourceLink;
-use App\ApiResource\Violation;
-use App\ApiResource\Violations;
+use App\Controller\SendErrorController;
 use App\Repository\Locale\LocalePostRepository;
 use App\State\Locale\LocalePostProcessor;
 use OpenApi\Attributes as OA;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,14 +17,13 @@ use Symfony\Component\Serializer\Exception\MissingConstructorArgumentsException;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * A controller to POST a locale.
  */
-final class LocalePostController extends AbstractController
+final class LocalePostController extends SendErrorController
 {
     // Properties :
 
@@ -51,21 +47,14 @@ final class LocalePostController extends AbstractController
      */
     private LocalePostRepository $repository;
 
-    /**
-     * @var \Symfony\Contracts\Translation\TranslatorInterface the translator.
-     */
-    private TranslatorInterface $translator;
-
 
     // Magic methods :
 
     /**
-     * The constructor.
      * @param \Symfony\Component\Serializer\SerializerInterface $serializer the serializer.
      * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator the validator.
      * @param \App\State\Locale\LocalePostProcessor $processor the processor.
      * @param \App\Repository\Locale\LocalePostRepository $repository the locale's repository.
-     * @param \Symfony\Contracts\Translation\TranslatorInterface $translator the translator.
      */
     public function __construct(
         SerializerInterface $serializer,
@@ -74,11 +63,12 @@ final class LocalePostController extends AbstractController
         LocalePostRepository $repository,
         TranslatorInterface $translator
     ) {
+        parent::__construct($translator);
+
         $this->serializer = $serializer;
         $this->validator = $validator;
         $this->processor = $processor;
         $this->repository = $repository;
-        $this->translator = $translator;
     }
 
 
@@ -160,56 +150,5 @@ final class LocalePostController extends AbstractController
             new ResourceLink($this->generateUrl('locale_get', ['id' => $locale->getId()])),
             Response::HTTP_CREATED
         );
-    }
-
-    /**
-     * Respond to a syntactically erroneous request.
-     * @param \Exception $exception
-     * @param string $locale the locale.
-     * @return \Symfony\Component\HttpFoundation\Response the response.
-     */
-    private function respondToBadRequest(\Exception $exception, string $locale): Response
-    {
-        $message = 'invalidJson'; // NotEncodableValueException
-
-        switch (get_class($exception)) {
-            case MissingConstructorArgumentsException::class:
-                $message = 'missingProperties';
-                break;
-            case NotNormalizableValueException::class:
-                $message = 'typeError';
-        }
-
-        return $this->json(
-            new ApiResponse($this->translator->trans($message, locale: $locale)),
-            Response::HTTP_BAD_REQUEST
-        );
-    }
-
-    /**
-     * Sends the violations.
-     * @param \Symfony\Component\Validator\ConstraintViolationListInterface $violations the violations.
-     * @param string $locale the locale.
-     * @param int $httpStatusCode the http status code.
-     * @return \Symfony\Component\HttpFoundation\Response the response.
-     */
-    private function sendViolations(
-        ConstraintViolationListInterface $violations,
-        string $locale,
-        int $httpStatusCode = Response::HTTP_UNPROCESSABLE_ENTITY
-    ): Response {
-        $violationMessages = new Violations();
-
-        foreach ($violations as $violation) {
-            /** @var string */
-            $violationMessage = $violation->getMessage();
-
-            $violationMessages->add(new Violation(
-                $violation->getPropertyPath(),
-                $this->translator->trans($violationMessage, [], 'locale', $locale)
-            ));
-        }
-
-        return $this->json($violationMessages, $httpStatusCode);
     }
 }

@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  * @coversDefaultClass \App\Controller\Currency\CurrencyPutController
  * @covers ::__construct
  * @covers ::put
+ * @covers \App\Controller\SendErrorController::__construct
  * @uses \App\Repository\Currency\CurrencyGetRepository::find
  * @uses \App\Repository\Currency\CurrencyPutRepository::__construct
  * @group api
@@ -69,7 +70,7 @@ final class CurrencyPutTest extends WebTestCase
      * Tests that a currency can not be updated
      * with the code of an other one.
      *
-     * @covers ::sendViolations
+     * @covers \App\Controller\SendErrorController::sendViolations
      * @uses \App\ApiResource\CurrencyInput::__construct
      * @uses \App\ApiResource\CurrencyInput::getCode
      * @uses \App\ApiResource\CurrencyInput::getDecimals
@@ -78,7 +79,6 @@ final class CurrencyPutTest extends WebTestCase
      * @uses \App\ApiResource\Violations::__construct
      * @uses \App\ApiResource\Violations::add
      * @uses \App\ApiResource\Violations::jsonSerialize
-     * @uses \App\Controller\Currency\CurrencyPutController::sendViolations
      * @uses \App\Entity\Currency::__construct
      * @uses \App\Entity\Currency::setDecimals
      * @uses \App\Entity\Property\Code::setCode
@@ -162,7 +162,7 @@ final class CurrencyPutTest extends WebTestCase
      * Tests that a currency can not be updated
      * from invalid json.
      *
-     * @covers ::respondToBadRequest
+     * @covers \App\Controller\SendErrorController::respondToBadRequest
      * @uses \App\ApiResource\ApiResponse::__construct
      * @uses \App\ApiResource\ApiResponse::jsonSerialize
      * @uses \App\Entity\Currency::__construct
@@ -202,7 +202,7 @@ final class CurrencyPutTest extends WebTestCase
      * Tests that an empty body request
      * can not create a currency.
      *
-     * @covers ::respondToBadRequest
+     * @covers \App\Controller\SendErrorController::respondToBadRequest
      * @uses \App\ApiResource\ApiResponse::__construct
      * @uses \App\ApiResource\ApiResponse::jsonSerialize
      * @uses \App\Entity\Currency::__construct
@@ -261,7 +261,7 @@ final class CurrencyPutTest extends WebTestCase
      * @param string $property the property name.
      * @param mixed $invalidTypeValue an invalid type value.
      *
-     * @covers ::respondToBadRequest
+     * @covers \App\Controller\SendErrorController::respondToBadRequest
      * @uses \App\ApiResource\ApiResponse::__construct
      * @uses \App\ApiResource\ApiResponse::jsonSerialize
      * @uses \App\Entity\Currency::__construct
@@ -308,7 +308,7 @@ final class CurrencyPutTest extends WebTestCase
      * Tests that an invalid code
      * can not be updated.
      *
-     * @covers ::sendViolations
+     * @covers \App\Controller\SendErrorController::sendViolations
      * @uses \App\ApiResource\CurrencyInput::__construct
      * @uses \App\ApiResource\Violation::__construct
      * @uses \App\ApiResource\Violation::jsonSerialize
@@ -361,7 +361,7 @@ final class CurrencyPutTest extends WebTestCase
      * Tests that a currency can not be updated
      * with a blank code.
      *
-     * @covers ::sendViolations
+     * @covers \App\Controller\SendErrorController::sendViolations
      * @uses \App\ApiResource\CurrencyInput::__construct
      * @uses \App\ApiResource\Violation::__construct
      * @uses \App\ApiResource\Violation::jsonSerialize

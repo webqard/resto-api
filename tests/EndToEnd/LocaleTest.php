@@ -23,6 +23,7 @@ final class LocaleTest extends WebTestCase
      * Tests that a locale can be created in the database.
      *
      * @covers \App\Controller\Locale\LocalePostController::post
+     * @covers \App\Controller\SendErrorController::__construct
      * @uses \App\ApiResource\LocaleInput::__construct
      * @uses \App\ApiResource\LocaleInput::getCode
      * @uses \App\ApiResource\ResourceLink::__construct
@@ -98,6 +99,7 @@ final class LocaleTest extends WebTestCase
      * Tests that a locale can be updated in the database.
      *
      * @covers \App\Controller\Locale\LocalePutController::put
+     * @covers \App\Controller\SendErrorController::__construct
      * @uses \App\ApiResource\LocaleInput::__construct
      * @uses \App\ApiResource\LocaleInput::getCode
      * @uses \App\Controller\Locale\LocalePutController::__construct

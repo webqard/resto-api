@@ -6,12 +6,10 @@ namespace App\Controller\Currency;
 
 use App\ApiResource\ApiResponse;
 use App\ApiResource\CurrencyInput;
-use App\ApiResource\Violation;
-use App\ApiResource\Violations;
+use App\Controller\SendErrorController;
 use App\Repository\Currency\CurrencyPutRepository;
 use App\State\Currency\CurrencyPutProcessor;
 use OpenApi\Attributes as OA;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,14 +17,13 @@ use Symfony\Component\Serializer\Exception\MissingConstructorArgumentsException;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * A controller to PUT a currency.
  */
-final class CurrencyPutController extends AbstractController
+final class CurrencyPutController extends SendErrorController
 {
     // Properties :
 
@@ -50,11 +47,6 @@ final class CurrencyPutController extends AbstractController
      */
     private CurrencyPutRepository $repository;
 
-    /**
-     * @var \Symfony\Contracts\Translation\TranslatorInterface the translator.
-     */
-    private TranslatorInterface $translator;
-
 
     // Magic methods :
 
@@ -73,11 +65,12 @@ final class CurrencyPutController extends AbstractController
         CurrencyPutRepository $repository,
         TranslatorInterface $translator
     ) {
+        parent::__construct($translator);
+
         $this->serializer = $serializer;
         $this->validator = $validator;
         $this->processor = $processor;
         $this->repository = $repository;
-        $this->translator = $translator;
     }
 
 
@@ -169,56 +162,5 @@ final class CurrencyPutController extends AbstractController
         $this->repository->save($updatedCurrency);
 
         return new Response(status: Response::HTTP_NO_CONTENT);
-    }
-
-    /**
-     * Respond to a syntactically erroneous request.
-     * @param \Exception $exception
-     * @param string $locale the locale.
-     * @return \Symfony\Component\HttpFoundation\Response the response.
-     */
-    private function respondToBadRequest(\Exception $exception, string $locale): Response
-    {
-        $message = 'invalidJson'; // NotEncodableValueException
-
-        switch (get_class($exception)) {
-            case MissingConstructorArgumentsException::class:
-                $message = 'missingProperties';
-                break;
-            case NotNormalizableValueException::class:
-                $message = 'typeError';
-        }
-
-        return $this->json(
-            new ApiResponse($this->translator->trans($message, locale: $locale)),
-            Response::HTTP_BAD_REQUEST
-        );
-    }
-
-    /**
-     * Sends the violations.
-     * @param \Symfony\Component\Validator\ConstraintViolationListInterface $violations the violations.
-     * @param string $locale the locale.
-     * @param int $httpStatusCode the http status code.
-     * @return \Symfony\Component\HttpFoundation\Response the response.
-     */
-    private function sendViolations(
-        ConstraintViolationListInterface $violations,
-        string $locale,
-        int $httpStatusCode = Response::HTTP_UNPROCESSABLE_ENTITY
-    ): Response {
-        $violationMessages = new Violations();
-
-        foreach ($violations as $violation) {
-            /** @var string */
-            $violationMessage = $violation->getMessage();
-
-            $violationMessages->add(new Violation(
-                $violation->getPropertyPath(),
-                $this->translator->trans($violationMessage, [], 'currency', $locale)
-            ));
-        }
-
-        return $this->json($violationMessages, $httpStatusCode);
     }
 }

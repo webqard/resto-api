@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  * @coversDefaultClass \App\Controller\Locale\LocalePostController
  * @covers ::__construct
  * @covers ::post
+ * @covers \App\Controller\SendErrorController::__construct
  * @uses \App\Repository\Locale\LocalePostRepository::__construct
  * @group api
  * @group api_locales
@@ -58,7 +59,7 @@ final class LocalePostTest extends WebTestCase
      * Tests that a code of an already existing locale
      * can not be created.
      *
-     * @covers ::sendViolations
+     * @covers \App\Controller\SendErrorController::sendViolations
      * @uses \App\ApiResource\LocaleInput::__construct
      * @uses \App\ApiResource\LocaleInput::getCode
      * @uses \App\ApiResource\Violation::__construct
@@ -66,7 +67,6 @@ final class LocalePostTest extends WebTestCase
      * @uses \App\ApiResource\Violations::__construct
      * @uses \App\ApiResource\Violations::add
      * @uses \App\ApiResource\Violations::jsonSerialize
-     * @uses \App\Controller\Locale\LocalePostController::sendViolations
      * @uses \App\Entity\Locale::__construct
      * @uses \App\State\Locale\LocalePostProcessor::getEntity
      */
@@ -111,7 +111,7 @@ final class LocalePostTest extends WebTestCase
      * Tests that a locale can not be created
      * from invalid json.
      *
-     * @covers ::respondToBadRequest
+     * @covers \App\Controller\SendErrorController::respondToBadRequest
      * @uses \App\ApiResource\ApiResponse::__construct
      * @uses \App\ApiResource\ApiResponse::jsonSerialize
      */
@@ -145,7 +145,7 @@ final class LocalePostTest extends WebTestCase
      * Tests that an empty body request
      * can not create a locale.
      *
-     * @covers ::respondToBadRequest
+     * @covers \App\Controller\SendErrorController::respondToBadRequest
      * @uses \App\ApiResource\ApiResponse::__construct
      * @uses \App\ApiResource\ApiResponse::jsonSerialize
      */
@@ -193,7 +193,7 @@ final class LocalePostTest extends WebTestCase
      * can not be created.
      * @param mixed $invalidTypeCode an invalid type code.
      *
-     * @covers ::respondToBadRequest
+     * @covers \App\Controller\SendErrorController::respondToBadRequest
      * @uses \App\ApiResource\ApiResponse::__construct
      * @uses \App\ApiResource\ApiResponse::jsonSerialize
      * @dataProvider getInvalidTypeCodes
@@ -232,7 +232,7 @@ final class LocalePostTest extends WebTestCase
      * Tests that an invalid code
      * can not be created.
      *
-     * @covers ::sendViolations
+     * @covers \App\Controller\SendErrorController::sendViolations
      * @uses \App\ApiResource\LocaleInput::__construct
      * @uses \App\ApiResource\Violation::__construct
      * @uses \App\ApiResource\Violation::jsonSerialize
@@ -278,7 +278,7 @@ final class LocalePostTest extends WebTestCase
      * Tests that a locale can not be created
      * with a blank code.
      *
-     * @covers ::sendViolations
+     * @covers \App\Controller\SendErrorController::sendViolations
      * @uses \App\ApiResource\LocaleInput::__construct
      * @uses \App\ApiResource\Violation::__construct
      * @uses \App\ApiResource\Violation::jsonSerialize

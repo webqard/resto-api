@@ -23,6 +23,7 @@ final class CurrencyTest extends WebTestCase
      * Tests that a currency can be created in the database.
      *
      * @covers \App\Controller\Currency\CurrencyPostController::post
+     * @covers \App\Controller\SendErrorController::__construct
      * @uses \App\ApiResource\CurrencyInput::__construct
      * @uses \App\ApiResource\CurrencyInput::getCode
      * @uses \App\ApiResource\CurrencyInput::getDecimals
@@ -104,6 +105,7 @@ final class CurrencyTest extends WebTestCase
      * Tests that a currency can be updated in the database.
      *
      * @covers \App\Controller\Currency\CurrencyPutController::put
+     * @covers \App\Controller\SendErrorController::__construct
      * @uses \App\ApiResource\CurrencyInput::__construct
      * @uses \App\ApiResource\CurrencyInput::getCode
      * @uses \App\ApiResource\CurrencyInput::getDecimals

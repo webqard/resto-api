@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  * @coversDefaultClass \App\Controller\Locale\LocalePutController
  * @covers ::__construct
  * @covers ::put
+ * @covers \App\Controller\SendErrorController::__construct
  * @uses \App\Repository\Locale\LocaleGetRepository::find
  * @uses \App\Repository\Locale\LocalePutRepository::__construct
  * @group api
@@ -66,7 +67,7 @@ final class LocalePutTest extends WebTestCase
      * Tests that a locale can not be updated
      * with the code of an other one.
      *
-     * @covers ::sendViolations
+     * @covers \App\Controller\SendErrorController::sendViolations
      * @uses \App\ApiResource\LocaleInput::__construct
      * @uses \App\ApiResource\LocaleInput::getCode
      * @uses \App\ApiResource\Violation::__construct
@@ -74,7 +75,6 @@ final class LocalePutTest extends WebTestCase
      * @uses \App\ApiResource\Violations::__construct
      * @uses \App\ApiResource\Violations::add
      * @uses \App\ApiResource\Violations::jsonSerialize
-     * @uses \App\Controller\Locale\LocalePutController::sendViolations
      * @uses \App\Entity\Locale::__construct
      * @uses \App\Entity\Property\Code::setCode
      * @uses \App\State\Locale\LocalePutProcessor::getEntity
@@ -155,7 +155,7 @@ final class LocalePutTest extends WebTestCase
      * Tests that a locale can not be updated
      * from invalid json.
      *
-     * @covers ::respondToBadRequest
+     * @covers \App\Controller\SendErrorController::respondToBadRequest
      * @uses \App\ApiResource\ApiResponse::__construct
      * @uses \App\ApiResource\ApiResponse::jsonSerialize
      * @uses \App\Entity\Locale::__construct
@@ -195,7 +195,7 @@ final class LocalePutTest extends WebTestCase
      * Tests that an empty body request
      * can not create a locale.
      *
-     * @covers ::respondToBadRequest
+     * @covers \App\Controller\SendErrorController::respondToBadRequest
      * @uses \App\ApiResource\ApiResponse::__construct
      * @uses \App\ApiResource\ApiResponse::jsonSerialize
      * @uses \App\Entity\Locale::__construct
@@ -249,7 +249,7 @@ final class LocalePutTest extends WebTestCase
      * can not be updated.
      * @param mixed $invalidTypeCode an invalid type code.
      *
-     * @covers ::respondToBadRequest
+     * @covers \App\Controller\SendErrorController::respondToBadRequest
      * @uses \App\ApiResource\ApiResponse::__construct
      * @uses \App\ApiResource\ApiResponse::jsonSerialize
      * @uses \App\Entity\Locale::__construct
@@ -294,7 +294,7 @@ final class LocalePutTest extends WebTestCase
      * Tests that an invalid code
      * can not be updated.
      *
-     * @covers ::sendViolations
+     * @covers \App\Controller\SendErrorController::sendViolations
      * @uses \App\ApiResource\LocaleInput::__construct
      * @uses \App\ApiResource\Violation::__construct
      * @uses \App\ApiResource\Violation::jsonSerialize
@@ -346,7 +346,7 @@ final class LocalePutTest extends WebTestCase
      * Tests that a locale can not be updated
      * with a blank code.
      *
-     * @covers ::sendViolations
+     * @covers \App\Controller\SendErrorController::sendViolations
      * @uses \App\ApiResource\LocaleInput::__construct
      * @uses \App\ApiResource\Violation::__construct
      * @uses \App\ApiResource\Violation::jsonSerialize
