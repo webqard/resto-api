@@ -6,18 +6,19 @@ namespace App\Tests\Entity;
 
 use App\Entity\Currency;
 use App\Entity\ProductPrice;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the ProductPrice entity.
- *
- * @coversDefaultClass \App\Entity\ProductPrice
- * @covers ::__construct
- * @uses \App\Entity\Currency::__construct
- * @group entities
- * @group entities_productPrice
- * @group productPrice
  */
+#[
+    PA\CoversClass(ProductPrice::class),
+    PA\UsesClass(Currency::class),
+    PA\Group('entities'),
+    PA\Group('entities_productPrice'),
+    PA\Group('productPrice')
+]
 final class ProductPriceTest extends TestCase
 {
     // Methods :

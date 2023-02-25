@@ -4,22 +4,25 @@ declare(strict_types=1);
 
 namespace App\Tests\Entity;
 
+use App\Entity\Product;
+use App\Entity\ProductPicture;
 use App\Entity\SetMenu;
 use App\Entity\SetMenuPicture;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the SetMenuPicture entity.
- *
- * @coversDefaultClass \App\Entity\SetMenuPicture
- * @covers ::__construct
- * @uses \App\Entity\SetMenu::__construct
- * @uses \App\Entity\Product::__construct
- * @uses \App\Entity\ProductPicture::__construct
- * @group entities
- * @group entities_setMenuPicture
- * @group setMenuPicture
  */
+#[
+    PA\CoversClass(SetMenuPicture::class),
+    PA\UsesClass(SetMenu::class),
+    PA\UsesClass(Product::class),
+    PA\UsesClass(ProductPicture::class),
+    PA\Group('entities'),
+    PA\Group('entities_setMenuPicture'),
+    PA\Group('setMenuPicture')
+]
 final class SetMenuPictureTest extends TestCase
 {
     // Methods :

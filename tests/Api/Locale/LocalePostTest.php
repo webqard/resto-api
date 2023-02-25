@@ -4,36 +4,44 @@ declare(strict_types=1);
 
 namespace App\Tests\Api\Locale;
 
+use App\ApiResource\ApiResponse;
+use App\ApiResource\LocaleInput;
+use App\ApiResource\ResourceLink;
+use App\ApiResource\Violation;
+use App\ApiResource\Violations;
+use App\Controller\Locale\LocalePostController;
+use App\Controller\SendErrorController;
 use App\Entity\Locale;
+use App\Repository\Locale\LocalePostRepository;
+use App\State\Locale\LocalePostProcessor;
+use PHPUnit\Framework\Attributes as PA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the locale POST.
- *
- * @coversDefaultClass \App\Controller\Locale\LocalePostController
- * @covers ::__construct
- * @covers ::post
- * @covers \App\Controller\SendErrorController::__construct
- * @uses \App\Repository\Locale\LocalePostRepository::__construct
- * @group api
- * @group api_locales
- * @group api_locales_post
- * @group locale
  */
+#[
+    PA\CoversClass(LocalePostController::class),
+    PA\CoversClass(SendErrorController::class),
+    PA\UsesClass(ApiResponse::class),
+    PA\UsesClass(Locale::class),
+    PA\UsesClass(LocaleInput::class),
+    PA\UsesClass(LocalePostProcessor::class),
+    PA\UsesClass(LocalePostRepository::class),
+    PA\UsesClass(ResourceLink::class),
+    PA\UsesClass(Violation::class),
+    PA\UsesClass(Violations::class),
+    PA\Group('api'),
+    PA\Group('api_locales'),
+    PA\Group('api_locales_post'),
+    PA\Group('locale')
+]
 final class LocalePostTest extends WebTestCase
 {
     // Methods :
 
     /**
      * Tests that a locale can be created.
-     *
-     * @uses \App\ApiResource\LocaleInput::__construct
-     * @uses \App\ApiResource\LocaleInput::getCode
-     * @uses \App\ApiResource\ResourceLink::__construct
-     * @uses \App\ApiResource\ResourceLink::jsonSerialize
-     * @uses \App\Entity\Locale::__construct
-     * @uses \App\Repository\Locale\LocalePostRepository::save
-     * @uses \App\State\Locale\LocalePostProcessor::getEntity
      */
     public function testCanPostALocale(): void
     {
@@ -51,24 +59,12 @@ final class LocalePostTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertObjectHasAttribute('link', $jsonResponse);
         self::assertSame('/locales/1', $jsonResponse->link);
     }
 
     /**
      * Tests that a code of an already existing locale
      * can not be created.
-     *
-     * @covers \App\Controller\SendErrorController::sendViolations
-     * @uses \App\ApiResource\LocaleInput::__construct
-     * @uses \App\ApiResource\LocaleInput::getCode
-     * @uses \App\ApiResource\Violation::__construct
-     * @uses \App\ApiResource\Violation::jsonSerialize
-     * @uses \App\ApiResource\Violations::__construct
-     * @uses \App\ApiResource\Violations::add
-     * @uses \App\ApiResource\Violations::jsonSerialize
-     * @uses \App\Entity\Locale::__construct
-     * @uses \App\State\Locale\LocalePostProcessor::getEntity
      */
     public function testCanNotPostACodeThatAlreadyExist(): void
     {
@@ -110,10 +106,6 @@ final class LocalePostTest extends WebTestCase
     /**
      * Tests that a locale can not be created
      * from invalid json.
-     *
-     * @covers \App\Controller\SendErrorController::respondToBadRequest
-     * @uses \App\ApiResource\ApiResponse::__construct
-     * @uses \App\ApiResource\ApiResponse::jsonSerialize
      */
     public function testCanNotPostInvalidJson(): void
     {
@@ -132,7 +124,6 @@ final class LocalePostTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertObjectHasAttribute('message', $jsonResponse);
         self::assertNotSame(
             '',
             $jsonResponse->message,
@@ -144,10 +135,6 @@ final class LocalePostTest extends WebTestCase
     /**
      * Tests that an empty body request
      * can not create a locale.
-     *
-     * @covers \App\Controller\SendErrorController::respondToBadRequest
-     * @uses \App\ApiResource\ApiResponse::__construct
-     * @uses \App\ApiResource\ApiResponse::jsonSerialize
      */
     public function testCanNotPostAnEmptyBodyRequest(): void
     {
@@ -166,7 +153,6 @@ final class LocalePostTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertObjectHasAttribute('message', $jsonResponse);
         self::assertNotSame(
             '',
             $jsonResponse->message,
@@ -179,7 +165,7 @@ final class LocalePostTest extends WebTestCase
      * Return invalid type codes.
      * @return array invalid type codes.
      */
-    private function getInvalidTypeCodes(): array
+    public static function getInvalidTypeCodes(): array
     {
         return [
             'code is null' => [null],
@@ -192,12 +178,11 @@ final class LocalePostTest extends WebTestCase
      * Tests that an invalid type code
      * can not be created.
      * @param mixed $invalidTypeCode an invalid type code.
-     *
-     * @covers \App\Controller\SendErrorController::respondToBadRequest
-     * @uses \App\ApiResource\ApiResponse::__construct
-     * @uses \App\ApiResource\ApiResponse::jsonSerialize
-     * @dataProvider getInvalidTypeCodes
      */
+    #[
+        PA\DataProvider('getInvalidTypeCodes'),
+        PA\TestDox('Can not post when $_dataName')
+    ]
     public function testCanNotPostAnInvalidTypeCode(mixed $invalidTypeCode): void
     {
         $params = [
@@ -219,7 +204,6 @@ final class LocalePostTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertObjectHasAttribute('message', $jsonResponse);
         self::assertNotSame(
             '',
             $jsonResponse->message,
@@ -231,14 +215,6 @@ final class LocalePostTest extends WebTestCase
     /**
      * Tests that an invalid code
      * can not be created.
-     *
-     * @covers \App\Controller\SendErrorController::sendViolations
-     * @uses \App\ApiResource\LocaleInput::__construct
-     * @uses \App\ApiResource\Violation::__construct
-     * @uses \App\ApiResource\Violation::jsonSerialize
-     * @uses \App\ApiResource\Violations::__construct
-     * @uses \App\ApiResource\Violations::add
-     * @uses \App\ApiResource\Violations::jsonSerialize
      */
     public function testCanNotPostAnInvalidCode(): void
     {
@@ -263,8 +239,6 @@ final class LocalePostTest extends WebTestCase
 
         self::assertCount(1, $jsonResponse, 'There must be one violation.');
         self::assertArrayHasKey(0, $jsonResponse);
-        self::assertObjectHasAttribute('property', $jsonResponse[0]);
-        self::assertObjectHasAttribute('message', $jsonResponse[0]);
         self::assertSame('code', $jsonResponse[0]->property);
         self::assertNotSame(
             '',
@@ -277,14 +251,6 @@ final class LocalePostTest extends WebTestCase
     /**
      * Tests that a locale can not be created
      * with a blank code.
-     *
-     * @covers \App\Controller\SendErrorController::sendViolations
-     * @uses \App\ApiResource\LocaleInput::__construct
-     * @uses \App\ApiResource\Violation::__construct
-     * @uses \App\ApiResource\Violation::jsonSerialize
-     * @uses \App\ApiResource\Violations::__construct
-     * @uses \App\ApiResource\Violations::add
-     * @uses \App\ApiResource\Violations::jsonSerialize
      */
     public function testCanNotPostABlankCode(): void
     {
@@ -309,8 +275,6 @@ final class LocalePostTest extends WebTestCase
 
         self::assertCount(1, $jsonResponse, 'There must be one violation.');
         self::assertArrayHasKey(0, $jsonResponse);
-        self::assertObjectHasAttribute('property', $jsonResponse[0]);
-        self::assertObjectHasAttribute('message', $jsonResponse[0]);
         self::assertSame('code', $jsonResponse[0]->property);
         self::assertNotSame(
             '',

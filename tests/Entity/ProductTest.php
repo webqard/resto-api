@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace App\Tests\Entity;
 
 use App\Entity\Product;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the Product entity.
- *
- * @coversDefaultClass \App\Entity\Product
- * @covers ::__construct
- * @group entities
- * @group entities_product
- * @group product
  */
+#[
+    PA\CoversClass(Product::class),
+    PA\Group('entities'),
+    PA\Group('entities_product'),
+    PA\Group('product')
+]
 final class ProductTest extends TestCase
 {
     // Methods :

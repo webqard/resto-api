@@ -6,28 +6,26 @@ namespace App\Tests\Repository\Locale;
 
 use App\Entity\Locale;
 use App\Repository\Locale\LocalePostRepository;
+use PHPUnit\Framework\Attributes as PA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the locale POST repository.
- *
- * @coversDefaultClass \App\Repository\Locale\LocalePostRepository
- * @covers ::__construct
- * @covers ::save
- * @group repositories
- * @group repository_locales
- * @group repository_locales_post
- * @group locale
  */
+#[
+    PA\CoversClass(LocalePostRepository::class),
+    PA\UsesClass(Locale::class),
+    PA\Group('repositories'),
+    PA\Group('repository_locales'),
+    PA\Group('repository_locales_post'),
+    PA\Group('locale')
+]
 final class LocalePostRepositoryTest extends WebTestCase
 {
     // Methods :
 
     /**
      * Tests that a locale can be saved.
-     *
-     * @uses \App\Entity\Locale::__construct
-     * @uses \App\Entity\Property\Code::getCode
      */
     public function testCanPostALocale(): void
     {

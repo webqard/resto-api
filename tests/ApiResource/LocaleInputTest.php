@@ -5,25 +5,24 @@ declare(strict_types=1);
 namespace App\Tests\ApiResource;
 
 use App\ApiResource\LocaleInput;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the API locale input.
- *
- * @coversDefaultClass \App\ApiResource\LocaleInput
- * @covers ::__construct
- * @group apiResource
- * @group apiResource_localeInput
- * @group locale
  */
+#[
+    PA\CoversClass(LocaleInput::class),
+    PA\Group('apiResource'),
+    PA\Group('apiResource_localeInput'),
+    PA\Group('locale')
+]
 final class LocaleInputTest extends TestCase
 {
     // Methods :
 
     /**
      * Tests that the locale can return code.
-     *
-     * @covers ::getCode
      */
     public function testCanGetCode(): void
     {

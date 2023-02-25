@@ -4,19 +4,21 @@ declare(strict_types=1);
 
 namespace App\Tests\Entity;
 
+use App\Entity\Product;
 use App\Entity\SetMenu;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the SetMenu entity.
- *
- * @coversDefaultClass \App\Entity\SetMenu
- * @covers ::__construct
- * @uses \App\Entity\Product::__construct
- * @group entities
- * @group entities_setMenu
- * @group setMenu
  */
+#[
+    PA\CoversClass(SetMenu::class),
+    PA\UsesClass(Product::class),
+    PA\Group('entities'),
+    PA\Group('entities_setMenu'),
+    PA\Group('setMenu')
+]
 final class SetMenuTest extends TestCase
 {
     // Methods :

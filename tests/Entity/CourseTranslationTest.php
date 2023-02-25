@@ -7,21 +7,24 @@ namespace App\Tests\Entity;
 use App\Entity\Course;
 use App\Entity\CourseTranslation;
 use App\Entity\Locale;
+use App\Entity\Product;
+use App\Entity\ProductTranslation;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the CourseTranslation entity.
- *
- * @coversDefaultClass \App\Entity\CourseTranslation
- * @covers ::__construct
- * @uses \App\Entity\Course::__construct
- * @uses \App\Entity\Locale::__construct
- * @uses \App\Entity\Product::__construct
- * @uses \App\Entity\ProductTranslation::__construct
- * @group entities
- * @group entities_courseTranslation
- * @group courseTranslation
  */
+#[
+    PA\CoversClass(CourseTranslation::class),
+    PA\UsesClass(Course::class),
+    PA\UsesClass(Locale::class),
+    PA\UsesClass(Product::class),
+    PA\UsesClass(ProductTranslation::class),
+    PA\Group('entities'),
+    PA\Group('entities_courseTranslation'),
+    PA\Group('courseTranslation')
+]
 final class CourseTranslationTest extends TestCase
 {
     // Methods :

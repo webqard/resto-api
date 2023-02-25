@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace App\Tests\ApiResource;
 
 use App\ApiResource\Violation;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the API violation.
- *
- * @coversDefaultClass \App\ApiResource\Violation
- * @covers ::__construct
- * @covers ::jsonSerialize
- * @group apiResource
- * @group apiResource_violation
  */
+#[
+    PA\CoversClass(Violation::class),
+    PA\Group('apiResource'),
+    PA\Group('apiResource_violation')
+]
 final class ViolationTest extends TestCase
 {
     // Methods :
@@ -29,9 +29,7 @@ final class ViolationTest extends TestCase
 
         $unserialisedViolation = json_decode(json_encode($violation));
 
-        self::assertObjectHasAttribute('property', $unserialisedViolation);
         self::assertSame('property', $unserialisedViolation->property);
-        self::assertObjectHasAttribute('message', $unserialisedViolation);
         self::assertSame('message', $unserialisedViolation->message);
     }
 }

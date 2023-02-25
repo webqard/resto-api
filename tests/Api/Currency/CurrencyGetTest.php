@@ -4,35 +4,36 @@ declare(strict_types=1);
 
 namespace App\Tests\Api\Currency;
 
+use App\ApiResource\ApiResponse;
+use App\ApiResource\CurrencyOutput;
+use App\Controller\Currency\CurrencyGetController;
 use App\Entity\Currency;
+use App\Repository\Currency\CurrencyGetRepository;
+use App\State\Currency\CurrencyProvider;
+use PHPUnit\Framework\Attributes as PA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the currency GET.
- *
- * @coversDefaultClass \App\Controller\Currency\CurrencyGetController
- * @covers ::__construct
- * @covers ::get
- * @uses \App\Repository\Currency\CurrencyGetRepository::__construct
- * @uses \App\Repository\Currency\CurrencyGetRepository::find
- * @group api
- * @group api_currencies
- * @group api_currencies_get
- * @group currency
  */
+#[
+    PA\CoversClass(CurrencyGetController::class),
+    PA\UsesClass(ApiResponse::class),
+    PA\UsesClass(Currency::class),
+    PA\UsesClass(CurrencyGetRepository::class),
+    PA\UsesClass(CurrencyOutput::class),
+    PA\UsesClass(CurrencyProvider::class),
+    PA\Group('api'),
+    PA\Group('api_currencies'),
+    PA\Group('api_currencies_get'),
+    PA\Group('currency')
+]
 final class CurrencyGetTest extends WebTestCase
 {
     // Methods :
 
     /**
      * Tests that a currency can be returned.
-     *
-     * @uses \App\ApiResource\CurrencyOutput::__construct
-     * @uses \App\ApiResource\CurrencyOutput::jsonSerialize
-     * @uses \App\Entity\Currency::__construct
-     * @uses \App\Entity\Currency::getCode
-     * @uses \App\Entity\Currency::getDecimals
-     * @uses \App\State\Currency\CurrencyProvider::provideCurrencyOutput
      */
     public function testCanGetACurrency(): void
     {
@@ -51,9 +52,7 @@ final class CurrencyGetTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertObjectHasAttribute('code', $jsonResponse);
         self::assertSame('EUR', $jsonResponse->code);
-        self::assertObjectHasAttribute('decimals', $jsonResponse);
         self::assertSame(2, $jsonResponse->decimals);
     }
 
@@ -62,11 +61,11 @@ final class CurrencyGetTest extends WebTestCase
      * Return invalid type Ids.
      * @return array invalid type Ids.
      */
-    private function getInvalidTypeId(): array
+    public static function getInvalidTypeId(): array
     {
         return [
-            'id is a string (test)' => ['test'],
-            'id is a float (1.5)' => [1.5]
+            'a string (test)' => ['test'],
+            'a float (1.5)' => [1.5]
         ];
     }
 
@@ -74,11 +73,11 @@ final class CurrencyGetTest extends WebTestCase
      * Tests that a identifier can not be returned
      * from an invalid type identifier.
      * @param mixed $invalidTypeId an invalid type identifier.
-     *
-     * @uses \App\ApiResource\ApiResponse::__construct
-     * @uses \App\ApiResource\ApiResponse::jsonSerialize
-     * @dataProvider getInvalidTypeId
      */
+    #[
+        PA\DataProvider('getInvalidTypeId'),
+        PA\TestDox('Can not get a currency from $_dataName')
+    ]
     public function testCanNotGetACurrencyFromAnInvalidTypeId(mixed $invalidTypeId): void
     {
         $requestParameters = [
@@ -96,7 +95,6 @@ final class CurrencyGetTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertObjectHasAttribute('message', $jsonResponse);
         self::assertNotSame('', $jsonResponse->message, 'The error message is empty.');
     }
 
@@ -104,9 +102,6 @@ final class CurrencyGetTest extends WebTestCase
     /**
      * Tests that a currency can not be returned
      * from an non existant identifier.
-     *
-     * @covers \App\ApiResource\ApiResponse::__construct
-     * @covers \App\ApiResource\ApiResponse::jsonSerialize
      */
     public function testCanNotGetACurrencyFromAnNonExistantId(): void
     {
@@ -125,7 +120,6 @@ final class CurrencyGetTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertObjectHasAttribute('message', $jsonResponse);
         self::assertNotSame('', $jsonResponse->message, 'The error message is empty.');
     }
 }

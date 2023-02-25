@@ -6,28 +6,28 @@ namespace App\Tests\Repository\Locale;
 
 use App\Entity\Locale;
 use App\Repository\Locale\LocalePutRepository;
+use App\Repository\Locale\LocaleRepository;
+use PHPUnit\Framework\Attributes as PA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the locale PUT repository.
- *
- * @coversDefaultClass \App\Repository\Locale\LocalePutRepository
- * @covers ::__construct
- * @group repositories
- * @group repository_locales
- * @group repository_locales_put
- * @group locale
  */
+#[
+    PA\CoversClass(LocalePutRepository::class),
+    PA\UsesClass(Locale::class),
+    PA\UsesClass(LocaleRepository::class),
+    PA\Group('repositories'),
+    PA\Group('repository_locales'),
+    PA\Group('repository_locales_put'),
+    PA\Group('locale')
+]
 final class LocalePutRepositoryTest extends WebTestCase
 {
     // Methods :
 
     /**
      * Tests that a locale can be saved.
-     *
-     * @covers ::save
-     * @uses \App\Entity\Locale::__construct
-     * @uses \App\Entity\Property\Code::getCode
      */
     public function testCanPutALocale(): void
     {

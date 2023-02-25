@@ -4,37 +4,44 @@ declare(strict_types=1);
 
 namespace App\Tests\Api\Currency;
 
+use App\ApiResource\ApiResponse;
+use App\ApiResource\CurrencyInput;
+use App\ApiResource\ResourceLink;
+use App\ApiResource\Violation;
+use App\ApiResource\Violations;
+use App\Controller\Currency\CurrencyPostController;
+use App\Controller\SendErrorController;
 use App\Entity\Currency;
+use App\Repository\Currency\CurrencyPostRepository;
+use App\State\Currency\CurrencyPostProcessor;
+use PHPUnit\Framework\Attributes as PA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the currency POST.
- *
- * @coversDefaultClass \App\Controller\Currency\CurrencyPostController
- * @covers ::__construct
- * @covers ::post
- * @covers \App\Controller\SendErrorController::__construct
- * @uses \App\Repository\Currency\CurrencyPostRepository::__construct
- * @group api
- * @group api_currencies
- * @group api_currencies_post
- * @group currency
  */
+#[
+    PA\CoversClass(CurrencyPostController::class),
+    PA\CoversClass(SendErrorController::class),
+    PA\UsesClass(ApiResponse::class),
+    PA\UsesClass(Currency::class),
+    PA\UsesClass(CurrencyInput::class),
+    PA\UsesClass(CurrencyPostProcessor::class),
+    PA\UsesClass(CurrencyPostRepository::class),
+    PA\UsesClass(ResourceLink::class),
+    PA\UsesClass(Violation::class),
+    PA\UsesClass(Violations::class),
+    PA\Group('api'),
+    PA\Group('api_currencies'),
+    PA\Group('api_currencies_post'),
+    PA\Group('currency')
+]
 final class CurrencyPostTest extends WebTestCase
 {
     // Methods :
 
     /**
      * Tests that a currency can be created.
-     *
-     * @uses \App\ApiResource\CurrencyInput::__construct
-     * @uses \App\ApiResource\CurrencyInput::getCode
-     * @uses \App\ApiResource\CurrencyInput::getDecimals
-     * @uses \App\ApiResource\ResourceLink::__construct
-     * @uses \App\ApiResource\ResourceLink::jsonSerialize
-     * @uses \App\Entity\Currency::__construct
-     * @uses \App\Repository\Currency\CurrencyPostRepository::save
-     * @uses \App\State\Currency\CurrencyPostProcessor::getEntity
      */
     public function testCanPostACurrency(): void
     {
@@ -53,25 +60,12 @@ final class CurrencyPostTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertObjectHasAttribute('link', $jsonResponse);
         self::assertSame('/currencies/1', $jsonResponse->link);
     }
 
     /**
      * Tests that a code of an already existing currency
      * can not be created.
-     *
-     * @covers \App\Controller\SendErrorController::sendViolations
-     * @uses \App\ApiResource\CurrencyInput::__construct
-     * @uses \App\ApiResource\CurrencyInput::getCode
-     * @uses \App\ApiResource\CurrencyInput::getDecimals
-     * @uses \App\ApiResource\Violation::__construct
-     * @uses \App\ApiResource\Violation::jsonSerialize
-     * @uses \App\ApiResource\Violations::__construct
-     * @uses \App\ApiResource\Violations::add
-     * @uses \App\ApiResource\Violations::jsonSerialize
-     * @uses \App\Entity\Currency::__construct
-     * @uses \App\State\Currency\CurrencyPostProcessor::getEntity
      */
     public function testCanNotPostACodeThatAlreadyExist(): void
     {
@@ -114,10 +108,6 @@ final class CurrencyPostTest extends WebTestCase
     /**
      * Tests that a currency can not be created
      * from invalid json.
-     *
-     * @covers \App\Controller\SendErrorController::respondToBadRequest
-     * @uses \App\ApiResource\ApiResponse::__construct
-     * @uses \App\ApiResource\ApiResponse::jsonSerialize
      */
     public function testCanNotPostInvalidJson(): void
     {
@@ -136,7 +126,6 @@ final class CurrencyPostTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertObjectHasAttribute('message', $jsonResponse);
         self::assertNotSame(
             '',
             $jsonResponse->message,
@@ -148,10 +137,6 @@ final class CurrencyPostTest extends WebTestCase
     /**
      * Tests that an empty body request
      * can not create a currency.
-     *
-     * @covers \App\Controller\SendErrorController::respondToBadRequest
-     * @uses \App\ApiResource\ApiResponse::__construct
-     * @uses \App\ApiResource\ApiResponse::jsonSerialize
      */
     public function testCanNotPostAnEmptyBodyRequest(): void
     {
@@ -170,7 +155,6 @@ final class CurrencyPostTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertObjectHasAttribute('message', $jsonResponse);
         self::assertNotSame(
             '',
             $jsonResponse->message,
@@ -183,7 +167,7 @@ final class CurrencyPostTest extends WebTestCase
      * Returns invalid type values.
      * @return array invalid type values.
      */
-    private function getInvalidTypeValues(): array
+    public static function getInvalidTypeValues(): array
     {
         return [
             'code is null' => ['code', null],
@@ -201,12 +185,11 @@ final class CurrencyPostTest extends WebTestCase
      * can not be created.
      * @param string $property the property name.
      * @param mixed $invalidTypeValue an invalid type value.
-     *
-     * @covers \App\Controller\SendErrorController::respondToBadRequest
-     * @uses \App\ApiResource\ApiResponse::__construct
-     * @uses \App\ApiResource\ApiResponse::jsonSerialize
-     * @dataProvider getInvalidTypeValues
      */
+    #[
+        PA\DataProvider('getInvalidTypeValues'),
+        PA\TestDox('Can not post when $_dataName')
+    ]
     public function testCanNotPostAnInvalidTypeValue(string $property, mixed $invalidTypeValue): void
     {
         $params = [
@@ -229,7 +212,6 @@ final class CurrencyPostTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertObjectHasAttribute('message', $jsonResponse);
         self::assertNotSame(
             '',
             $jsonResponse->message,
@@ -242,7 +224,7 @@ final class CurrencyPostTest extends WebTestCase
      * Returns invalid values.
      * @return array invalid values.
      */
-    private function getValidTypeInvalidValues(): array
+    public static function getValidTypeInvalidValues(): array
     {
         return [
             'code is not currency (aaa_AAA_aaa)' => ['code', 'aaa_AAA_aaa'],
@@ -255,16 +237,11 @@ final class CurrencyPostTest extends WebTestCase
      * can not be created.
      * @param string $property the property name.
      * @param mixed $value the value.
-     *
-     * @covers \App\Controller\SendErrorController::sendViolations
-     * @uses \App\ApiResource\CurrencyInput::__construct
-     * @uses \App\ApiResource\Violation::__construct
-     * @uses \App\ApiResource\Violation::jsonSerialize
-     * @uses \App\ApiResource\Violations::__construct
-     * @uses \App\ApiResource\Violations::add
-     * @uses \App\ApiResource\Violations::jsonSerialize
-     * @dataProvider getValidTypeInvalidValues
      */
+    #[
+        PA\DataProvider('getValidTypeInvalidValues'),
+        PA\TestDox('Can not post when $_dataName')
+    ]
     public function testCanNotPostAValidTypeInvalidValue(string $property, mixed $value): void
     {
         $params = [
@@ -289,8 +266,6 @@ final class CurrencyPostTest extends WebTestCase
 
         self::assertCount(1, $jsonResponse, 'There must be one violation.');
         self::assertArrayHasKey(0, $jsonResponse);
-        self::assertObjectHasAttribute('property', $jsonResponse[0]);
-        self::assertObjectHasAttribute('message', $jsonResponse[0]);
         self::assertSame($property, $jsonResponse[0]->property);
         self::assertNotSame(
             '',
@@ -303,14 +278,6 @@ final class CurrencyPostTest extends WebTestCase
     /**
      * Tests that a currency can not be created
      * with a blank code.
-     *
-     * @covers \App\Controller\SendErrorController::sendViolations
-     * @uses \App\ApiResource\CurrencyInput::__construct
-     * @uses \App\ApiResource\Violation::__construct
-     * @uses \App\ApiResource\Violation::jsonSerialize
-     * @uses \App\ApiResource\Violations::__construct
-     * @uses \App\ApiResource\Violations::add
-     * @uses \App\ApiResource\Violations::jsonSerialize
      */
     public function testCanNotPostABlankCode(): void
     {
@@ -336,8 +303,6 @@ final class CurrencyPostTest extends WebTestCase
 
         self::assertCount(1, $jsonResponse, 'There must be one violation.');
         self::assertArrayHasKey(0, $jsonResponse);
-        self::assertObjectHasAttribute('property', $jsonResponse[0]);
-        self::assertObjectHasAttribute('message', $jsonResponse[0]);
         self::assertSame('code', $jsonResponse[0]->property);
         self::assertNotSame(
             '',

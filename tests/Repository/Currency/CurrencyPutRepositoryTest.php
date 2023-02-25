@@ -6,29 +6,28 @@ namespace App\Tests\Repository\Currency;
 
 use App\Entity\Currency;
 use App\Repository\Currency\CurrencyPutRepository;
+use App\Repository\Currency\CurrencyRepository;
+use PHPUnit\Framework\Attributes as PA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the currency PUT repository.
- *
- * @coversDefaultClass \App\Repository\Currency\CurrencyPutRepository
- * @covers ::__construct
- * @group repositories
- * @group repository_currencies
- * @group repository_currencies_put
- * @group currency
  */
+#[
+    PA\CoversClass(CurrencyPutRepository::class),
+    PA\UsesClass(Currency::class),
+    PA\UsesClass(CurrencyRepository::class),
+    PA\Group('repositories'),
+    PA\Group('repository_currencies'),
+    PA\Group('repository_currencies_put'),
+    PA\Group('currency')
+]
 final class CurrencyPutRepositoryTest extends WebTestCase
 {
     // Methods :
 
     /**
      * Tests that a currency can be saved.
-     *
-     * @covers ::save
-     * @uses \App\Entity\Currency::__construct
-     * @uses \App\Entity\Currency::getDecimals
-     * @uses \App\Entity\Property\Code::getCode
      */
     public function testCanSaveACurrency(): void
     {

@@ -6,29 +6,26 @@ namespace App\Tests\Repository\Currency;
 
 use App\Entity\Currency;
 use App\Repository\Currency\CurrencyGetRepository;
+use PHPUnit\Framework\Attributes as PA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the currency GET repository.
- *
- * @coversDefaultClass \App\Repository\Currency\CurrencyGetRepository
- * @covers ::__construct
- * @group repositories
- * @group repository_currencies
- * @group repository_currencies_get
- * @group currency
  */
+#[
+    PA\CoversClass(CurrencyGetRepository::class),
+    PA\UsesClass(Currency::class),
+    PA\Group('repositories'),
+    PA\Group('repository_currencies'),
+    PA\Group('repository_currencies_get'),
+    PA\Group('currency')
+]
 final class CurrencyGetRepositoryTest extends WebTestCase
 {
     // Methods :
 
     /**
      * Tests that a currency can be found.
-     *
-     * @covers ::find
-     * @uses \App\Entity\Currency::__construct
-     * @uses \App\Entity\Currency::getDecimals
-     * @uses \App\Entity\Property\Code::getCode
      */
     public function testCanFindACurrency(): void
     {

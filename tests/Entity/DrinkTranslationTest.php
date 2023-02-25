@@ -7,21 +7,24 @@ namespace App\Tests\Entity;
 use App\Entity\Drink;
 use App\Entity\DrinkTranslation;
 use App\Entity\Locale;
+use App\Entity\Product;
+use App\Entity\ProductTranslation;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the DrinkTranslation entity.
- *
- * @coversDefaultClass \App\Entity\DrinkTranslation
- * @covers ::__construct
- * @uses \App\Entity\Drink::__construct
- * @uses \App\Entity\Locale::__construct
- * @uses \App\Entity\Product::__construct
- * @uses \App\Entity\ProductTranslation::__construct
- * @group entities
- * @group entities_drinkTranslation
- * @group drinkTranslation
  */
+#[
+    PA\CoversClass(DrinkTranslation::class),
+    PA\UsesClass(Drink::class),
+    PA\UsesClass(Locale::class),
+    PA\UsesClass(Product::class),
+    PA\UsesClass(ProductTranslation::class),
+    PA\Group('entities'),
+    PA\Group('entities_drinkTranslation'),
+    PA\Group('drinkTranslation')
+]
 final class DrinkTranslationTest extends TestCase
 {
     // Methods :

@@ -4,34 +4,36 @@ declare(strict_types=1);
 
 namespace App\Tests\Api\Locale;
 
+use App\ApiResource\ApiResponse;
+use App\ApiResource\LocaleOutput;
+use App\Controller\Locale\LocaleGetController;
 use App\Entity\Locale;
+use App\Repository\Locale\LocaleGetRepository;
+use App\State\Locale\LocaleProvider;
+use PHPUnit\Framework\Attributes as PA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the locale GET.
- *
- * @coversDefaultClass \App\Controller\Locale\LocaleGetController
- * @covers ::__construct
- * @covers ::get
- * @uses \App\Repository\Locale\LocaleGetRepository::__construct
- * @uses \App\Repository\Locale\LocaleGetRepository::find
- * @group api
- * @group api_locales
- * @group api_locales_get
- * @group locale
  */
+#[
+    PA\CoversClass(LocaleGetController::class),
+    PA\UsesClass(ApiResponse::class),
+    PA\UsesClass(Locale::class),
+    PA\UsesClass(LocaleGetRepository::class),
+    PA\UsesClass(LocaleOutput::class),
+    PA\UsesClass(LocaleProvider::class),
+    PA\Group('api'),
+    PA\Group('api_locales'),
+    PA\Group('api_locales_get'),
+    PA\Group('locale')
+]
 final class LocaleGetTest extends WebTestCase
 {
     // Methods :
 
     /**
      * Tests that a locale can be returned.
-     *
-     * @uses \App\ApiResource\LocaleOutput::__construct
-     * @uses \App\ApiResource\LocaleOutput::jsonSerialize
-     * @uses \App\Entity\Locale::__construct
-     * @uses \App\Entity\Locale::getCode
-     * @uses \App\State\Locale\LocaleProvider::provideLocaleOutput
      */
     public function testCanGetALocale(): void
     {
@@ -50,7 +52,6 @@ final class LocaleGetTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertObjectHasAttribute('code', $jsonResponse);
         self::assertSame('en_GB', $jsonResponse->code);
     }
 
@@ -58,9 +59,6 @@ final class LocaleGetTest extends WebTestCase
     /**
      * Tests that a locale can not be returned
      * from an non existant identifier.
-     *
-     * @uses \App\ApiResource\ApiResponse::__construct
-     * @uses \App\ApiResource\ApiResponse::jsonSerialize
      */
     public function testCanNotGetALocaleFromAnNonExistantId(): void
     {
@@ -79,7 +77,6 @@ final class LocaleGetTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertObjectHasAttribute('message', $jsonResponse);
         self::assertNotSame('', $jsonResponse->message, 'The error message is empty.');
     }
 }

@@ -7,29 +7,26 @@ namespace App\Tests\State\Currency;
 use App\ApiResource\CurrencyOutput;
 use App\Entity\Currency;
 use App\State\Currency\CurrencyProvider;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the currency provider.
- *
- * @coversDefaultClass \App\State\Currency\CurrencyProvider
- * @covers ::provideCurrencyOutput
- * @group state
- * @group state_currencyProvider
- * @group currency
  */
+#[
+    PA\CoversClass(CurrencyProvider::class),
+    PA\UsesClass(Currency::class),
+    PA\UsesClass(CurrencyOutput::class),
+    PA\Group('state'),
+    PA\Group('state_currencyProvider'),
+    PA\Group('currency')
+]
 final class CurrencyProviderTest extends TestCase
 {
     // Methods :
 
     /**
      * Test that the code can be returned.
-     *
-     * @uses \App\ApiResource\CurrencyOutput::__construct
-     * @uses \App\ApiResource\CurrencyOutput::jsonSerialize
-     * @uses \App\Entity\Currency::__construct
-     * @uses \App\Entity\Currency::getCode
-     * @uses \App\Entity\Currency::getDecimals
      */
     public function testCanProvideCurrencyOutput(): void
     {

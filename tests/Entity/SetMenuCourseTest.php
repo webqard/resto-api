@@ -5,23 +5,26 @@ declare(strict_types=1);
 namespace App\Tests\Entity;
 
 use App\Entity\Course;
+use App\Entity\Product;
 use App\Entity\SetMenu;
 use App\Entity\SetMenuCourse;
+use App\Entity\SetMenuProduct;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the SetMenuCourse entity.
- *
- * @coversDefaultClass \App\Entity\SetMenuCourse
- * @covers ::__construct
- * @uses \App\Entity\Course::__construct
- * @uses \App\Entity\Product::__construct
- * @uses \App\Entity\SetMenu::__construct
- * @uses \App\Entity\SetMenuProduct::__construct
- * @group entities
- * @group entities_setMenuCourse
- * @group setMenuCourse
  */
+#[
+    PA\CoversClass(SetMenuCourse::class),
+    PA\UsesClass(Course::class),
+    PA\UsesClass(Product::class),
+    PA\UsesClass(SetMenu::class),
+    PA\UsesClass(SetMenuProduct::class),
+    PA\Group('entities'),
+    PA\Group('entities_setMenuCourse'),
+    PA\Group('setMenuCourse')
+]
 final class SetMenuCourseTest extends TestCase
 {
     // Methods :

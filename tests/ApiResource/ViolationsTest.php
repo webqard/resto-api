@@ -6,19 +6,18 @@ namespace App\Tests\ApiResource;
 
 use App\ApiResource\Violation;
 use App\ApiResource\Violations;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the API violations.
- *
- * @coversDefaultClass \App\ApiResource\Violations
- * @covers ::__construct
- * @covers ::jsonSerialize
- * @uses \App\ApiResource\Violation::__construct
- * @uses \App\ApiResource\Violation::jsonSerialize
- * @group apiResource
- * @group apiResource_violations
  */
+#[
+    PA\CoversClass(Violations::class),
+    PA\UsesClass(Violation::class),
+    PA\Group('apiResource'),
+    PA\Group('apiResource_violations')
+]
 final class ViolationsTest extends TestCase
 {
     // Methods :
@@ -38,15 +37,11 @@ final class ViolationsTest extends TestCase
         self::assertIsArray($unserialisedViolations);
 
         self::assertArrayHasKey(0, $unserialisedViolations);
-        self::assertObjectHasAttribute('property', $unserialisedViolations[0]);
         self::assertSame('property', $unserialisedViolations[0]->property);
-        self::assertObjectHasAttribute('message', $unserialisedViolations[0]);
         self::assertSame('message', $unserialisedViolations[0]->message);
 
         self::assertArrayHasKey(1, $unserialisedViolations);
-        self::assertObjectHasAttribute('property', $unserialisedViolations[1]);
         self::assertSame('property2', $unserialisedViolations[1]->property);
-        self::assertObjectHasAttribute('message', $unserialisedViolations[1]);
         self::assertSame('message2', $unserialisedViolations[1]->message);
     }
 
@@ -67,8 +62,6 @@ final class ViolationsTest extends TestCase
     /**
      * Tests that a violation can be added
      * to an empty list.
-     *
-     * @covers ::add
      */
     public function testCanAddAViolationToAnEmptyList(): void
     {
@@ -87,17 +80,13 @@ final class ViolationsTest extends TestCase
         self::assertCount(1, $unserialisedViolations);
 
         self::assertArrayHasKey(0, $unserialisedViolations);
-        self::assertObjectHasAttribute('property', $unserialisedViolations[0]);
         self::assertSame('property', $unserialisedViolations[0]->property);
-        self::assertObjectHasAttribute('message', $unserialisedViolations[0]);
         self::assertSame('message', $unserialisedViolations[0]->message);
     }
 
     /**
      * Tests that a violation can be added
      * to a non empty list.
-     *
-     * @covers ::add
      */
     public function testCanAddAViolationToANonEmptyList(): void
     {
@@ -110,15 +99,11 @@ final class ViolationsTest extends TestCase
         self::assertCount(2, $unserialisedViolations);
 
         self::assertArrayHasKey(0, $unserialisedViolations);
-        self::assertObjectHasAttribute('property', $unserialisedViolations[0]);
         self::assertSame('property', $unserialisedViolations[0]->property);
-        self::assertObjectHasAttribute('message', $unserialisedViolations[0]);
         self::assertSame('message', $unserialisedViolations[0]->message);
 
         self::assertArrayHasKey(1, $unserialisedViolations);
-        self::assertObjectHasAttribute('property', $unserialisedViolations[1]);
         self::assertSame('property2', $unserialisedViolations[1]->property);
-        self::assertObjectHasAttribute('message', $unserialisedViolations[1]);
         self::assertSame('message2', $unserialisedViolations[1]->message);
     }
 }

@@ -8,23 +8,27 @@ use App\Entity\Drink;
 use App\Entity\DrinkPicture;
 use App\Entity\DrinkPictureTranslation;
 use App\Entity\Locale;
+use App\Entity\Product;
+use App\Entity\ProductPicture;
+use App\Entity\ProductPictureTranslation;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the DrinkPictureTranslation entity.
- *
- * @coversDefaultClass \App\Entity\DrinkPictureTranslation
- * @covers ::__construct
- * @uses \App\Entity\Drink::__construct
- * @uses \App\Entity\DrinkPicture::__construct
- * @uses \App\Entity\Locale::__construct
- * @uses \App\Entity\Product::__construct
- * @uses \App\Entity\ProductPicture::__construct
- * @uses \App\Entity\ProductPictureTranslation::__construct
- * @group entities
- * @group entities_drinkPictureTranslation
- * @group drinkPictureTranslation
  */
+#[
+    PA\CoversClass(DrinkPictureTranslation::class),
+    PA\UsesClass(Drink::class),
+    PA\UsesClass(DrinkPicture::class),
+    PA\UsesClass(Locale::class),
+    PA\UsesClass(Product::class),
+    PA\UsesClass(ProductPicture::class),
+    PA\UsesClass(ProductPictureTranslation::class),
+    PA\Group('entities'),
+    PA\Group('entities_drinkPictureTranslation'),
+    PA\Group('drinkPictureTranslation')
+]
 final class DrinkPictureTranslationTest extends TestCase
 {
     // Methods :

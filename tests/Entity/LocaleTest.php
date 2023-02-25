@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace App\Tests\Entity;
 
 use App\Entity\Locale;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the Locale entity.
- *
- * @coversDefaultClass \App\Entity\Locale
- * @covers ::__construct
- * @group entities
- * @group entities_locale
- * @group locale
  */
+#[
+    PA\CoversClass(Locale::class),
+    PA\Group('entities'),
+    PA\Group('entities_locale'),
+    PA\Group('locale')
+]
 final class LocaleTest extends TestCase
 {
     // Methods :
@@ -34,9 +35,6 @@ final class LocaleTest extends TestCase
 
     /**
      * Test that the code can be returned and changed.
-     *
-     * @covers ::getCode
-     * @covers ::setCode
      */
     public function testCanGetAndCode(): void
     {

@@ -7,21 +7,24 @@ namespace App\Tests\Entity;
 use App\Entity\Course;
 use App\Entity\CoursePrice;
 use App\Entity\Currency;
+use App\Entity\Product;
+use App\Entity\ProductPrice;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the CoursePrice entity.
- *
- * @coversDefaultClass \App\Entity\CoursePrice
- * @covers ::__construct
- * @uses \App\Entity\Course::__construct
- * @uses \App\Entity\Currency::__construct
- * @uses \App\Entity\Product::__construct
- * @uses \App\Entity\ProductPrice::__construct
- * @group entities
- * @group entities_coursePrice
- * @group coursePrice
  */
+#[
+    PA\CoversClass(CoursePrice::class),
+    PA\UsesClass(Course::class),
+    PA\UsesClass(Currency::class),
+    PA\UsesClass(Product::class),
+    PA\UsesClass(ProductPrice::class),
+    PA\Group('entities'),
+    PA\Group('entities_coursePrice'),
+    PA\Group('coursePrice')
+]
 final class CoursePriceTest extends TestCase
 {
     // Methods :

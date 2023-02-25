@@ -7,28 +7,26 @@ namespace App\Tests\State\Locale;
 use App\ApiResource\LocaleOutput;
 use App\Entity\Locale;
 use App\State\Locale\LocaleProvider;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the locale provider.
- *
- * @coversDefaultClass \App\State\Locale\LocaleProvider
- * @covers ::provideLocaleOutput
- * @group state
- * @group state_localeProvider
- * @group locale
  */
+#[
+    PA\CoversClass(LocaleProvider::class),
+    PA\UsesClass(Locale::class),
+    PA\UsesClass(LocaleOutput::class),
+    PA\Group('state'),
+    PA\Group('state_localeProvider'),
+    PA\Group('locale')
+]
 final class LocaleProviderTest extends TestCase
 {
     // Methods :
 
     /**
      * Test that the code can be returned.
-     *
-     * @uses \App\ApiResource\LocaleOutput::__construct
-     * @uses \App\ApiResource\LocaleOutput::jsonSerialize
-     * @uses \App\Entity\Locale::__construct
-     * @uses \App\Entity\Locale::getCode
      */
     public function testCanGetProvideLocaleOutput(): void
     {

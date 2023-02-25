@@ -5,18 +5,18 @@ declare(strict_types=1);
 namespace App\Tests\ApiResource;
 
 use App\ApiResource\LocaleOutput;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the API locale output.
- *
- * @coversDefaultClass \App\ApiResource\LocaleOutput
- * @covers ::__construct
- * @covers ::jsonSerialize
- * @group apiResource
- * @group apiResource_localeOutput
- * @group locale
  */
+#[
+    PA\CoversClass(LocaleOutput::class),
+    PA\Group('apiResource'),
+    PA\Group('apiResource_localeOutput'),
+    PA\Group('locale')
+]
 final class LocaleOutputTest extends TestCase
 {
     // Methods :
@@ -30,7 +30,6 @@ final class LocaleOutputTest extends TestCase
 
         $unserialisedLocale = json_decode(json_encode($localeOutput));
 
-        self::assertObjectHasAttribute('code', $unserialisedLocale);
         self::assertSame('en_GB', $unserialisedLocale->code);
     }
 }

@@ -4,24 +4,27 @@ declare(strict_types=1);
 
 namespace App\Tests\Entity;
 
+use App\Entity\Locale;
+use App\Entity\Product;
+use App\Entity\ProductTranslation;
 use App\Entity\SetMenu;
 use App\Entity\SetMenuTranslation;
-use App\Entity\Locale;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the SetMenuTranslation entity.
- *
- * @coversDefaultClass \App\Entity\SetMenuTranslation
- * @covers ::__construct
- * @uses \App\Entity\SetMenu::__construct
- * @uses \App\Entity\Locale::__construct
- * @uses \App\Entity\Product::__construct
- * @uses \App\Entity\ProductTranslation::__construct
- * @group entities
- * @group entities_setMenuTranslation
- * @group setMenuTranslation
  */
+#[
+    PA\CoversClass(SetMenuTranslation::class),
+    PA\UsesClass(Locale::class),
+    PA\UsesClass(Product::class),
+    PA\UsesClass(ProductTranslation::class),
+    PA\UsesClass(SetMenu::class),
+    PA\Group('entities'),
+    PA\Group('entities_setMenuTranslation'),
+    PA\Group('setMenuTranslation')
+]
 final class SetMenuTranslationTest extends TestCase
 {
     // Methods :

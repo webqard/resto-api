@@ -6,20 +6,23 @@ namespace App\Tests\Entity;
 
 use App\Entity\Drink;
 use App\Entity\DrinkPicture;
+use App\Entity\Product;
+use App\Entity\ProductPicture;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the DrinkPicture entity.
- *
- * @coversDefaultClass \App\Entity\DrinkPicture
- * @covers ::__construct
- * @uses \App\Entity\Drink::__construct
- * @uses \App\Entity\Product::__construct
- * @uses \App\Entity\ProductPicture::__construct
- * @group entities
- * @group entities_drinkPicture
- * @group drinkPicture
  */
+#[
+    PA\CoversClass(DrinkPicture::class),
+    PA\UsesClass(Drink::class),
+    PA\UsesClass(Product::class),
+    PA\UsesClass(ProductPicture::class),
+    PA\Group('entities'),
+    PA\Group('entities_drinkPicture'),
+    PA\Group('drinkPicture')
+]
 final class DrinkPictureTest extends TestCase
 {
     // Methods :

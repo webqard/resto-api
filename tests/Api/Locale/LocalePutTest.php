@@ -4,37 +4,44 @@ declare(strict_types=1);
 
 namespace App\Tests\Api\Locale;
 
+use App\ApiResource\ApiResponse;
+use App\ApiResource\LocaleInput;
+use App\ApiResource\Violation;
+use App\ApiResource\Violations;
+use App\Controller\Locale\LocalePutController;
+use App\Controller\SendErrorController;
 use App\Entity\Locale;
+use App\Repository\Locale\LocaleGetRepository;
+use App\Repository\Locale\LocalePutRepository;
+use App\State\Locale\LocalePutProcessor;
+use PHPUnit\Framework\Attributes as PA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the locale PUT.
- *
- * @coversDefaultClass \App\Controller\Locale\LocalePutController
- * @covers ::__construct
- * @covers ::put
- * @covers \App\Controller\SendErrorController::__construct
- * @uses \App\Repository\Locale\LocaleGetRepository::find
- * @uses \App\Repository\Locale\LocalePutRepository::__construct
- * @group api
- * @group api_locales
- * @group api_locales_put
- * @group locale
  */
+#[
+    PA\CoversClass(LocalePutController::class),
+    PA\CoversClass(SendErrorController::class),
+    PA\UsesClass(ApiResponse::class),
+    PA\UsesClass(Locale::class),
+    PA\UsesClass(LocaleInput::class),
+    PA\UsesClass(LocalePutProcessor::class),
+    PA\UsesClass(LocaleGetRepository::class),
+    PA\UsesClass(LocalePutRepository::class),
+    PA\UsesClass(Violation::class),
+    PA\UsesClass(Violations::class),
+    PA\Group('api'),
+    PA\Group('api_locales'),
+    PA\Group('api_locales_put'),
+    PA\Group('locale')
+]
 final class LocalePutTest extends WebTestCase
 {
     // Methods :
 
     /**
      * Tests that a locale can be updated.
-     *
-     * @uses \App\ApiResource\LocaleInput::__construct
-     * @uses \App\ApiResource\LocaleInput::getCode
-     * @uses \App\Entity\Locale::__construct
-     * @uses \App\Entity\Property\Code::getCode
-     * @uses \App\Entity\Property\Code::setCode
-     * @uses \App\Repository\Locale\LocalePutRepository::save
-     * @uses \App\State\Locale\LocalePutProcessor::getEntity
      */
     public function testCanPutALocale(): void
     {
@@ -66,18 +73,6 @@ final class LocalePutTest extends WebTestCase
     /**
      * Tests that a locale can not be updated
      * with the code of an other one.
-     *
-     * @covers \App\Controller\SendErrorController::sendViolations
-     * @uses \App\ApiResource\LocaleInput::__construct
-     * @uses \App\ApiResource\LocaleInput::getCode
-     * @uses \App\ApiResource\Violation::__construct
-     * @uses \App\ApiResource\Violation::jsonSerialize
-     * @uses \App\ApiResource\Violations::__construct
-     * @uses \App\ApiResource\Violations::add
-     * @uses \App\ApiResource\Violations::jsonSerialize
-     * @uses \App\Entity\Locale::__construct
-     * @uses \App\Entity\Property\Code::setCode
-     * @uses \App\State\Locale\LocalePutProcessor::getEntity
      */
     public function testCanNotPutALocaleWithTheCodeOfAnOtherOne(): void
     {
@@ -121,9 +116,6 @@ final class LocalePutTest extends WebTestCase
     /**
      * Tests that a locale can not be updated
      * from an non existant identifier.
-     *
-     * @uses \App\ApiResource\ApiResponse::__construct
-     * @uses \App\ApiResource\ApiResponse::jsonSerialize
      */
     public function testCanNotPutALocaleFromAnNonExistantId(): void
     {
@@ -146,7 +138,6 @@ final class LocalePutTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertObjectHasAttribute('message', $jsonResponse);
         self::assertNotSame('', $jsonResponse->message, 'The error message is empty.');
     }
 
@@ -154,11 +145,6 @@ final class LocalePutTest extends WebTestCase
     /**
      * Tests that a locale can not be updated
      * from invalid json.
-     *
-     * @covers \App\Controller\SendErrorController::respondToBadRequest
-     * @uses \App\ApiResource\ApiResponse::__construct
-     * @uses \App\ApiResource\ApiResponse::jsonSerialize
-     * @uses \App\Entity\Locale::__construct
      */
     public function testCanNotPutInvalidJson(): void
     {
@@ -182,7 +168,6 @@ final class LocalePutTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertObjectHasAttribute('message', $jsonResponse);
         self::assertNotSame(
             '',
             $jsonResponse->message,
@@ -194,11 +179,6 @@ final class LocalePutTest extends WebTestCase
     /**
      * Tests that an empty body request
      * can not create a locale.
-     *
-     * @covers \App\Controller\SendErrorController::respondToBadRequest
-     * @uses \App\ApiResource\ApiResponse::__construct
-     * @uses \App\ApiResource\ApiResponse::jsonSerialize
-     * @uses \App\Entity\Locale::__construct
      */
     public function testCanNotPutAnEmptyBodyRequest(): void
     {
@@ -222,7 +202,6 @@ final class LocalePutTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertObjectHasAttribute('message', $jsonResponse);
         self::assertNotSame(
             '',
             $jsonResponse->message,
@@ -235,7 +214,7 @@ final class LocalePutTest extends WebTestCase
      * Return invalid type codes.
      * @return array invalid type codes.
      */
-    private function getInvalidTypeCodes(): array
+    public static function getInvalidTypeCodes(): array
     {
         return [
             'code is null' => [null],
@@ -248,13 +227,11 @@ final class LocalePutTest extends WebTestCase
      * Tests that an invalid type code
      * can not be updated.
      * @param mixed $invalidTypeCode an invalid type code.
-     *
-     * @covers \App\Controller\SendErrorController::respondToBadRequest
-     * @uses \App\ApiResource\ApiResponse::__construct
-     * @uses \App\ApiResource\ApiResponse::jsonSerialize
-     * @uses \App\Entity\Locale::__construct
-     * @dataProvider getInvalidTypeCodes
      */
+    #[
+        PA\DataProvider('getInvalidTypeCodes'),
+        PA\TestDox('Can not put a locale when $_dataName')
+    ]
     public function testCanNotPutAnInvalidTypeCode(mixed $invalidTypeCode): void
     {
         $params = [
@@ -281,7 +258,6 @@ final class LocalePutTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertObjectHasAttribute('message', $jsonResponse);
         self::assertNotSame(
             '',
             $jsonResponse->message,
@@ -293,15 +269,6 @@ final class LocalePutTest extends WebTestCase
     /**
      * Tests that an invalid code
      * can not be updated.
-     *
-     * @covers \App\Controller\SendErrorController::sendViolations
-     * @uses \App\ApiResource\LocaleInput::__construct
-     * @uses \App\ApiResource\Violation::__construct
-     * @uses \App\ApiResource\Violation::jsonSerialize
-     * @uses \App\ApiResource\Violations::__construct
-     * @uses \App\ApiResource\Violations::add
-     * @uses \App\ApiResource\Violations::jsonSerialize
-     * @uses \App\Entity\Locale::__construct
      */
     public function testCanNotPutAnInvalidCode(): void
     {
@@ -331,8 +298,6 @@ final class LocalePutTest extends WebTestCase
 
         self::assertCount(1, $jsonResponse, 'There must be one violation.');
         self::assertArrayHasKey(0, $jsonResponse);
-        self::assertObjectHasAttribute('property', $jsonResponse[0]);
-        self::assertObjectHasAttribute('message', $jsonResponse[0]);
         self::assertSame('code', $jsonResponse[0]->property);
         self::assertNotSame(
             '',
@@ -345,15 +310,6 @@ final class LocalePutTest extends WebTestCase
     /**
      * Tests that a locale can not be updated
      * with a blank code.
-     *
-     * @covers \App\Controller\SendErrorController::sendViolations
-     * @uses \App\ApiResource\LocaleInput::__construct
-     * @uses \App\ApiResource\Violation::__construct
-     * @uses \App\ApiResource\Violation::jsonSerialize
-     * @uses \App\ApiResource\Violations::__construct
-     * @uses \App\ApiResource\Violations::add
-     * @uses \App\ApiResource\Violations::jsonSerialize
-     * @uses \App\Entity\Locale::__construct
      */
     public function testCanNotPutABlankCode(): void
     {
@@ -383,8 +339,6 @@ final class LocalePutTest extends WebTestCase
 
         self::assertCount(1, $jsonResponse, 'There must be one violation.');
         self::assertArrayHasKey(0, $jsonResponse);
-        self::assertObjectHasAttribute('property', $jsonResponse[0]);
-        self::assertObjectHasAttribute('message', $jsonResponse[0]);
         self::assertSame('code', $jsonResponse[0]->property);
         self::assertNotSame(
             '',

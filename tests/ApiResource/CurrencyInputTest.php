@@ -5,25 +5,24 @@ declare(strict_types=1);
 namespace App\Tests\ApiResource;
 
 use App\ApiResource\CurrencyInput;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the API currency input.
- *
- * @coversDefaultClass \App\ApiResource\CurrencyInput
- * @covers ::__construct
- * @group apiResource
- * @group apiResource_currencyInput
- * @group currency
  */
+#[
+    PA\CoversClass(CurrencyInput::class),
+    PA\Group('apiResource'),
+    PA\Group('apiResource_currencyInput'),
+    PA\Group('currency')
+]
 final class CurrencyInputTest extends TestCase
 {
     // Methods :
 
     /**
      * Tests that the currency can return code.
-     *
-     * @covers ::getCode
      */
     public function testCanGetCode(): void
     {
@@ -34,8 +33,6 @@ final class CurrencyInputTest extends TestCase
 
     /**
      * Tests that the currency can return decimal.
-     *
-     * @covers ::getDecimals
      */
     public function testCanGetDecimals(): void
     {

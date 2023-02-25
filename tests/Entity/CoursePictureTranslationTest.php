@@ -8,23 +8,27 @@ use App\Entity\Course;
 use App\Entity\CoursePicture;
 use App\Entity\CoursePictureTranslation;
 use App\Entity\Locale;
+use App\Entity\Product;
+use App\Entity\ProductPicture;
+use App\Entity\ProductPictureTranslation;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the CoursePictureTranslation entity.
- *
- * @coversDefaultClass \App\Entity\CoursePictureTranslation
- * @covers ::__construct
- * @uses \App\Entity\Course::__construct
- * @uses \App\Entity\CoursePicture::__construct
- * @uses \App\Entity\Locale::__construct
- * @uses \App\Entity\Product::__construct
- * @uses \App\Entity\ProductPicture::__construct
- * @uses \App\Entity\ProductPictureTranslation::__construct
- * @group entities
- * @group entities_coursePictureTranslation
- * @group coursePictureTranslation
  */
+#[
+    PA\CoversClass(CoursePictureTranslation::class),
+    PA\UsesClass(Course::class),
+    PA\UsesClass(CoursePicture::class),
+    PA\UsesClass(Locale::class),
+    PA\UsesClass(Product::class),
+    PA\UsesClass(ProductPicture::class),
+    PA\UsesClass(ProductPictureTranslation::class),
+    PA\Group('entities'),
+    PA\Group('entities_coursePictureTranslation'),
+    PA\Group('coursePictureTranslation')
+]
 final class CoursePictureTranslationTest extends TestCase
 {
     // Methods :

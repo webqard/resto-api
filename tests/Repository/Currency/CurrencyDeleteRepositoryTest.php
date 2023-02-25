@@ -6,27 +6,28 @@ namespace App\Tests\Repository\Currency;
 
 use App\Entity\Currency;
 use App\Repository\Currency\CurrencyDeleteRepository;
+use App\Repository\Currency\CurrencyRepository;
+use PHPUnit\Framework\Attributes as PA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the currency DELETE repository.
- *
- * @coversDefaultClass \App\Repository\Currency\CurrencyDeleteRepository
- * @covers ::__construct
- * @covers ::delete
- * @group repositories
- * @group repository_currencies
- * @group repository_currencies_delete
- * @group currency
  */
+#[
+    PA\CoversClass(CurrencyDeleteRepository::class),
+    PA\UsesClass(Currency::class),
+    PA\UsesClass(CurrencyRepository::class),
+    PA\Group('repositories'),
+    PA\Group('repository_currencies'),
+    PA\Group('repository_currencies_delete'),
+    PA\Group('currency')
+]
 final class CurrencyDeleteRepositoryTest extends WebTestCase
 {
     // Methods :
 
     /**
      * Tests that a currency can be deleted.
-     *
-     * @uses \App\Entity\Currency::__construct
      */
     public function testCanDeleteACurrency(): void
     {

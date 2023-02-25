@@ -6,28 +6,28 @@ namespace App\Tests\Repository\Locale;
 
 use App\Entity\Locale;
 use App\Repository\Locale\LocaleGetRepository;
+use App\Repository\Locale\LocaleRepository;
+use PHPUnit\Framework\Attributes as PA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the locale GET repository.
- *
- * @coversDefaultClass \App\Repository\Locale\LocaleGetRepository
- * @covers ::__construct
- * @group repositories
- * @group repository_locales
- * @group repository_locales_get
- * @group locale
  */
+#[
+    PA\CoversClass(LocaleGetRepository::class),
+    PA\UsesClass(Locale::class),
+    PA\UsesClass(LocaleRepository::class),
+    PA\Group('repositories'),
+    PA\Group('repository_locales'),
+    PA\Group('repository_locales_get'),
+    PA\Group('locale')
+]
 final class LocaleGetRepositoryTest extends WebTestCase
 {
     // Methods :
 
     /**
      * Tests that a locale can be found.
-     *
-     * @covers ::find
-     * @uses \App\Entity\Locale::__construct
-     * @uses \App\Entity\Property\Code::getCode
      */
     public function testCanFindALocale(): void
     {

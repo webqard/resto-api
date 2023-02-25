@@ -5,23 +5,26 @@ declare(strict_types=1);
 namespace App\Tests\Entity;
 
 use App\Entity\Drink;
+use App\Entity\Product;
 use App\Entity\SetMenu;
 use App\Entity\SetMenuDrink;
+use App\Entity\SetMenuProduct;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the SetMenuDrink entity.
- *
- * @coversDefaultClass \App\Entity\SetMenuDrink
- * @covers ::__construct
- * @uses \App\Entity\Drink::__construct
- * @uses \App\Entity\Product::__construct
- * @uses \App\Entity\SetMenu::__construct
- * @uses \App\Entity\SetMenuProduct::__construct
- * @group entities
- * @group entities_setMenuDrink
- * @group setMenuDrink
  */
+#[
+    PA\CoversClass(SetMenuDrink::class),
+    PA\UsesClass(Drink::class),
+    PA\UsesClass(Product::class),
+    PA\UsesClass(SetMenu::class),
+    PA\UsesClass(SetMenuProduct::class),
+    PA\Group('entities'),
+    PA\Group('entities_setMenuDrink'),
+    PA\Group('setMenuDrink')
+]
 final class SetMenuDrinkTest extends TestCase
 {
     // Methods :

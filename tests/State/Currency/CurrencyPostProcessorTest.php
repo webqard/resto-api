@@ -7,30 +7,26 @@ namespace App\Tests\State\Currency;
 use App\ApiResource\CurrencyInput;
 use App\Entity\Currency;
 use App\State\Currency\CurrencyPostProcessor;
+use PHPUnit\Framework\Attributes as PA;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
  * Tests the currency post processor.
- *
- * @coversDefaultClass \App\State\Currency\CurrencyPostProcessor
- * @group state
- * @group state_currencyPostProcessor
- * @group currency
  */
+#[
+    PA\CoversClass(CurrencyPostProcessor::class),
+    PA\UsesClass(Currency::class),
+    PA\UsesClass(CurrencyInput::class),
+    PA\Group('state'),
+    PA\Group('state_currencyPostProcessor'),
+    PA\Group('currency')
+]
 final class CurrencyPostProcessorTest extends KernelTestCase
 {
     // Methods :
 
     /**
      * Test that the entity can be returned.
-     *
-     * @covers ::getEntity
-     * @uses \App\ApiResource\CurrencyInput::__construct
-     * @uses \App\ApiResource\CurrencyInput::getCode
-     * @uses \App\ApiResource\CurrencyInput::getDecimals
-     * @uses \App\Entity\Currency::__construct
-     * @uses \App\Entity\Currency::getDecimals
-     * @uses \App\Entity\Property\Code::getCode
      */
     public function testCanGetEntity(): void
     {

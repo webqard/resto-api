@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace App\Tests\Entity;
 
 use App\Entity\Currency;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the Currency entity.
- *
- * @coversDefaultClass \App\Entity\Currency
- * @covers ::__construct
- * @group entities
- * @group entities_currency
- * @group currency
  */
+#[
+    PA\CoversClass(Currency::class),
+    PA\Group('entities'),
+    PA\Group('entities_currency'),
+    PA\Group('currency')
+]
 final class CurrencyTest extends TestCase
 {
     // Methods :
@@ -34,9 +35,6 @@ final class CurrencyTest extends TestCase
 
     /**
      * Test that the code can be returned and changed.
-     *
-     * @covers ::getCode
-     * @covers ::setCode
      */
     public function testCanGetAndSetCode(): void
     {
@@ -52,9 +50,6 @@ final class CurrencyTest extends TestCase
 
     /**
      * Test that the decimals can be returned and changed.
-     *
-     * @covers ::getDecimals
-     * @covers ::setDecimals
      */
     public function testCanGetAndSetDecimals(): void
     {

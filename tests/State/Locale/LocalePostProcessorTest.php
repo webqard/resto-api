@@ -7,28 +7,26 @@ namespace App\Tests\State\Locale;
 use App\ApiResource\LocaleInput;
 use App\Entity\Locale;
 use App\State\Locale\LocalePostProcessor;
+use PHPUnit\Framework\Attributes as PA;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
  * Tests the locale post processor.
- *
- * @coversDefaultClass \App\State\Locale\LocalePostProcessor
- * @group state
- * @group state_localePostProcessor
- * @group locale
  */
+#[
+    PA\CoversClass(LocalePostProcessor::class),
+    PA\UsesClass(Locale::class),
+    PA\UsesClass(LocaleInput::class),
+    PA\Group('state'),
+    PA\Group('state_localePostProcessor'),
+    PA\Group('locale')
+]
 final class LocalePostProcessorTest extends KernelTestCase
 {
     // Methods :
 
     /**
      * Test that the entity can be returned.
-     *
-     * @covers ::getEntity
-     * @uses \App\ApiResource\LocaleInput::__construct
-     * @uses \App\ApiResource\LocaleInput::getCode
-     * @uses \App\Entity\Locale::__construct
-     * @uses \App\Entity\Property\Code::getCode
      */
     public function testCanGetEntity(): void
     {

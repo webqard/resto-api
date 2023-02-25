@@ -6,18 +6,19 @@ namespace App\Tests\Entity;
 
 use App\Entity\Locale;
 use App\Entity\ProductPictureTranslation;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the ProductPictureTranslation entity.
- *
- * @coversDefaultClass \App\Entity\ProductPictureTranslation
- * @covers ::__construct
- * @uses \App\Entity\Locale::__construct
- * @group entities
- * @group entities_productPictureTranslation
- * @group productPictureTranslation
  */
+#[
+    PA\CoversClass(ProductPictureTranslation::class),
+    PA\UsesClass(Locale::class),
+    PA\Group('entities'),
+    PA\Group('entities_productPictureTranslation'),
+    PA\Group('productPictureTranslation')
+]
 final class ProductPictureTranslationTest extends TestCase
 {
     // Methods :

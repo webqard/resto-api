@@ -4,39 +4,44 @@ declare(strict_types=1);
 
 namespace App\Tests\Api\Currency;
 
+use App\ApiResource\ApiResponse;
+use App\ApiResource\CurrencyInput;
+use App\ApiResource\Violation;
+use App\ApiResource\Violations;
+use App\Controller\Currency\CurrencyPutController;
+use App\Controller\SendErrorController;
 use App\Entity\Currency;
+use App\Repository\Currency\CurrencyGetRepository;
+use App\Repository\Currency\CurrencyPutRepository;
+use App\State\Currency\CurrencyPutProcessor;
+use PHPUnit\Framework\Attributes as PA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the currency PUT.
- *
- * @coversDefaultClass \App\Controller\Currency\CurrencyPutController
- * @covers ::__construct
- * @covers ::put
- * @covers \App\Controller\SendErrorController::__construct
- * @uses \App\Repository\Currency\CurrencyGetRepository::find
- * @uses \App\Repository\Currency\CurrencyPutRepository::__construct
- * @group api
- * @group api_currencies
- * @group api_currencies_put
- * @group currency
  */
+#[
+    PA\CoversClass(CurrencyPutController::class),
+    PA\CoversClass(SendErrorController::class),
+    PA\UsesClass(ApiResponse::class),
+    PA\UsesClass(Currency::class),
+    PA\UsesClass(CurrencyInput::class),
+    PA\UsesClass(CurrencyPutProcessor::class),
+    PA\UsesClass(CurrencyGetRepository::class),
+    PA\UsesClass(CurrencyPutRepository::class),
+    PA\UsesClass(Violation::class),
+    PA\UsesClass(Violations::class),
+    PA\Group('api'),
+    PA\Group('api_currencies'),
+    PA\Group('api_currencies_put'),
+    PA\Group('currency')
+]
 final class CurrencyPutTest extends WebTestCase
 {
     // Methods :
 
     /**
      * Tests that a currency can be updated.
-     *
-     * @uses \App\ApiResource\CurrencyInput::__construct
-     * @uses \App\ApiResource\CurrencyInput::getCode
-     * @uses \App\ApiResource\CurrencyInput::getDecimals
-     * @uses \App\Entity\Currency::__construct
-     * @uses \App\Entity\Currency::setDecimals
-     * @uses \App\Entity\Property\Code::getCode
-     * @uses \App\Entity\Property\Code::setCode
-     * @uses \App\Repository\Currency\CurrencyPutRepository::save
-     * @uses \App\State\Currency\CurrencyPutProcessor::getEntity
      */
     public function testCanPutACurrency(): void
     {
@@ -69,20 +74,6 @@ final class CurrencyPutTest extends WebTestCase
     /**
      * Tests that a currency can not be updated
      * with the code of an other one.
-     *
-     * @covers \App\Controller\SendErrorController::sendViolations
-     * @uses \App\ApiResource\CurrencyInput::__construct
-     * @uses \App\ApiResource\CurrencyInput::getCode
-     * @uses \App\ApiResource\CurrencyInput::getDecimals
-     * @uses \App\ApiResource\Violation::__construct
-     * @uses \App\ApiResource\Violation::jsonSerialize
-     * @uses \App\ApiResource\Violations::__construct
-     * @uses \App\ApiResource\Violations::add
-     * @uses \App\ApiResource\Violations::jsonSerialize
-     * @uses \App\Entity\Currency::__construct
-     * @uses \App\Entity\Currency::setDecimals
-     * @uses \App\Entity\Property\Code::setCode
-     * @uses \App\State\Currency\CurrencyPutProcessor::getEntity
      */
     public function testCanNotPutACurrencyWithTheCodeOfAnOtherOne(): void
     {
@@ -127,9 +118,6 @@ final class CurrencyPutTest extends WebTestCase
     /**
      * Tests that a currency can not be updated
      * from an non existant identifier.
-     *
-     * @uses \App\ApiResource\ApiResponse::__construct
-     * @uses \App\ApiResource\ApiResponse::jsonSerialize
      */
     public function testCanNotPutACurrencyFromAnNonExistantId(): void
     {
@@ -153,7 +141,6 @@ final class CurrencyPutTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertObjectHasAttribute('message', $jsonResponse);
         self::assertNotSame('', $jsonResponse->message, 'The error message is empty.');
     }
 
@@ -161,11 +148,6 @@ final class CurrencyPutTest extends WebTestCase
     /**
      * Tests that a currency can not be updated
      * from invalid json.
-     *
-     * @covers \App\Controller\SendErrorController::respondToBadRequest
-     * @uses \App\ApiResource\ApiResponse::__construct
-     * @uses \App\ApiResource\ApiResponse::jsonSerialize
-     * @uses \App\Entity\Currency::__construct
      */
     public function testCanNotPutInvalidJson(): void
     {
@@ -189,7 +171,6 @@ final class CurrencyPutTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertObjectHasAttribute('message', $jsonResponse);
         self::assertNotSame(
             '',
             $jsonResponse->message,
@@ -201,11 +182,6 @@ final class CurrencyPutTest extends WebTestCase
     /**
      * Tests that an empty body request
      * can not create a currency.
-     *
-     * @covers \App\Controller\SendErrorController::respondToBadRequest
-     * @uses \App\ApiResource\ApiResponse::__construct
-     * @uses \App\ApiResource\ApiResponse::jsonSerialize
-     * @uses \App\Entity\Currency::__construct
      */
     public function testCanNotPutAnEmptyBodyRequest(): void
     {
@@ -229,7 +205,6 @@ final class CurrencyPutTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertObjectHasAttribute('message', $jsonResponse);
         self::assertNotSame(
             '',
             $jsonResponse->message,
@@ -242,7 +217,7 @@ final class CurrencyPutTest extends WebTestCase
      * Returns invalid type values.
      * @return array invalid type values.
      */
-    private function getInvalidTypeValues(): array
+    public static function getInvalidTypeValues(): array
     {
         return [
             'code is null' => ['code', null],
@@ -260,13 +235,11 @@ final class CurrencyPutTest extends WebTestCase
      * can not be updated.
      * @param string $property the property name.
      * @param mixed $invalidTypeValue an invalid type value.
-     *
-     * @covers \App\Controller\SendErrorController::respondToBadRequest
-     * @uses \App\ApiResource\ApiResponse::__construct
-     * @uses \App\ApiResource\ApiResponse::jsonSerialize
-     * @uses \App\Entity\Currency::__construct
-     * @dataProvider getInvalidTypeValues
      */
+    #[
+        PA\DataProvider('getInvalidTypeValues'),
+        PA\TestDox('Can not put a currency when $_dataName')
+    ]
     public function testCanNotPutAnInvalidTypeValue(string $property, mixed $invalidTypeValue): void
     {
         $params = [
@@ -295,7 +268,6 @@ final class CurrencyPutTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertObjectHasAttribute('message', $jsonResponse);
         self::assertNotSame(
             '',
             $jsonResponse->message,
@@ -307,15 +279,6 @@ final class CurrencyPutTest extends WebTestCase
     /**
      * Tests that an invalid code
      * can not be updated.
-     *
-     * @covers \App\Controller\SendErrorController::sendViolations
-     * @uses \App\ApiResource\CurrencyInput::__construct
-     * @uses \App\ApiResource\Violation::__construct
-     * @uses \App\ApiResource\Violation::jsonSerialize
-     * @uses \App\ApiResource\Violations::__construct
-     * @uses \App\ApiResource\Violations::add
-     * @uses \App\ApiResource\Violations::jsonSerialize
-     * @uses \App\Entity\Currency::__construct
      */
     public function testCanNotPutAnInvalidCode(): void
     {
@@ -346,8 +309,6 @@ final class CurrencyPutTest extends WebTestCase
 
         self::assertCount(1, $jsonResponse, 'There must be one violation.');
         self::assertArrayHasKey(0, $jsonResponse);
-        self::assertObjectHasAttribute('property', $jsonResponse[0]);
-        self::assertObjectHasAttribute('message', $jsonResponse[0]);
         self::assertSame('code', $jsonResponse[0]->property);
         self::assertNotSame(
             '',
@@ -360,15 +321,6 @@ final class CurrencyPutTest extends WebTestCase
     /**
      * Tests that a currency can not be updated
      * with a blank code.
-     *
-     * @covers \App\Controller\SendErrorController::sendViolations
-     * @uses \App\ApiResource\CurrencyInput::__construct
-     * @uses \App\ApiResource\Violation::__construct
-     * @uses \App\ApiResource\Violation::jsonSerialize
-     * @uses \App\ApiResource\Violations::__construct
-     * @uses \App\ApiResource\Violations::add
-     * @uses \App\ApiResource\Violations::jsonSerialize
-     * @uses \App\Entity\Currency::__construct
      */
     public function testCanNotPutABlankCode(): void
     {
@@ -399,8 +351,6 @@ final class CurrencyPutTest extends WebTestCase
 
         self::assertCount(1, $jsonResponse, 'There must be one violation.');
         self::assertArrayHasKey(0, $jsonResponse);
-        self::assertObjectHasAttribute('property', $jsonResponse[0]);
-        self::assertObjectHasAttribute('message', $jsonResponse[0]);
         self::assertSame('code', $jsonResponse[0]->property);
         self::assertNotSame(
             '',

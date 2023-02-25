@@ -4,31 +4,34 @@ declare(strict_types=1);
 
 namespace App\Tests\Api\Locale;
 
+use App\ApiResource\ApiResponse;
+use App\Controller\Locale\LocaleDeleteController;
 use App\Entity\Locale;
+use App\Repository\Locale\LocaleDeleteRepository;
+use App\Repository\Locale\LocaleGetRepository;
+use PHPUnit\Framework\Attributes as PA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the locale DELETE.
- *
- * @coversDefaultClass \App\Controller\Locale\LocaleDeleteController
- * @covers ::__construct
- * @covers ::delete
- * @uses \App\Repository\Locale\LocaleDeleteRepository::__construct
- * @uses \App\Repository\Locale\LocaleGetRepository::find
- * @group api
- * @group api_locales
- * @group api_locales_delete
- * @group locale
  */
+#[
+    PA\CoversClass(LocaleDeleteController::class),
+    PA\UsesClass(ApiResponse::class),
+    PA\UsesClass(Locale::class),
+    PA\UsesClass(LocaleDeleteRepository::class),
+    PA\UsesClass(LocaleGetRepository::class),
+    PA\Group('api'),
+    PA\Group('api_locales'),
+    PA\Group('api_locales_delete'),
+    PA\Group('locale')
+]
 final class LocaleDeleteTest extends WebTestCase
 {
     // Methods :
 
     /**
      * Tests that a locale can be deleted.
-     *
-     * @uses \App\Entity\Locale::__construct
-     * @uses \App\Repository\Locale\LocaleDeleteRepository::delete
      */
     public function testCanDeleteALocale(): void
     {
@@ -50,9 +53,6 @@ final class LocaleDeleteTest extends WebTestCase
     /**
      * Tests that a locale can not be deleted
      * from an non existant identifier.
-     *
-     * @uses \App\ApiResource\ApiResponse::__construct
-     * @uses \App\ApiResource\ApiResponse::jsonSerialize
      */
     public function testCanNotDeleteALocaleFromAnNonExistantId(): void
     {
@@ -71,7 +71,6 @@ final class LocaleDeleteTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertObjectHasAttribute('message', $jsonResponse);
         self::assertNotSame('', $jsonResponse->message, 'The error message is empty.');
     }
 }

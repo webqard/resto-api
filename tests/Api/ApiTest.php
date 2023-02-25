@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace App\Tests\Api;
 
+use App\Controller\ApiController;
+use PHPUnit\Framework\Attributes as PA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the API documentation.
- *
- * @coversDefaultClass \App\Controller\ApiController
- * @covers ::api
- * @group api
- * @group api_doc
  */
+#[
+    PA\CoversClass(ApiController::class),
+    PA\Group('api'),
+    PA\Group('api_doc')
+]
 final class ApiTest extends WebTestCase
 {
     // Methods :

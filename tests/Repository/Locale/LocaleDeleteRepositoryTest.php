@@ -6,27 +6,28 @@ namespace App\Tests\Repository\Locale;
 
 use App\Entity\Locale;
 use App\Repository\Locale\LocaleDeleteRepository;
+use App\Repository\Locale\LocaleRepository;
+use PHPUnit\Framework\Attributes as PA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the locale DELETE repository.
- *
- * @coversDefaultClass \App\Repository\Locale\LocaleDeleteRepository
- * @covers ::__construct
- * @covers ::delete
- * @group repositories
- * @group repository_locales
- * @group repository_locales_delete
- * @group locale
  */
+#[
+    PA\CoversClass(LocaleDeleteRepository::class),
+    PA\UsesClass(Locale::class),
+    PA\UsesClass(LocaleRepository::class),
+    PA\Group('repositories'),
+    PA\Group('repository_locales'),
+    PA\Group('repository_locales_delete'),
+    PA\Group('locale')
+]
 final class LocaleDeleteRepositoryTest extends WebTestCase
 {
     // Methods :
 
     /**
      * Tests that a locale can be deleted.
-     *
-     * @uses \App\Entity\Locale::__construct
      */
     public function testCanDeleteALocale(): void
     {

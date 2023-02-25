@@ -4,24 +4,27 @@ declare(strict_types=1);
 
 namespace App\Tests\Entity;
 
+use App\Entity\Currency;
+use App\Entity\Product;
+use App\Entity\ProductPrice;
 use App\Entity\SetMenu;
 use App\Entity\SetMenuPrice;
-use App\Entity\Currency;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the SetMenuPrice entity.
- *
- * @coversDefaultClass \App\Entity\SetMenuPrice
- * @covers ::__construct
- * @uses \App\Entity\SetMenu::__construct
- * @uses \App\Entity\Currency::__construct
- * @uses \App\Entity\Product::__construct
- * @uses \App\Entity\ProductPrice::__construct
- * @group entities
- * @group entities_setMenuPrice
- * @group setMenuPrice
  */
+#[
+    PA\CoversClass(SetMenuPrice::class),
+    PA\UsesClass(Currency::class),
+    PA\UsesClass(Product::class),
+    PA\UsesClass(ProductPrice::class),
+    PA\UsesClass(SetMenu::class),
+    PA\Group('entities'),
+    PA\Group('entities_setMenuPrice'),
+    PA\Group('setMenuPrice')
+]
 final class SetMenuPriceTest extends TestCase
 {
     // Methods :

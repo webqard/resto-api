@@ -5,17 +5,18 @@ declare(strict_types=1);
 namespace App\Tests\Entity;
 
 use App\Entity\Category;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the Category entity.
- *
- * @coversDefaultClass \App\Entity\Category
- * @covers ::__construct
- * @group entities
- * @group entities_category
- * @group category
  */
+#[
+    PA\CoversClass(Category::class),
+    PA\Group('entities'),
+    PA\Group('entities_category'),
+    PA\Group('category')
+]
 final class CategoryTest extends TestCase
 {
     // Methods :

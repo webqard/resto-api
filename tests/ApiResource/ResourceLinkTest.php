@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace App\Tests\ApiResource;
 
 use App\ApiResource\ResourceLink;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the API resource link.
- *
- * @coversDefaultClass \App\ApiResource\ResourceLink
- * @covers ::__construct
- * @covers ::jsonSerialize
- * @group apiResource
- * @group apiResource_resourceLink
  */
+#[
+    PA\CoversClass(ResourceLink::class),
+    PA\Group('apiResource'),
+    PA\Group('apiResource_resourceLink')
+]
 final class ResourceLinkTest extends TestCase
 {
     // Methods :
@@ -29,7 +29,6 @@ final class ResourceLinkTest extends TestCase
 
         $unserialisedResourceLink = json_decode(json_encode($resourceLink));
 
-        self::assertObjectHasAttribute('link', $unserialisedResourceLink);
         self::assertSame('/entities/1', $unserialisedResourceLink->link);
     }
 }

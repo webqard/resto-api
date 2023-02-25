@@ -6,20 +6,23 @@ namespace App\Tests\Entity;
 
 use App\Entity\Course;
 use App\Entity\CoursePicture;
+use App\Entity\Product;
+use App\Entity\ProductPicture;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the CoursePicture entity.
- *
- * @coversDefaultClass \App\Entity\CoursePicture
- * @covers ::__construct
- * @uses \App\Entity\Course::__construct
- * @uses \App\Entity\Product::__construct
- * @uses \App\Entity\ProductPicture::__construct
- * @group entities
- * @group entities_coursePicture
- * @group coursePicture
  */
+#[
+    PA\CoversClass(CoursePicture::class),
+    PA\UsesClass(Course::class),
+    PA\UsesClass(Product::class),
+    PA\UsesClass(ProductPicture::class),
+    PA\Group('entities'),
+    PA\Group('entities_coursePicture'),
+    PA\Group('coursePicture')
+]
 final class CoursePictureTest extends TestCase
 {
     // Methods :

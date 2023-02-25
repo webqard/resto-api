@@ -5,18 +5,20 @@ declare(strict_types=1);
 namespace App\Tests\Entity;
 
 use App\Entity\Drink;
+use App\Entity\Product;
+use PHPUnit\Framework\Attributes as PA;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the Drink entity.
- *
- * @coversDefaultClass \App\Entity\Drink
- * @covers ::__construct
- * @uses \App\Entity\Product::__construct
- * @group entities
- * @group entities_drink
- * @group drink
  */
+#[
+    PA\CoversClass(Drink::class),
+    PA\UsesClass(Product::class),
+    PA\Group('entities'),
+    PA\Group('entities_drink'),
+    PA\Group('drink')
+]
 final class DrinkTest extends TestCase
 {
     // Methods :
