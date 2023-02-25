@@ -4,7 +4,7 @@ This is a restaurant API.
 
 [![License](https://img.shields.io/github/license/webqard/resto-api)](https://github.com/webqard/resto-api/blob/trunk/LICENSE)
 [![Type coverage](https://shepherd.dev/github/webqard/resto-api/coverage.svg)](https://shepherd.dev/github/webqard/resto-api)
-[![Minimum PHP version](https://img.shields.io/badge/php-%3E%3D8.1-%23777BB4?logo=php&style=flat)](https://www.php.net/)
+[![Minimum PHP version](https://img.shields.io/badge/php-%3E%3D8.2-%23777BB4?logo=php&style=flat)](https://www.php.net/)
 
 **This API is not fit for production in its current state. Its features may changed without warning.**
 
