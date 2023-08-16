@@ -46,7 +46,7 @@ The "-e test" option is to for the test environment which uses Sqlite.
 
 First, you need to install phive dependencies :
 ```shellsession
-user@host resto-api$ phive install --trust-gpg-keys 4AA394086372C20A,12CE0F1D262429A5,31C7E470E2138192,67F861C3D889C656,C5095986493B4AA0
+user@host resto-api$ phive install --trust-gpg-keys 4AA394086372C20A,12CE0F1D262429A5,31C7E470E2138192,8AC0BAA79732DD42,C5095986493B4AA0
 ```
 
 ### Tests
