@@ -120,6 +120,11 @@ jobs:
       with:
         name: installed-project
 
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+
     - name: Untar project.
       run:  tar -xf project.tar
 
