@@ -11,26 +11,26 @@
         "doctrine/annotations": "^1.0",
         "doctrine/doctrine-bundle": "^2.7",
         "doctrine/doctrine-migrations-bundle": "^3.2",
-        "doctrine/orm": "^2.13",
+        "doctrine/orm": "^2.17",
         "symfony/console": "*",
-        "symfony/doctrine-bridge": "6.3.*",
+        "symfony/doctrine-bridge": "7.0.*",
         "symfony/dotenv": "*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "*",
-        "symfony/intl": "6.3.*",
+        "symfony/intl": "7.0.*",
         "symfony/monolog-bundle": "^3.8",
-        "symfony/property-access": "6.3.*",
-        "symfony/proxy-manager-bridge": "6.3.*",
+        "symfony/property-access": "7.0.*",
+        "symfony/proxy-manager-bridge": "6.4.*",
         "symfony/runtime": "*",
-        "symfony/serializer": "6.3.*",
-        "symfony/translation": "6.3.*",
-        "symfony/validator": "6.3.*",
+        "symfony/serializer": "7.0.*",
+        "symfony/translation": "7.0.*",
+        "symfony/validator": "7.0.*",
         "symfony/yaml": "*",
         "zircote/swagger-php": "^4.4"
     },
     "require-dev": {
-        "dama/doctrine-test-bundle": "^7.2",
-        "symfony/browser-kit": "6.3.*",
+        "dama/doctrine-test-bundle": "^8.0",
+        "symfony/browser-kit": "7.0.*",
         "symfony/maker-bundle": "^1.43"
     },
     "config": {
@@ -77,7 +77,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "6.3.*"
+            "require": "7.0.*"
         }
     }
 }
