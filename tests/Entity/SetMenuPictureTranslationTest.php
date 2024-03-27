@@ -18,11 +18,11 @@ use PHPUnit\Framework\TestCase;
  * Tests the SetMenuPictureTranslation entity.
  */
 #[
+    PA\CoversClass(ProductPictureTranslation::class),
     PA\CoversClass(SetMenuPictureTranslation::class),
     PA\UsesClass(Locale::class),
     PA\UsesClass(Product::class),
     PA\UsesClass(ProductPicture::class),
-    PA\UsesClass(ProductPictureTranslation::class),
     PA\UsesClass(SetMenu::class),
     PA\UsesClass(SetMenuPicture::class),
     PA\Group('entities'),

@@ -17,10 +17,10 @@ use PHPUnit\Framework\TestCase;
  */
 #[
     PA\CoversClass(CourseTranslation::class),
+    PA\CoversClass(ProductTranslation::class),
     PA\UsesClass(Course::class),
     PA\UsesClass(Locale::class),
     PA\UsesClass(Product::class),
-    PA\UsesClass(ProductTranslation::class),
     PA\Group('entities'),
     PA\Group('entities_courseTranslation'),
     PA\Group('courseTranslation')

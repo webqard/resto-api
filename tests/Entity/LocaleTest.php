@@ -36,7 +36,7 @@ final class LocaleTest extends TestCase
     /**
      * Test that the code can be returned and changed.
      */
-    public function testCanGetAndCode(): void
+    public function testCanGetAndSetCode(): void
     {
         $locale = new Locale('en_GB');
 

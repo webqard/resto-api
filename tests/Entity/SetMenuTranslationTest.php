@@ -16,10 +16,10 @@ use PHPUnit\Framework\TestCase;
  * Tests the SetMenuTranslation entity.
  */
 #[
+    PA\CoversClass(ProductTranslation::class),
     PA\CoversClass(SetMenuTranslation::class),
     PA\UsesClass(Locale::class),
     PA\UsesClass(Product::class),
-    PA\UsesClass(ProductTranslation::class),
     PA\UsesClass(SetMenu::class),
     PA\Group('entities'),
     PA\Group('entities_setMenuTranslation'),

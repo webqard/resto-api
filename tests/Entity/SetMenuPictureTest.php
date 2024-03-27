@@ -15,10 +15,10 @@ use PHPUnit\Framework\TestCase;
  * Tests the SetMenuPicture entity.
  */
 #[
+    PA\CoversClass(ProductPicture::class),
     PA\CoversClass(SetMenuPicture::class),
-    PA\UsesClass(SetMenu::class),
     PA\UsesClass(Product::class),
-    PA\UsesClass(ProductPicture::class),
+    PA\UsesClass(SetMenu::class),
     PA\Group('entities'),
     PA\Group('entities_setMenuPicture'),
     PA\Group('setMenuPicture')

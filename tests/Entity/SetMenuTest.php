@@ -13,8 +13,8 @@ use PHPUnit\Framework\TestCase;
  * Tests the SetMenu entity.
  */
 #[
+    PA\CoversClass(Product::class),
     PA\CoversClass(SetMenu::class),
-    PA\UsesClass(Product::class),
     PA\Group('entities'),
     PA\Group('entities_setMenu'),
     PA\Group('setMenu')

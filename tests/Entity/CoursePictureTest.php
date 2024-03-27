@@ -16,9 +16,9 @@ use PHPUnit\Framework\TestCase;
  */
 #[
     PA\CoversClass(CoursePicture::class),
+    PA\CoversClass(ProductPicture::class),
     PA\UsesClass(Course::class),
     PA\UsesClass(Product::class),
-    PA\UsesClass(ProductPicture::class),
     PA\Group('entities'),
     PA\Group('entities_coursePicture'),
     PA\Group('coursePicture')

@@ -16,10 +16,10 @@ use PHPUnit\Framework\TestCase;
  * Tests the SetMenuPrice entity.
  */
 #[
+    PA\CoversClass(ProductPrice::class),
     PA\CoversClass(SetMenuPrice::class),
     PA\UsesClass(Currency::class),
     PA\UsesClass(Product::class),
-    PA\UsesClass(ProductPrice::class),
     PA\UsesClass(SetMenu::class),
     PA\Group('entities'),
     PA\Group('entities_setMenuPrice'),

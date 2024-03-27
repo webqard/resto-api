@@ -17,10 +17,10 @@ use PHPUnit\Framework\TestCase;
  */
 #[
     PA\CoversClass(DrinkPrice::class),
+    PA\CoversClass(ProductPrice::class),
     PA\UsesClass(Drink::class),
     PA\UsesClass(Currency::class),
     PA\UsesClass(Product::class),
-    PA\UsesClass(ProductPrice::class),
     PA\Group('entities'),
     PA\Group('entities_drinkPrice'),
     PA\Group('drinkPrice')

@@ -19,12 +19,12 @@ use PHPUnit\Framework\TestCase;
  */
 #[
     PA\CoversClass(CoursePictureTranslation::class),
+    PA\CoversClass(ProductPictureTranslation::class),
     PA\UsesClass(Course::class),
     PA\UsesClass(CoursePicture::class),
     PA\UsesClass(Locale::class),
     PA\UsesClass(Product::class),
     PA\UsesClass(ProductPicture::class),
-    PA\UsesClass(ProductPictureTranslation::class),
     PA\Group('entities'),
     PA\Group('entities_coursePictureTranslation'),
     PA\Group('coursePictureTranslation')
