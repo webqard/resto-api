@@ -31,6 +31,30 @@ use Symfony\Component\Routing\Annotation\Route;
         name: 'id',
         required: true
     ),
+    OA\Parameter(
+        description: 'The offset amount.',
+        example : 0,
+        in: 'query',
+        name: 'offset'
+    ),
+    OA\Parameter(
+        description: 'The number of items to return (defaults to 50).',
+        example : 50,
+        in: 'query',
+        name: 'limit'
+    ),
+    OA\Parameter(
+        description: 'The criterias.',
+        example : '[]',
+        in: 'query',
+        name: 'criterias'
+    ),
+    OA\Parameter(
+        description: 'The ordering.',
+        example : '[field1 => "ASC", field2 => "DESC"]',
+        in: 'query',
+        name: 'orderby'
+    ),
     OA\Response(
         content: new OA\JsonContent(ref: '#/components/schemas/ResourceLink'),
         description: 'When the item is added successfully.',
@@ -65,12 +89,12 @@ use Symfony\Component\Routing\Annotation\Route;
         description: "When the method is not allowed.",
         headers: [
             new OA\Header(
-                description: 'POST',
+                description: 'GET, POST',
                 header: 'Allow',
                 schema: new OA\Schema(type: 'string')
             )
         ],
-        response: 'DELETE_GET_PUTNotAllowed'
+        response: 'DELETE_PUTNotAllowed'
     ),
     OA\Response(
         content: new OA\JsonContent(

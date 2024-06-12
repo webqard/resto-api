@@ -20,6 +20,12 @@ class LocaleOutput implements \JsonSerializable
     // Properties :
 
     /**
+     * @var int the identifier/primary key.
+     */
+    #[OA\Property(example : 1)]
+    private int $id;
+
+    /**
      * @var string the code.
      */
     #[OA\Property(example : "en_GB")]
@@ -30,10 +36,12 @@ class LocaleOutput implements \JsonSerializable
 
     /**
      * The constructor.
+     * @param int $id the identifier/primary key.
      * @param string $code the code.
      */
-    public function __construct(string $code)
+    public function __construct(int $id, string $code)
     {
+        $this->id = $id;
         $this->code = $code;
     }
 
@@ -46,6 +54,7 @@ class LocaleOutput implements \JsonSerializable
     public function jsonSerialize(): mixed
     {
         return [
+            'id' => $this->id,
             'code' => $this->code
         ];
     }

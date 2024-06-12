@@ -2,3 +2,8 @@ invalidJson: Invalid json.
 missingProperties: Properties are missing.
 typeError: type error.
 notFound: The resource has not been found.
+notQueryableField: '"givenField" is not queryable. Queryable fields are : availableFields.'
+notOrderableField: '"givenField" is not orderable. Orderable fields are : availableFields.'
+notADirection: The orderable direction must be "ASC" or "DESC".
+limitIsNegative: The limit is negative.
+offsetIsNegative: The offset is negative.

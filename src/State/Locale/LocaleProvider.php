@@ -18,9 +18,19 @@ class LocaleProvider
      * Returns a locale to output.
      * @param \App\Entity\Locale $locale the locale.
      * @return \App\ApiResource\LocaleOutput the locale to output.
+     * @throws \DomainException if the locale has a null id.
      */
     public function provideLocaleOutput(Locale $locale): LocaleOutput
     {
-        return new LocaleOutput($locale->getCode());
+        $id = $locale->getId();
+
+        if ($id === null) {
+            throw new \DomainException('entityNotPersisted');
+        }
+
+        return new LocaleOutput(
+            $id,
+            $locale->getCode()
+        );
     }
 }

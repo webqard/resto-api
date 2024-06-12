@@ -103,7 +103,7 @@ final class LocalePostController extends SendErrorController
             response: '400'
         ),
         OA\Response(
-            ref: '#/components/responses/DELETE_GET_PUTNotAllowed',
+            ref: '#/components/responses/DELETE_PUTNotAllowed',
             response: '405'
         ),
         OA\Response(

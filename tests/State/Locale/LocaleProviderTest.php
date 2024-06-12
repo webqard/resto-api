@@ -26,19 +26,39 @@ final class LocaleProviderTest extends TestCase
     // Methods :
 
     /**
-     * Test that the code can be returned.
+     * Test that a DomainException is thrown
+     * if the entity is not persisted.
      */
-    public function testCanGetProvideLocaleOutput(): void
+    public function testCanThrowADomainExceptionIfTheEntityIsNotPersisted(): void
     {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('entityNotPersisted');
+
         $locale = new Locale('en_GB');
         $localeProvider = new LocaleProvider();
-        $localeOutput = $localeProvider->provideLocaleOutput($locale);
+        $localeProvider->provideLocaleOutput($locale);
+    }
 
-        self::assertInstanceOf(LocaleOutput::class, $localeOutput);
+
+    /**
+     * Test that the code can be returned.
+     */
+    public function testCanProvideLocaleOutput(): void
+    {
+        $locale = $this->createStub(Locale::class);
+        $locale->method('getId')
+            ->willReturn(1);
+        $locale->method('getCode')
+            ->willReturn('en_GB');
+
+        $localeProvider = new LocaleProvider();
+        $localeOutput = $localeProvider->provideLocaleOutput($locale);
 
         $serialisedLocaleOutput = $localeOutput->jsonSerialize();
 
         self::assertIsArray($serialisedLocaleOutput);
+        self::assertArrayHasKey('id', $serialisedLocaleOutput);
+        self::assertSame(1, $serialisedLocaleOutput['id']);
         self::assertArrayHasKey('code', $serialisedLocaleOutput);
         self::assertSame('en_GB', $serialisedLocaleOutput['code']);
     }

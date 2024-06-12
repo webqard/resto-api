@@ -26,10 +26,11 @@ final class LocaleOutputTest extends TestCase
      */
     public function testCanSerialiseLocale(): void
     {
-        $localeOutput = new LocaleOutput('en_GB');
+        $localeOutput = new LocaleOutput(1, 'en_GB');
 
         $unserialisedLocale = json_decode(json_encode($localeOutput));
 
+        self::assertSame(1, $unserialisedLocale->id);
         self::assertSame('en_GB', $unserialisedLocale->code);
     }
 }
