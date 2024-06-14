@@ -20,9 +20,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
         message: "code.alreadyExist"
     )
 ]
-class Locale extends IntId
+class Locale
 {
     //Traits :
+    use IntId;
     use Code;
 
 
@@ -44,8 +45,7 @@ class Locale extends IntId
      */
     public function __construct(string $code)
     {
-        parent::__construct();
-
+        $this->id = null;
         $this->code = $code;
     }
 }

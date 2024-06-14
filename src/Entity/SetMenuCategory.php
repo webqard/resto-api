@@ -18,9 +18,10 @@ use Doctrine\ORM\Mapping as ORM;
     ORM\Entity(),
     ORM\UniqueConstraint(columns: ["set_menu_id", "category_id"])
 ]
-class SetMenuCategory extends IntId
+class SetMenuCategory
 {
     // Traits :
+    use IntId;
     use Priority;
     use SetMenuAssociation;
 
@@ -79,8 +80,7 @@ class SetMenuCategory extends IntId
         int $priority = 0,
         ?SetMenuCategory $parent = null
     ) {
-        parent::__construct();
-
+        $this->id = null;
         $this->setMenu = $setMenu;
         $this->category = $category;
         $this->priority = $priority;

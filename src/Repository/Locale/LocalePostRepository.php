@@ -24,7 +24,7 @@ class LocalePostRepository extends ServiceEntityRepository
      */
     public function save(Locale $locale): void
     {
-        $this->_em->persist($locale);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($locale);
+        $this->getEntityManager()->flush();
     }
 }

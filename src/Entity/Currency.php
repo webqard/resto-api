@@ -20,9 +20,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
         message: "code.alreadyExist"
     )
 ]
-class Currency extends IntId
+class Currency
 {
     //Traits :
+    use IntId;
     use Code;
 
 
@@ -55,8 +56,7 @@ class Currency extends IntId
      */
     public function __construct(string $code, int $decimals)
     {
-        parent::__construct();
-
+        $this->id = null;
         $this->code = $code;
         $this->decimals = $decimals;
     }

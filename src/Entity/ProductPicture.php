@@ -13,9 +13,10 @@ use Doctrine\ORM\Mapping as ORM;
  * product's picture.
  */
 #[ORM\MappedSuperclass()]
-abstract class ProductPicture extends IntId
+abstract class ProductPicture
 {
     // Traits :
+    use IntId;
     use Priority;
 
 
@@ -38,8 +39,7 @@ abstract class ProductPicture extends IntId
         string $source,
         int $priority = 0
     ) {
-        parent::__construct();
-
+        $this->id = null;
         $this->source = $source;
         $this->priority = $priority;
     }

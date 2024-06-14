@@ -15,9 +15,10 @@ use Doctrine\ORM\Mapping as ORM;
  * The category entity.
  */
 #[ORM\Entity()]
-class Category extends IntId
+class Category
 {
     // Traits :
+    use IntId;
     use Priority;
     use SetMenuOnly;
 
@@ -74,8 +75,7 @@ class Category extends IntId
         bool $setMenuOnly = false,
         ?Category $parent = null
     ) {
-        parent::__construct();
-
+        $this->id = null;
         $this->priority = $priority;
         $this->setMenuOnly = $setMenuOnly;
         $this->parent = $parent;

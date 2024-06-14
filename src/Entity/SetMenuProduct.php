@@ -13,9 +13,10 @@ use Doctrine\ORM\Mapping as ORM;
  * The product in a set menu.
  */
 #[ORM\MappedSuperclass()]
-abstract class SetMenuProduct extends IntId
+abstract class SetMenuProduct
 {
     // Traits :
+    use IntId;
     use Priority;
     use SetMenuAssociation;
 
@@ -47,8 +48,7 @@ abstract class SetMenuProduct extends IntId
         ?SetMenuCategory $setMenuCategory = null,
         int $priority = 0
     ) {
-        parent::__construct();
-
+        $this->id = null;
         $this->setMenu = $setMenu;
         $this->setMenuCategory = $setMenuCategory;
         $this->priority = $priority;

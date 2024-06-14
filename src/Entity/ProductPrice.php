@@ -12,8 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
  * product's price.
  */
 #[ORM\MappedSuperclass()]
-abstract class ProductPrice extends IntId
+abstract class ProductPrice
 {
+    // Traits :
+    use IntId;
+
+
     // Properties :
 
     /**
@@ -68,8 +72,7 @@ abstract class ProductPrice extends IntId
         \DateTimeImmutable $beginDate,
         ?\DateTimeImmutable $endDate = null
     ) {
-        parent::__construct();
-
+        $this->id = null;
         $this->value = $value;
         $this->currency = $currency;
         $this->beginDate = $beginDate;

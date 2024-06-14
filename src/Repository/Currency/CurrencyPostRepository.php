@@ -24,7 +24,7 @@ class CurrencyPostRepository extends ServiceEntityRepository
      */
     public function save(Currency $currency): void
     {
-        $this->_em->persist($currency);
-        $this->_em->flush();
+        $this->getEntityManager()->persist($currency);
+        $this->getEntityManager()->flush();
     }
 }

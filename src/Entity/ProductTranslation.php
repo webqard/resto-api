@@ -14,9 +14,10 @@ use Doctrine\ORM\Mapping as ORM;
  * product's translation.
  */
 #[ORM\MappedSuperclass()]
-abstract class ProductTranslation extends IntId
+abstract class ProductTranslation
 {
     // Traits :
+    use IntId;
     use LocaleAssociation;
     use Slug;
 
@@ -57,8 +58,7 @@ abstract class ProductTranslation extends IntId
         Locale $locale,
         ?string $description = null
     ) {
-        parent::__construct();
-
+        $this->id = null;
         $this->name = $name;
         $this->slug = $slug;
         $this->locale = $locale;

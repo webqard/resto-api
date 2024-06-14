@@ -14,9 +14,10 @@ use Doctrine\ORM\Mapping as ORM;
  * courses, drinks and menus.
  */
 #[ORM\MappedSuperclass()]
-abstract class Product extends IntId
+abstract class Product
 {
     // Traits :
+    use IntId;
     use Available;
     use Priority;
 
@@ -31,8 +32,7 @@ abstract class Product extends IntId
         bool $available = true,
         int $priority = 0
     ) {
-        parent::__construct();
-
+        $this->id = null;
         $this->available = $available;
         $this->priority = $priority;
     }

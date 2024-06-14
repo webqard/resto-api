@@ -19,7 +19,7 @@ class CurrencyDeleteRepository extends CurrencyGetRepository
      */
     public function delete(Currency $currency): void
     {
-        $this->_em->remove($currency);
-        $this->_em->flush();
+        $this->getEntityManager()->remove($currency);
+        $this->getEntityManager()->flush();
     }
 }

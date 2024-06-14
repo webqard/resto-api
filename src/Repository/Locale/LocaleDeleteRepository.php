@@ -19,7 +19,7 @@ class LocaleDeleteRepository extends LocaleGetRepository
      */
     public function delete(Locale $locale): void
     {
-        $this->_em->remove($locale);
-        $this->_em->flush();
+        $this->getEntityManager()->remove($locale);
+        $this->getEntityManager()->flush();
     }
 }
