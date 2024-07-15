@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller\Locale;
 
 use App\ApiResource\ApiResponse;
-use App\Exception\UnexpectedDirectionException;
 use App\Exception\UnexpectedFieldException;
 use App\Repository\Locale\LocaleCollectionRepository;
 use App\State\Locale\LocaleProvider;
