@@ -39,6 +39,7 @@ abstract class SetMenuProduct
     // Magic methods :
 
     /**
+     * The constructor.
      * @param \App\Entity\SetMenu $setMenu the set menu.
      * @param \App\Entity\SetMenuCategory|null $setMenuCategory the set menu category.
      * @param int $priority the priority.

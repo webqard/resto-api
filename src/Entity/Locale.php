@@ -41,6 +41,7 @@ class Locale
     // Magic methods :
 
     /**
+     * The constructor.
      * @param string $code the code.
      */
     public function __construct(string $code)

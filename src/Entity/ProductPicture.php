@@ -32,6 +32,7 @@ abstract class ProductPicture
     // Magic methods :
 
     /**
+     * The constructor.
      * @param string $source the source.
      * @param int $priority the priority.
      */

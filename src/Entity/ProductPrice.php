@@ -61,6 +61,7 @@ abstract class ProductPrice
     // Magic methods :
 
     /**
+     * The constructor.
      * @param int $value the value in the smallest unit.
      * @param \App\Entity\Currency $currency the currency.
      * @param \DateTimeImmutable $beginDate the begin date.

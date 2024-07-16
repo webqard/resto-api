@@ -66,6 +66,7 @@ class Category
     // Magic methods :
 
     /**
+     * The constructor.
      * @param int $priority the priority.
      * @param bool $setMenuOnly if the course is available only in set menu.
      * @param \App\Entity\Category|null $parent the parent category.

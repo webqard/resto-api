@@ -69,6 +69,7 @@ class SetMenuCategory
     // Magic methods :
 
     /**
+     * The constructor.
      * @param \App\Entity\SetMenu $setMenu the set menu.
      * @param \App\Entity\Category $category the category.
      * @param int $priority the priority.

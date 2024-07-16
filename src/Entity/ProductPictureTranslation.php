@@ -43,6 +43,7 @@ abstract class ProductPictureTranslation
     // Magic methods :
 
     /**
+     * The constructor.
      * @param \App\Entity\Locale $locale the locale.
      * @param string|null $alternative the alternative.
      * @param string|null $title the title.

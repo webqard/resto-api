@@ -25,6 +25,7 @@ abstract class Product
     // Magic methods :
 
     /**
+     * The constructor.
      * @param bool $available the availability.
      * @param int $priority the priority.
      */

@@ -51,6 +51,7 @@ class Currency
     // Magic methods :
 
     /**
+     * The constructor.
      * @param string $code the code.
      * @param int $decimals the number of decimals.
      */
