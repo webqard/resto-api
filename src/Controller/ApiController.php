@@ -61,8 +61,12 @@ use Symfony\Component\Routing\Annotation\Route;
         response: '201'
     ),
     OA\Response(
+        description: 'When the item is updated successfully.',
+        response: '204updated'
+    ),
+    OA\Response(
         description: 'When the item is deleted successfully.',
-        response: '204'
+        response: '204deleted'
     ),
     OA\Response(
         content: new OA\JsonContent(ref: '#/components/schemas/ApiResponse'),

@@ -66,7 +66,7 @@ final class CurrencyDeleteController extends AbstractController
         OA\Parameter(ref: '#/components/parameters/id'),
         OA\Parameter(ref: '#/components/parameters/Accept-Language'),
         OA\Response(
-            ref: '#/components/responses/204',
+            ref: '#/components/responses/204deleted',
             response: '204'
         ),
         OA\Response(

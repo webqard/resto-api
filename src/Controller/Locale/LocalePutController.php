@@ -97,6 +97,10 @@ final class LocalePutController extends SendErrorController
             required: true
         ),
         OA\Response(
+            ref: '#/components/responses/204updated',
+            response: '204'
+        ),
+        OA\Response(
             ref: '#/components/responses/InvalidJsonBody',
             response: '400'
         ),
