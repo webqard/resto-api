@@ -71,7 +71,7 @@ use Symfony\Component\Routing\Annotation\Route;
     OA\Response(
         content: new OA\JsonContent(ref: '#/components/schemas/ApiResponse'),
         description: 'When the request body is an invalid or empty json.',
-        response: 'InvalidJsonBody'
+        response: 'InvalidJsonBody' // 400
     ),
     OA\Response(
         content: new OA\JsonContent(ref: '#/components/schemas/ApiResponse'),
@@ -87,7 +87,7 @@ use Symfony\Component\Routing\Annotation\Route;
                 schema: new OA\Schema(type: 'string')
             )
         ],
-        response: 'POSTNotAllowed'
+        response: 'POSTNotAllowed' // 405
     ),
     OA\Response(
         description: "When the method is not allowed.",
@@ -98,7 +98,7 @@ use Symfony\Component\Routing\Annotation\Route;
                 schema: new OA\Schema(type: 'string')
             )
         ],
-        response: 'DELETE_PUTNotAllowed'
+        response: 'DELETE_PUTNotAllowed' // 405
     ),
     OA\Response(
         content: new OA\JsonContent(
