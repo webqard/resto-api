@@ -14,7 +14,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 #[
     ORM\Entity(),
-    ORM\UniqueConstraint(columns: ["code"]),
     UniqueEntity(
         fields: ["code"],
         message: "code.alreadyExist"
