@@ -18,24 +18,22 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
     UniqueEntity(
         fields: ["code"],
         message: "code.alreadyExist"
-    )
+    ),
+    ORM\AttributeOverrides([
+        new ORM\AttributeOverride(
+            'code',
+            new ORM\Column(
+                length: 7,
+                unique: true
+            )
+        )
+    ])
 ]
 class Locale
 {
     //Traits :
     use IntId;
     use Code;
-
-
-    // Properties :
-
-    #[
-        ORM\Column(
-            length: 7,
-            unique: true
-        )
-    ]
-    private string $code;
 
 
     // Magic methods :
