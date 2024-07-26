@@ -18,7 +18,16 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
     UniqueEntity(
         fields: ["code"],
         message: "code.alreadyExist"
-    )
+    ),
+    ORM\AttributeOverrides([
+        new ORM\AttributeOverride(
+            'code',
+            new ORM\Column(
+                length: 3,
+                unique: true
+            )
+        )
+    ])
 ]
 class Currency
 {
@@ -28,14 +37,6 @@ class Currency
 
 
     // Properties :
-
-    #[
-        ORM\Column(
-            length: 3,
-            unique: true
-        )
-    ]
-    private string $code;
 
     /**
      * @var int the number of decimals.
