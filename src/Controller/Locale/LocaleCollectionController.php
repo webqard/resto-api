@@ -116,23 +116,20 @@ final class LocaleCollectionController extends AbstractController
                 $limit,
                 $offset
             );
-        } catch (UnexpectedFieldException $exception) {
-            $response = new ApiResponse(
-                $this->translator->trans(
-                    $exception->getMessage(),
-                    [
-                        'givenField' => $exception->getGivenField(),
-                        'availableFields' => $exception->getAvailableFields()
-                    ],
-                    locale: $request->getLocale()
-                )
-            );
+        } catch (UnexpectedFieldException|\UnexpectedValueException $exception) {
+            $parameters = [];
 
-            return $this->json($response, Response::HTTP_BAD_REQUEST);
-        } catch (\UnexpectedValueException $exception) {
+            if(($exception instanceof UnexpectedFieldException) === true) {
+                $parameters = [
+                    'givenField' => $exception->getGivenField(),
+                    'availableFields' => $exception->getAvailableFields()
+                ];
+            }
+
             $response = new ApiResponse(
                 $this->translator->trans(
                     $exception->getMessage(),
+                    $parameters,
                     locale: $request->getLocale()
                 )
             );
