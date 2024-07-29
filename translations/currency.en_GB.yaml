@@ -3,4 +3,4 @@ code:
     blankError: The code is blank.
     invalid: The code is invalid.
 decimals:
-    invalid: The decimals are negative.
+    negativeError: The decimals are negative.

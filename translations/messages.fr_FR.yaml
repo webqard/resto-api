@@ -6,4 +6,4 @@ notQueryableField: '"givenField" ne peut pas être interrogé. Les champs pouvan
 notOrderableField: '"givenField" ne peut pas être trié. Les champs pouvant être triés sont : availableFields.'
 notOrderableDirection: L'ordre de trie doit être "ASC" ou "DESC".
 limitIsNegative: La limite est négative.
-offsetIsNegative: Le décalage est négative.
+offsetIsNegative: Le décalage est négatif.

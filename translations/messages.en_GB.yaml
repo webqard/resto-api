@@ -1,6 +1,6 @@
 invalidJson: Invalid json.
 missingProperties: Properties are missing.
-typeError: type error.
+typeError: Type error.
 notFound: The resource has not been found.
 notQueryableField: '"givenField" is not queryable. Queryable fields are : availableFields.'
 notOrderableField: '"givenField" is not orderable. Orderable fields are : availableFields.'
