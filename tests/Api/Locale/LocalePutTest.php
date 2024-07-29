@@ -45,12 +45,7 @@ final class LocalePutTest extends WebTestCase
      */
     public function testCanPutALocale(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
-        ];
-        $client = static::createClient($params);
+        $client = static::createClient();
         $locale = new Locale('en_GB');
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -76,12 +71,10 @@ final class LocalePutTest extends WebTestCase
      */
     public function testCanNotPutALocaleWithTheCodeOfAnOtherOne(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
         $localeEN = new Locale('en_GB');
         $localeFR = new Locale('fr_FR');
 
@@ -105,11 +98,7 @@ final class LocalePutTest extends WebTestCase
         self::assertCount(1, $jsonResponse, 'There must be one violation.');
         self::assertArrayHasKey(0, $jsonResponse);
         self::assertSame('code', $jsonResponse[0]->property);
-        self::assertNotSame(
-            '',
-            $jsonResponse[0]->message,
-            'The violation message is empty.'
-        );
+        self::assertSame('The code already exist.', $jsonResponse[0]->message);
     }
 
 
@@ -119,12 +108,10 @@ final class LocalePutTest extends WebTestCase
      */
     public function testCanNotPutALocaleFromAnNonExistantId(): void
     {
-        $requestParameters = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($requestParameters);
+        $client = static::createClient(server: $server);
 
         $locale = [
             'code' => 'en_GB'
@@ -138,7 +125,7 @@ final class LocalePutTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertNotSame('', $jsonResponse->message, 'The error message is empty.');
+        self::assertSame('The resource has not been found.', $jsonResponse->message);
     }
 
 
@@ -148,12 +135,10 @@ final class LocalePutTest extends WebTestCase
      */
     public function testCanNotPutInvalidJson(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
         $locale = new Locale('en_GB');
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -168,11 +153,7 @@ final class LocalePutTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertNotSame(
-            '',
-            $jsonResponse->message,
-            'The error message is empty.'
-        );
+        self::assertSame('Invalid json.', $jsonResponse->message);
     }
 
 
@@ -182,12 +163,10 @@ final class LocalePutTest extends WebTestCase
      */
     public function testCanNotPutAnEmptyBodyRequest(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
         $locale = new Locale('en_GB');
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -202,11 +181,7 @@ final class LocalePutTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertNotSame(
-            '',
-            $jsonResponse->message,
-            'There is no error message.'
-        );
+        self::assertSame('Properties are missing.', $jsonResponse->message);
     }
 
 
@@ -234,12 +209,10 @@ final class LocalePutTest extends WebTestCase
     ]
     public function testCanNotPutAnInvalidTypeCode(mixed $invalidTypeCode): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
         $locale = new Locale('en_GB');
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -258,11 +231,7 @@ final class LocalePutTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertNotSame(
-            '',
-            $jsonResponse->message,
-            'There is no error message.'
-        );
+        self::assertSame('Type error.', $jsonResponse->message);
     }
 
 
@@ -272,12 +241,10 @@ final class LocalePutTest extends WebTestCase
      */
     public function testCanNotPutAnInvalidCode(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
         $locale = new Locale('en_GB');
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -299,11 +266,7 @@ final class LocalePutTest extends WebTestCase
         self::assertCount(1, $jsonResponse, 'There must be one violation.');
         self::assertArrayHasKey(0, $jsonResponse);
         self::assertSame('code', $jsonResponse[0]->property);
-        self::assertNotSame(
-            '',
-            $jsonResponse[0]->message,
-            'The violation message is empty.'
-        );
+        self::assertSame('The code is invalid.', $jsonResponse[0]->message);
     }
 
 
@@ -313,12 +276,10 @@ final class LocalePutTest extends WebTestCase
      */
     public function testCanNotPutABlankCode(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
         $locale = new Locale('en_GB');
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -340,10 +301,6 @@ final class LocalePutTest extends WebTestCase
         self::assertCount(1, $jsonResponse, 'There must be one violation.');
         self::assertArrayHasKey(0, $jsonResponse);
         self::assertSame('code', $jsonResponse[0]->property);
-        self::assertNotSame(
-            '',
-            $jsonResponse[0]->message,
-            'The violation message is empty.'
-        );
+        self::assertSame('The code is blank.', $jsonResponse[0]->message);
     }
 }

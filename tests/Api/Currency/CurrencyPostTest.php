@@ -69,12 +69,10 @@ final class CurrencyPostTest extends WebTestCase
      */
     public function testCanNotPostACodeThatAlreadyExist(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
         $currency = new Currency('EUR', 2);
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -97,11 +95,7 @@ final class CurrencyPostTest extends WebTestCase
         self::assertCount(1, $jsonResponse, 'There must be one violation.');
         self::assertArrayHasKey(0, $jsonResponse);
         self::assertSame('code', $jsonResponse[0]->property);
-        self::assertNotSame(
-            '',
-            $jsonResponse[0]->message,
-            'The violation message is empty.'
-        );
+        self::assertSame('The code already exist.', $jsonResponse[0]->message);
     }
 
 
@@ -111,12 +105,10 @@ final class CurrencyPostTest extends WebTestCase
      */
     public function testCanNotPostInvalidJson(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
 
         $client->request('POST', '/currencies', content: 'test:');
         $apiResponse = $client->getResponse()->getContent();
@@ -126,11 +118,7 @@ final class CurrencyPostTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertNotSame(
-            '',
-            $jsonResponse->message,
-            'The error message is empty.'
-        );
+        self::assertSame('Invalid json.', $jsonResponse->message);
     }
 
 
@@ -140,12 +128,10 @@ final class CurrencyPostTest extends WebTestCase
      */
     public function testCanNotPostAnEmptyBodyRequest(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
 
         $client->request('POST', '/currencies', content: '[]');
         $apiResponse = $client->getResponse()->getContent();
@@ -155,11 +141,7 @@ final class CurrencyPostTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertNotSame(
-            '',
-            $jsonResponse->message,
-            'There is no error message.'
-        );
+        self::assertSame('Properties are missing.', $jsonResponse->message);
     }
 
 
@@ -192,12 +174,10 @@ final class CurrencyPostTest extends WebTestCase
     ]
     public function testCanNotPostAnInvalidTypeValue(string $property, mixed $invalidTypeValue): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
 
         $currency = [
             'code' => 'EUR',
@@ -212,50 +192,25 @@ final class CurrencyPostTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertNotSame(
-            '',
-            $jsonResponse->message,
-            'There is no error message.'
-        );
+        self::assertSame('Type error.', $jsonResponse->message);
     }
 
 
     /**
-     * Returns invalid values.
-     * @return array invalid values.
-     */
-    public static function getValidTypeInvalidValues(): array
-    {
-        return [
-            'code is not currency (aaa_AAA_aaa)' => ['code', 'aaa_AAA_aaa'],
-            'decimal is negative (-2)' => ['decimals', -2]
-        ];
-    }
-
-    /**
-     * Tests that an invalid value
+     * Tests that a negative decimal
      * can not be created.
-     * @param string $property the property name.
-     * @param mixed $value the value.
      */
-    #[
-        PA\DataProvider('getValidTypeInvalidValues'),
-        PA\TestDox('Can not post when $_dataName')
-    ]
-    public function testCanNotPostAValidTypeInvalidValue(string $property, mixed $value): void
+    public function testCanNotPostANegativeDecimal(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
 
         $currency = [
             'code' => 'EUR',
-            'decimals' => 2
+            'decimals' => -2
         ];
-        $currency[$property] = $value;
         $client->request('POST', '/currencies', content: json_encode($currency));
         $apiResponse = $client->getResponse()->getContent();
 
@@ -266,12 +221,8 @@ final class CurrencyPostTest extends WebTestCase
 
         self::assertCount(1, $jsonResponse, 'There must be one violation.');
         self::assertArrayHasKey(0, $jsonResponse);
-        self::assertSame($property, $jsonResponse[0]->property);
-        self::assertNotSame(
-            '',
-            $jsonResponse[0]->message,
-            'The violation message is empty.'
-        );
+        self::assertSame('decimals', $jsonResponse[0]->property);
+        self::assertSame('The decimals are negative.', $jsonResponse[0]->message);
     }
 
 
@@ -281,12 +232,10 @@ final class CurrencyPostTest extends WebTestCase
      */
     public function testCanNotPostABlankCode(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
 
         $currency = [
             'code' => '',
@@ -304,10 +253,36 @@ final class CurrencyPostTest extends WebTestCase
         self::assertCount(1, $jsonResponse, 'There must be one violation.');
         self::assertArrayHasKey(0, $jsonResponse);
         self::assertSame('code', $jsonResponse[0]->property);
-        self::assertNotSame(
-            '',
-            $jsonResponse[0]->message,
-            'The violation message is empty.'
-        );
+        self::assertSame('The code is blank.', $jsonResponse[0]->message);
+    }
+
+
+    /**
+     * Tests that an invalid code
+     * can not be created.
+     */
+    public function testCanNotPostAnInvalidCode(): void
+    {
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
+        ];
+        $client = static::createClient(server: $server);
+
+        $currency = [
+            'code' => 'aaa_AAA_aaa',
+            'decimals' => 2
+        ];
+        $client->request('POST', '/currencies', content: json_encode($currency));
+        $apiResponse = $client->getResponse()->getContent();
+
+        self::assertResponseStatusCodeSame(422, 'POST did not failed for invalid code.');
+        self::assertJson($apiResponse);
+
+        $jsonResponse = json_decode($apiResponse, false);
+
+        self::assertCount(1, $jsonResponse, 'There must be one violation.');
+        self::assertArrayHasKey(0, $jsonResponse);
+        self::assertSame('code', $jsonResponse[0]->property);
+        self::assertSame('The code is invalid.', $jsonResponse[0]->message);
     }
 }

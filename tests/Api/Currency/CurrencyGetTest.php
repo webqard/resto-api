@@ -80,12 +80,10 @@ final class CurrencyGetTest extends WebTestCase
     ]
     public function testCanNotGetACurrencyFromAnInvalidTypeId(mixed $invalidTypeId): void
     {
-        $requestParameters = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($requestParameters);
+        $client = static::createClient(server: $server);
 
         $client->request('GET', '/currencies/' . $invalidTypeId);
         $apiResponse = $client->getResponse()->getContent();
@@ -95,7 +93,7 @@ final class CurrencyGetTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertNotSame('', $jsonResponse->message, 'The error message is empty.');
+        self::assertSame('The resource has not been found.', $jsonResponse->message);
     }
 
 
@@ -105,12 +103,10 @@ final class CurrencyGetTest extends WebTestCase
      */
     public function testCanNotGetACurrencyFromAnNonExistantId(): void
     {
-        $requestParameters = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($requestParameters);
+        $client = static::createClient(server: $server);
 
         $client->request('GET', '/currencies/1');
         $apiResponse = $client->getResponse()->getContent();
@@ -120,6 +116,6 @@ final class CurrencyGetTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertNotSame('', $jsonResponse->message, 'The error message is empty.');
+        self::assertSame('The resource has not been found.', $jsonResponse->message);
     }
 }

@@ -255,7 +255,10 @@ final class LocaleCollectionTest extends WebTestCase
      */
     public function testReturnsA400HttpResponseIfTheLimitIsNegative(): void
     {
-        $client = static::createClient();
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
+        ];
+        $client = static::createClient(server: $server);
 
         $client->request('GET', '/locales?limit=-1');
         $apiResponse = $client->getResponse()->getContent();
@@ -296,7 +299,10 @@ final class LocaleCollectionTest extends WebTestCase
      */
     public function testReturnsA400HttpResponseIfTheOffsetIsNegative(): void
     {
-        $client = static::createClient();
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
+        ];
+        $client = static::createClient(server: $server);
 
         $client->request('GET', '/locales?offset=-1');
         $apiResponse = $client->getResponse()->getContent();

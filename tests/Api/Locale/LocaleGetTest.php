@@ -62,12 +62,10 @@ final class LocaleGetTest extends WebTestCase
      */
     public function testCanNotGetALocaleFromAnNonExistantId(): void
     {
-        $requestParameters = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($requestParameters);
+        $client = static::createClient(server: $server);
 
         $client->request('GET', '/locales/1');
         $apiResponse = $client->getResponse()->getContent();
@@ -77,6 +75,6 @@ final class LocaleGetTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertNotSame('', $jsonResponse->message, 'The error message is empty.');
+        self::assertSame('The resource has not been found.', $jsonResponse->message);
     }
 }

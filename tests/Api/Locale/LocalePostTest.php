@@ -68,12 +68,10 @@ final class LocalePostTest extends WebTestCase
      */
     public function testCanNotPostACodeThatAlreadyExist(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
         $locale = new Locale('en_GB');
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -95,11 +93,7 @@ final class LocalePostTest extends WebTestCase
         self::assertCount(1, $jsonResponse, 'There must be one violation.');
         self::assertArrayHasKey(0, $jsonResponse);
         self::assertSame('code', $jsonResponse[0]->property);
-        self::assertNotSame(
-            '',
-            $jsonResponse[0]->message,
-            'The violation message is empty.'
-        );
+        self::assertSame('The code already exist.', $jsonResponse[0]->message);
     }
 
 
@@ -109,12 +103,10 @@ final class LocalePostTest extends WebTestCase
      */
     public function testCanNotPostInvalidJson(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
 
         $client->request('POST', '/locales', content: 'test:');
         $apiResponse = $client->getResponse()->getContent();
@@ -124,11 +116,7 @@ final class LocalePostTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertNotSame(
-            '',
-            $jsonResponse->message,
-            'The error message is empty.'
-        );
+        self::assertSame('Invalid json.', $jsonResponse->message,);
     }
 
 
@@ -138,12 +126,10 @@ final class LocalePostTest extends WebTestCase
      */
     public function testCanNotPostAnEmptyBodyRequest(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
 
         $client->request('POST', '/locales', content: '[]');
         $apiResponse = $client->getResponse()->getContent();
@@ -153,11 +139,7 @@ final class LocalePostTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertNotSame(
-            '',
-            $jsonResponse->message,
-            'There is no error message.'
-        );
+        self::assertSame('Properties are missing.', $jsonResponse->message,);
     }
 
 
@@ -185,12 +167,10 @@ final class LocalePostTest extends WebTestCase
     ]
     public function testCanNotPostAnInvalidTypeCode(mixed $invalidTypeCode): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
 
         $locale = [
             'code' => $invalidTypeCode
@@ -204,11 +184,7 @@ final class LocalePostTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertNotSame(
-            '',
-            $jsonResponse->message,
-            'There is no error message.'
-        );
+        self::assertSame('Type error.', $jsonResponse->message,);
     }
 
 
@@ -218,12 +194,10 @@ final class LocalePostTest extends WebTestCase
      */
     public function testCanNotPostAnInvalidCode(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
 
         $locale = [
             'code' => 'aaa_AAA_aaa'
@@ -240,11 +214,7 @@ final class LocalePostTest extends WebTestCase
         self::assertCount(1, $jsonResponse, 'There must be one violation.');
         self::assertArrayHasKey(0, $jsonResponse);
         self::assertSame('code', $jsonResponse[0]->property);
-        self::assertNotSame(
-            '',
-            $jsonResponse[0]->message,
-            'The violation message is empty.'
-        );
+        self::assertSame('The code is invalid.', $jsonResponse[0]->message);
     }
 
 
@@ -254,12 +224,10 @@ final class LocalePostTest extends WebTestCase
      */
     public function testCanNotPostABlankCode(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
 
         $locale = [
             'code' => ''
@@ -276,10 +244,6 @@ final class LocalePostTest extends WebTestCase
         self::assertCount(1, $jsonResponse, 'There must be one violation.');
         self::assertArrayHasKey(0, $jsonResponse);
         self::assertSame('code', $jsonResponse[0]->property);
-        self::assertNotSame(
-            '',
-            $jsonResponse[0]->message,
-            'The violation message is empty.'
-        );
+        self::assertSame('The code is blank.', $jsonResponse[0]->message);
     }
 }

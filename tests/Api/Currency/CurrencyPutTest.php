@@ -45,12 +45,7 @@ final class CurrencyPutTest extends WebTestCase
      */
     public function testCanPutACurrency(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
-        ];
-        $client = static::createClient($params);
+        $client = static::createClient();
         $currency = new Currency('EUR', 2);
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -77,12 +72,10 @@ final class CurrencyPutTest extends WebTestCase
      */
     public function testCanNotPutACurrencyWithTheCodeOfAnOtherOne(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
         $currencyEUR = new Currency('EUR', 2);
         $currencyGBP = new Currency('GBP', 2);
 
@@ -107,11 +100,7 @@ final class CurrencyPutTest extends WebTestCase
         self::assertCount(1, $jsonResponse, 'There must be one violation.');
         self::assertArrayHasKey(0, $jsonResponse);
         self::assertSame('code', $jsonResponse[0]->property);
-        self::assertNotSame(
-            '',
-            $jsonResponse[0]->message,
-            'The violation message is empty.'
-        );
+        self::assertSame('The code already exist.', $jsonResponse[0]->message);
     }
 
 
@@ -121,12 +110,10 @@ final class CurrencyPutTest extends WebTestCase
      */
     public function testCanNotPutACurrencyFromAnNonExistantId(): void
     {
-        $requestParameters = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($requestParameters);
+        $client = static::createClient(server: $server);
 
         $currency = [
             'code' => 'EUR',
@@ -141,7 +128,7 @@ final class CurrencyPutTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertNotSame('', $jsonResponse->message, 'The error message is empty.');
+        self::assertSame('The resource has not been found.', $jsonResponse->message);
     }
 
 
@@ -151,12 +138,10 @@ final class CurrencyPutTest extends WebTestCase
      */
     public function testCanNotPutInvalidJson(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
         $currency = new Currency('EUR', 2);
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -171,11 +156,7 @@ final class CurrencyPutTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertNotSame(
-            '',
-            $jsonResponse->message,
-            'The error message is empty.'
-        );
+        self::assertSame('Invalid json.', $jsonResponse->message);
     }
 
 
@@ -185,12 +166,10 @@ final class CurrencyPutTest extends WebTestCase
      */
     public function testCanNotPutAnEmptyBodyRequest(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
         $currency = new Currency('EUR', 2);
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -205,11 +184,7 @@ final class CurrencyPutTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertNotSame(
-            '',
-            $jsonResponse->message,
-            'There is no error message.'
-        );
+        self::assertSame('Properties are missing.', $jsonResponse->message);
     }
 
 
@@ -242,12 +217,10 @@ final class CurrencyPutTest extends WebTestCase
     ]
     public function testCanNotPutAnInvalidTypeValue(string $property, mixed $invalidTypeValue): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
         $currency = new Currency('EUR', 2);
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -268,38 +241,32 @@ final class CurrencyPutTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertNotSame(
-            '',
-            $jsonResponse->message,
-            'There is no error message.'
-        );
+        self::assertSame('Type error.', $jsonResponse->message);
     }
 
 
     /**
-     * Tests that an invalid code
-     * can not be updated.
+     * Tests that a currency can not be updated
+     * with a negative decimal.
      */
-    public function testCanNotPutAnInvalidCode(): void
+    public function testCanNotPutANegativeDecimal(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
         $currency = new Currency('EUR', 2);
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
         $entityManager->persist($currency);
         $entityManager->flush();
 
-        $currencyWithInvalidCode = [
-            'code' => 'aaa_AAA_aaa',
-            'decimals' => 2
+        $currencyWithABlankCode = [
+            'code' => 'EUR',
+            'decimals' => -2
         ];
 
-        $client->request('PUT', '/currencies/1', content: json_encode($currencyWithInvalidCode));
+        $client->request('PUT', '/currencies/1', content: json_encode($currencyWithABlankCode));
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(422, 'PUT did not failed for invalid code.');
@@ -309,12 +276,8 @@ final class CurrencyPutTest extends WebTestCase
 
         self::assertCount(1, $jsonResponse, 'There must be one violation.');
         self::assertArrayHasKey(0, $jsonResponse);
-        self::assertSame('code', $jsonResponse[0]->property);
-        self::assertNotSame(
-            '',
-            $jsonResponse[0]->message,
-            'The violation message is empty.'
-        );
+        self::assertSame('decimals', $jsonResponse[0]->property);
+        self::assertSame('The decimals are negative.', $jsonResponse[0]->message);
     }
 
 
@@ -324,12 +287,10 @@ final class CurrencyPutTest extends WebTestCase
      */
     public function testCanNotPutABlankCode(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
         $currency = new Currency('EUR', 2);
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -352,10 +313,42 @@ final class CurrencyPutTest extends WebTestCase
         self::assertCount(1, $jsonResponse, 'There must be one violation.');
         self::assertArrayHasKey(0, $jsonResponse);
         self::assertSame('code', $jsonResponse[0]->property);
-        self::assertNotSame(
-            '',
-            $jsonResponse[0]->message,
-            'The violation message is empty.'
-        );
+        self::assertSame('The code is blank.', $jsonResponse[0]->message);
+    }
+
+
+    /**
+     * Tests that an invalid code
+     * can not be updated.
+     */
+    public function testCanNotPutAnInvalidCode(): void
+    {
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
+        ];
+        $client = static::createClient(server: $server);
+        $currency = new Currency('EUR', 2);
+
+        $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
+        $entityManager->persist($currency);
+        $entityManager->flush();
+
+        $currencyWithInvalidCode = [
+            'code' => 'aaa_AAA_aaa',
+            'decimals' => 2
+        ];
+
+        $client->request('PUT', '/currencies/1', content: json_encode($currencyWithInvalidCode));
+        $apiResponse = $client->getResponse()->getContent();
+
+        self::assertResponseStatusCodeSame(422, 'PUT did not failed for invalid code.');
+        self::assertJson($apiResponse);
+
+        $jsonResponse = json_decode($apiResponse, false);
+
+        self::assertCount(1, $jsonResponse, 'There must be one violation.');
+        self::assertArrayHasKey(0, $jsonResponse);
+        self::assertSame('code', $jsonResponse[0]->property);
+        self::assertSame('The code is invalid.', $jsonResponse[0]->message);
     }
 }

@@ -56,12 +56,10 @@ final class CurrencyDeleteTest extends WebTestCase
      */
     public function testCanNotDeleteACurrencyFromAnNonExistantId(): void
     {
-        $requestParameters = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($requestParameters);
+        $client = static::createClient(server: $server);
 
         $client->request('DELETE', '/currencies/1');
         $apiResponse = $client->getResponse()->getContent();
@@ -71,6 +69,6 @@ final class CurrencyDeleteTest extends WebTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertNotSame('', $jsonResponse->message, 'The error message is empty.');
+        self::assertSame('The resource has not been found.', $jsonResponse->message);
     }
 }
