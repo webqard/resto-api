@@ -18,6 +18,7 @@ user@host ~$ cd [PATH_WHERE_TO_PUT_THE_PROJECT] # E.g. ~/projects/
 user@host projects$ git clone https://github.com/webqard/resto-api.git
 user@host projects$ cd resto-api
 ```
+Copy the variables in the `.env.dist` file to your `.env*` file and fill in the values.
 
 ### Install PHP dependencies :
 
