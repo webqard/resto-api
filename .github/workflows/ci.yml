@@ -37,6 +37,9 @@ jobs:
       if: steps.phive-tools-cache.outputs.cache-hit != 'true'
       run: wget -O phive https://phar.io/releases/phive.phar && chmod +x phive && ./phive install --trust-gpg-keys 4AA394086372C20A,12CE0F1D262429A5,A978220305CD5C32,8AC0BAA79732DD42,C5095986493B4AA0 && chmod -R +x ./tools/
 
+    - name: Generate JWT keys
+      run: ./bin/console lexik:jwt:generate-keypair -n --skip-if-exists -e test
+
     - name: 'Tar project'
       run: tar -cf project.tar .
 
