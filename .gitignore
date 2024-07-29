@@ -14,3 +14,7 @@
 /migrations-test/*.php
 /public/api.json
 /tools/
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###

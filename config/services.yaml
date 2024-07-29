@@ -22,3 +22,10 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+when@test:
+    services:
+        security.user_password_hasher:
+            class: Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher
+            autowire: true
+            public: true
