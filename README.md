@@ -41,6 +41,12 @@ user@host resto-api$ ./bin/console doctrine:migrations:migrate [--no-interaction
 ```
 The "-e test" option is to for the test environment which uses Sqlite.
 
+### Generate the JWT keys
+
+```shellsession
+user@host resto-api$ ./bin/console lexik:jwt:generate-keypair [-n] [--skip-if-exists] [--overwrite] [-e test]
+```
+
 
 ## Continuous integration
 
