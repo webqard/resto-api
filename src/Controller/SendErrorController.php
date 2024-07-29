@@ -86,7 +86,7 @@ abstract class SendErrorController extends AbstractController
 
             $violationMessages->add(new Violation(
                 $violation->getPropertyPath(),
-                $this->translator->trans($violationMessage, [], 'locale', $locale)
+                $this->translator->trans($violationMessage, domain: 'locale', locale: $locale)
             ));
         }
 
