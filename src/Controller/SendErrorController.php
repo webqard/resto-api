@@ -69,12 +69,14 @@ abstract class SendErrorController extends AbstractController
     /**
      * Sends the violations.
      * @param \Symfony\Component\Validator\ConstraintViolationListInterface $violations the violations.
+     * @param string $translationDomain the translation domain.
      * @param string $locale the locale.
      * @param int $httpStatusCode the http status code.
      * @return \Symfony\Component\HttpFoundation\Response the response.
      */
     protected function sendViolations(
         ConstraintViolationListInterface $violations,
+        string $translationDomain,
         string $locale,
         int $httpStatusCode = Response::HTTP_UNPROCESSABLE_ENTITY
     ): Response {
@@ -86,7 +88,7 @@ abstract class SendErrorController extends AbstractController
 
             $violationMessages->add(new Violation(
                 $violation->getPropertyPath(),
-                $this->translator->trans($violationMessage, domain: 'locale', locale: $locale)
+                $this->translator->trans($violationMessage, domain: $translationDomain, locale: $locale)
             ));
         }
 

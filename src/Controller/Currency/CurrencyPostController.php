@@ -136,14 +136,14 @@ final class CurrencyPostController extends SendErrorController
         $violations = $this->validator->validate($currencyInput);
 
         if (count($violations) > 0) {
-            return $this->sendViolations($violations, $request->getLocale());
+            return $this->sendViolations($violations, 'currency', $request->getLocale());
         }
 
         $currency = $this->processor->getEntity($currencyInput);
         $unicityViolations = $this->validator->validate($currency);
 
         if (count($unicityViolations) > 0) {
-            return $this->sendViolations($unicityViolations, $request->getLocale(), Response::HTTP_CONFLICT);
+            return $this->sendViolations($unicityViolations, 'currency', $request->getLocale(), Response::HTTP_CONFLICT);
         }
 
         $this->repository->save($currency);

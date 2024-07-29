@@ -151,14 +151,14 @@ final class LocalePutController extends SendErrorController
         $violations = $this->validator->validate($localeInput);
 
         if (count($violations) > 0) {
-            return $this->sendViolations($violations, $request->getLocale());
+            return $this->sendViolations($violations, 'locale', $request->getLocale());
         }
 
         $updatedLocale = $this->processor->getEntity($locale, $localeInput);
         $unicityViolations = $this->validator->validate($updatedLocale);
 
         if (count($unicityViolations) > 0) {
-            return $this->sendViolations($unicityViolations, $request->getLocale(), Response::HTTP_CONFLICT);
+            return $this->sendViolations($unicityViolations, 'locale', $request->getLocale(), Response::HTTP_CONFLICT);
         }
 
         $this->repository->save($updatedLocale);
