@@ -13,6 +13,7 @@ use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\Exception\MissingConstructorArgumentsException;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -125,7 +126,8 @@ final class LocalePutController extends SendErrorController
             response: '500'
         ),
         /** @infection-ignore-all */
-        Route('/locales/{id}', methods: ['PUT'], name: 'locale_put')
+        Route('/locales/{id}', methods: ['PUT'], name: 'locale_put'),
+        IsGranted('ROLE_PUT_LOCALE')
     ]
     public function put(Request $request, string $id): Response
     {

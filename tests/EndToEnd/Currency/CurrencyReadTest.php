@@ -7,10 +7,13 @@ namespace App\Tests\EndToEnd\Currency;
 use App\ApiResource\CurrencyOutput;
 use App\Controller\Currency\CurrencyGetController;
 use App\Entity\Currency;
+use App\Entity\User;
 use App\Repository\Currency\CurrencyGetRepository;
+use App\Repository\User\PasswordUpgraderRepository;
+use App\Security\UserChecker;
 use App\State\Currency\CurrencyProvider;
+use App\Tests\Api\JWTTestCase;
 use PHPUnit\Framework\Attributes as PA;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the database cRud for the currency.
@@ -21,27 +24,39 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
     PA\UsesClass(CurrencyOutput::class),
     PA\UsesClass(CurrencyGetRepository::class),
     PA\UsesClass(CurrencyProvider::class),
+    PA\UsesClass(PasswordUpgraderRepository::class),
+    PA\UsesClass(User::class),
+    PA\UsesClass(UserChecker::class),
     PA\Group('e2e'),
     PA\Group('e2e_currency'),
     PA\Group('e2e_currency_read'),
     PA\Group('currency'),
-    PA\TestDox('Currency')
+    PA\TestDox('A currency')
 ]
-final class CurrencyReadTest extends WebTestCase
+final class CurrencyReadTest extends JWTTestCase
 {
     // Methods :
+
+    /**
+     * Adds a user with ROLE_GET_CURRENCY.
+     */
+    private function addAUserWithRoleGetCurrency(): void
+    {
+        $this->addAUserWithRole('ROLE_GET_CURRENCY');
+    }
 
     /**
      * Tests that a currency can be read from the database.
      */
     public function testIsReadFromTheDatabaseWithGet(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
+
+        $this->addAUserWithRoleGetCurrency();
+        $this->authenticateClient($client);
 
         $currency = new Currency('EUR', 2);
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();

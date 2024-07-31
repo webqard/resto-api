@@ -12,10 +12,14 @@ use App\ApiResource\Violations;
 use App\Controller\Currency\CurrencyPostController;
 use App\Controller\SendErrorController;
 use App\Entity\Currency;
+use App\Entity\User;
 use App\Repository\Currency\CurrencyPostRepository;
+use App\Repository\User\PasswordUpgraderRepository;
+use App\Security\AccessDeniedHandler;
+use App\Security\UserChecker;
 use App\State\Currency\CurrencyPostProcessor;
+use App\Tests\Api\JWTTestCase;
 use PHPUnit\Framework\Attributes as PA;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the currency POST.
@@ -23,29 +27,82 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 #[
     PA\CoversClass(CurrencyPostController::class),
     PA\CoversClass(SendErrorController::class),
+    PA\UsesClass(AccessDeniedHandler::class),
     PA\UsesClass(ApiResponse::class),
     PA\UsesClass(Currency::class),
     PA\UsesClass(CurrencyInput::class),
     PA\UsesClass(CurrencyPostProcessor::class),
     PA\UsesClass(CurrencyPostRepository::class),
+    PA\UsesClass(PasswordUpgraderRepository::class),
     PA\UsesClass(ResourceLink::class),
+    PA\UsesClass(User::class),
+    PA\UsesClass(UserChecker::class),
     PA\UsesClass(Violation::class),
     PA\UsesClass(Violations::class),
     PA\Group('api'),
     PA\Group('api_currencies'),
     PA\Group('api_currencies_post'),
-    PA\Group('currency')
+    PA\Group('currency'),
+    PA\TestDox('A currency')
 ]
-final class CurrencyPostTest extends WebTestCase
+final class CurrencyPostTest extends JWTTestCase
 {
     // Methods :
 
     /**
-     * Tests that a currency can be created.
+     * Tests that a currency
+     * needs authentication to be posted.
      */
-    public function testCanPostACurrency(): void
+    public function testNeedsAuthenticationToBePosted(): void
     {
         $client = static::createClient();
+
+        $client->request('POST', '/currencies');
+
+        self::assertResponseStatusCodeSame(401);
+        self::assertSame(
+            '{"code":401,"message":"JWT Token not found"}',
+            $client->getResponse()->getContent()
+        );
+    }
+
+
+    /**
+     * Tests that a currency
+     * can not be posted
+     * without ROLE_POST_CURRENCY.
+     */
+    public function testCanNotBePostedWithoutRolePostCurrency(): void
+    {
+        $client = static::createClient();
+
+        $this->addAUserWithoutRole();
+        $this->authenticateClient($client);
+
+        $client->request('POST', '/currencies');
+
+        self::assertResponseStatusCodeSame(403);
+        self::assertSame('', $client->getResponse()->getContent());
+    }
+
+
+    /**
+     * Adds a user with ROLE_POST_CURRENCY.
+     */
+    private function addAUserWithRolePostCurrency(): void
+    {
+        $this->addAUserWithRole('ROLE_POST_CURRENCY');
+    }
+
+    /**
+     * Tests that a currency can be created.
+     */
+    public function testCanBePosted(): void
+    {
+        $client = static::createClient();
+
+        $this->addAUserWithRolePostCurrency();
+        $this->authenticateClient($client);
 
         $currency = [
             'code' => 'EUR',
@@ -67,12 +124,16 @@ final class CurrencyPostTest extends WebTestCase
      * Tests that a code of an already existing currency
      * can not be created.
      */
-    public function testCanNotPostACodeThatAlreadyExist(): void
+    public function testCanNotBePostedWithACodeThatAlreadyExist(): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePostCurrency();
+        $this->authenticateClient($client);
+
         $currency = new Currency('EUR', 2);
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -103,12 +164,15 @@ final class CurrencyPostTest extends WebTestCase
      * Tests that a currency can not be created
      * from invalid json.
      */
-    public function testCanNotPostInvalidJson(): void
+    public function testCanNotBePostedWithInvalidJson(): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePostCurrency();
+        $this->authenticateClient($client);
 
         $client->request('POST', '/currencies', content: 'test:');
         $apiResponse = $client->getResponse()->getContent();
@@ -126,12 +190,15 @@ final class CurrencyPostTest extends WebTestCase
      * Tests that an empty body request
      * can not create a currency.
      */
-    public function testCanNotPostAnEmptyBodyRequest(): void
+    public function testCanNotBePostedWithAnEmptyBodyRequest(): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePostCurrency();
+        $this->authenticateClient($client);
 
         $client->request('POST', '/currencies', content: '[]');
         $apiResponse = $client->getResponse()->getContent();
@@ -170,14 +237,17 @@ final class CurrencyPostTest extends WebTestCase
      */
     #[
         PA\DataProvider('getInvalidTypeValues'),
-        PA\TestDox('Can not post when $_dataName')
+        PA\TestDox('Can not be posted when the $_dataName')
     ]
-    public function testCanNotPostAnInvalidTypeValue(string $property, mixed $invalidTypeValue): void
+    public function testCanNotBePostedWithAnInvalidTypeValue(string $property, mixed $invalidTypeValue): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePostCurrency();
+        $this->authenticateClient($client);
 
         $currency = [
             'code' => 'EUR',
@@ -200,12 +270,15 @@ final class CurrencyPostTest extends WebTestCase
      * Tests that a negative decimal
      * can not be created.
      */
-    public function testCanNotPostANegativeDecimal(): void
+    public function testCanNotBePostedWithANegativeDecimal(): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePostCurrency();
+        $this->authenticateClient($client);
 
         $currency = [
             'code' => 'EUR',
@@ -230,12 +303,15 @@ final class CurrencyPostTest extends WebTestCase
      * Tests that a currency can not be created
      * with a blank code.
      */
-    public function testCanNotPostABlankCode(): void
+    public function testCanNotBePostedWithABlankCode(): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePostCurrency();
+        $this->authenticateClient($client);
 
         $currency = [
             'code' => '',
@@ -261,12 +337,15 @@ final class CurrencyPostTest extends WebTestCase
      * Tests that an invalid code
      * can not be created.
      */
-    public function testCanNotPostAnInvalidCode(): void
+    public function testCanNotBePostedWithAnInvalidCode(): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePostCurrency();
+        $this->authenticateClient($client);
 
         $currency = [
             'code' => 'aaa_AAA_aaa',

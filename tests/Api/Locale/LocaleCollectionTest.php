@@ -8,13 +8,17 @@ use App\ApiResource\ApiResponse;
 use App\ApiResource\LocaleOutput;
 use App\Controller\Locale\LocaleCollectionController;
 use App\Entity\Locale;
+use App\Entity\User;
 use App\Entity\Property\Code;
 use App\Exception\UnexpectedDirectionException;
 use App\Exception\UnexpectedFieldException;
 use App\Repository\Locale\LocaleCollectionRepository;
+use App\Repository\User\PasswordUpgraderRepository;
+use App\Security\AccessDeniedHandler;
+use App\Security\UserChecker;
 use App\State\Locale\LocaleProvider;
+use App\Tests\Api\JWTTestCase;
 use PHPUnit\Framework\Attributes as PA;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the locale's collection GET.
@@ -22,21 +26,63 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 #[
     PA\CoversClass(LocaleCollectionController::class),
     PA\CoversClass(LocaleCollectionRepository::class),
+    PA\UsesClass(AccessDeniedHandler::class),
     PA\UsesClass(ApiResponse::class),
     PA\UsesClass(Code::class),
     PA\UsesClass(Locale::class),
     PA\UsesClass(LocaleOutput::class),
     PA\UsesClass(LocaleProvider::class),
+    PA\UsesClass(PasswordUpgraderRepository::class),
     PA\UsesClass(UnexpectedDirectionException::class),
     PA\UsesClass(UnexpectedFieldException::class),
+    PA\UsesClass(User::class),
+    PA\UsesClass(UserChecker::class),
     PA\Group('api'),
     PA\Group('api_locales'),
     PA\Group('api_locales_collection'),
-    PA\Group('locale')
+    PA\Group('locale'),
+    PA\TestDox('A locale collection')
 ]
-final class LocaleCollectionTest extends WebTestCase
+final class LocaleCollectionTest extends JWTTestCase
 {
     // Methods :
+
+    /**
+     * Tests that a locale collection
+     * needs authentication to be returned.
+     */
+    public function testNeedsAuthenticationToBeReturned(): void
+    {
+        $client = static::createClient();
+
+        $client->request('GET', '/locales');
+
+        self::assertResponseStatusCodeSame(401);
+        self::assertSame(
+            '{"code":401,"message":"JWT Token not found"}',
+            $client->getResponse()->getContent()
+        );
+    }
+
+
+    /**
+     * Tests that a locale collection
+     * can not be returned
+     * without ROLE_GET_LOCALE_COLLECTION.
+     */
+    public function testCanNotBeReturnedWithoutRoleGetLocaleCollection(): void
+    {
+        $client = static::createClient();
+
+        $this->addAUserWithoutRole();
+        $this->authenticateClient($client);
+
+        $client->request('GET', '/locales');
+
+        self::assertResponseStatusCodeSame(403);
+        self::assertSame('', $client->getResponse()->getContent());
+    }
+
 
     /**
      * Generates 30 locales.
@@ -55,12 +101,23 @@ final class LocaleCollectionTest extends WebTestCase
 
 
     /**
+     * Adds a user with ROLE_GET_LOCALE_COLLECTION.
+     */
+    private function addAUserWithRoleGetLocaleCollection(): void
+    {
+        $this->addAUserWithRole('ROLE_GET_LOCALE_COLLECTION');
+    }
+
+    /**
      * Tests that a collection can be returned
      * without parameter.
      */
-    public function testCanGetACollectionWithoutParameter(): void
+    public function testCanBeReturnedWithoutParameter(): void
     {
         $client = static::createClient();
+
+        $this->addAUserWithRoleGetLocaleCollection();
+        $this->authenticateClient($client);
 
         $this->generate30Locales();
 
@@ -82,7 +139,13 @@ final class LocaleCollectionTest extends WebTestCase
      */
     public function testReturnsA400HttpResponseIfAFieldIsNotQueryable(): void
     {
-        $client = static::createClient();
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
+        ];
+        $client = static::createClient(server: $server);
+
+        $this->addAUserWithRoleGetLocaleCollection();
+        $this->authenticateClient($client);
 
         $client->request('GET', '/locales?criterias[notAField]=123');
         $apiResponse = $client->getResponse()->getContent();
@@ -98,9 +161,12 @@ final class LocaleCollectionTest extends WebTestCase
     /**
      * Tests that locales can be returned.
      */
-    public function testCanGetACollectionFromAPartialCode(): void
+    public function testCanBeReturnedFromAPartialCode(): void
     {
         $client = static::createClient();
+
+        $this->addAUserWithRoleGetLocaleCollection();
+        $this->authenticateClient($client);
 
         $this->generate30Locales();
 
@@ -126,7 +192,13 @@ final class LocaleCollectionTest extends WebTestCase
      */
     public function testReturnsA400HttpResponseIfTheFieldIsNotOrderable(): void
     {
-        $client = static::createClient();
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
+        ];
+        $client = static::createClient(server: $server);
+
+        $this->addAUserWithRoleGetLocaleCollection();
+        $this->authenticateClient($client);
 
         $client->request('GET', '/locales?orderBy[notAField]=ASC');
         $apiResponse = $client->getResponse()->getContent();
@@ -145,7 +217,13 @@ final class LocaleCollectionTest extends WebTestCase
      */
     public function testReturnsA400HttpResponseIfTheDirectionIsNotValid(): void
     {
-        $client = static::createClient();
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
+        ];
+        $client = static::createClient(server: $server);
+
+        $this->addAUserWithRoleGetLocaleCollection();
+        $this->authenticateClient($client);
 
         $client->request('GET', '/locales?orderBy[id]=notADirection');
         $apiResponse = $client->getResponse()->getContent();
@@ -163,9 +241,12 @@ final class LocaleCollectionTest extends WebTestCase
      * Tests that a collection can be
      * ordered by id asc.
      */
-    public function testCanGetACollectionOrderedByIdAsc(): void
+    public function testCanBeReturnedOrderedByIdAsc(): void
     {
         $client = static::createClient();
+
+        $this->addAUserWithRoleGetLocaleCollection();
+        $this->authenticateClient($client);
 
         $this->generate30Locales();
 
@@ -185,9 +266,12 @@ final class LocaleCollectionTest extends WebTestCase
      * Tests that a collection can be
      * ordered by id desc.
      */
-    public function testCanGetACollectionOrderedByIdDesc(): void
+    public function testCanBeReturnedOrderedByIdDesc(): void
     {
         $client = static::createClient();
+
+        $this->addAUserWithRoleGetLocaleCollection();
+        $this->authenticateClient($client);
 
         $this->generate30Locales();
 
@@ -208,9 +292,12 @@ final class LocaleCollectionTest extends WebTestCase
      * Tests that a collection can be
      * ordered by code asc.
      */
-    public function testCanGetACollectionOrderedByCodeAsc(): void
+    public function testCanBeReturnedOrderedByCodeAsc(): void
     {
         $client = static::createClient();
+
+        $this->addAUserWithRoleGetLocaleCollection();
+        $this->authenticateClient($client);
 
         $this->generate30Locales();
 
@@ -230,9 +317,12 @@ final class LocaleCollectionTest extends WebTestCase
      * Tests that a collection can be
      * ordered by code desc.
      */
-    public function testCanGetACollectionOrderedByCodeDesc(): void
+    public function testCanBeReturnedOrderedByCodeDesc(): void
     {
         $client = static::createClient();
+
+        $this->addAUserWithRoleGetLocaleCollection();
+        $this->authenticateClient($client);
 
         $this->generate30Locales();
 
@@ -260,6 +350,9 @@ final class LocaleCollectionTest extends WebTestCase
         ];
         $client = static::createClient(server: $server);
 
+        $this->addAUserWithRoleGetLocaleCollection();
+        $this->authenticateClient($client);
+
         $client->request('GET', '/locales?limit=-1');
         $apiResponse = $client->getResponse()->getContent();
 
@@ -275,9 +368,12 @@ final class LocaleCollectionTest extends WebTestCase
      * Tests that a collection can be returned
      * with a specified quantity.
      */
-    public function testCanGetALimitedCollection(): void
+    public function testCanBeReturnedWithALimitedCollection(): void
     {
         $client = static::createClient();
+
+        $this->addAUserWithRoleGetLocaleCollection();
+        $this->authenticateClient($client);
 
         $this->generate30Locales();
 
@@ -304,6 +400,9 @@ final class LocaleCollectionTest extends WebTestCase
         ];
         $client = static::createClient(server: $server);
 
+        $this->addAUserWithRoleGetLocaleCollection();
+        $this->authenticateClient($client);
+
         $client->request('GET', '/locales?offset=-1');
         $apiResponse = $client->getResponse()->getContent();
 
@@ -319,9 +418,12 @@ final class LocaleCollectionTest extends WebTestCase
      * Tests that a collection can be returned
      * from a specific offset.
      */
-    public function testCanGetACollectionFromASpecificOffset(): void
+    public function testCanBeReturnedFromASpecificOffset(): void
     {
         $client = static::createClient();
+
+        $this->addAUserWithRoleGetLocaleCollection();
+        $this->authenticateClient($client);
 
         $this->generate30Locales();
 

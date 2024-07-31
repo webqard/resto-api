@@ -13,6 +13,7 @@ use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\Exception\MissingConstructorArgumentsException;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -127,7 +128,8 @@ final class CurrencyPutController extends SendErrorController
             response: '500'
         ),
         /** @infection-ignore-all */
-        Route('/currencies/{id}', methods: ['PUT'], name: 'currency_put')
+        Route('/currencies/{id}', methods: ['PUT'], name: 'currency_put'),
+        IsGranted('ROLE_PUT_CURRENCY')
     ]
     public function put(Request $request, string $id): Response
     {

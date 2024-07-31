@@ -8,11 +8,14 @@ use App\ApiResource\CurrencyInput;
 use App\Controller\Currency\CurrencyPutController;
 use App\Controller\SendErrorController;
 use App\Entity\Currency;
+use App\Entity\User;
 use App\Repository\Currency\CurrencyGetRepository;
 use App\Repository\Currency\CurrencyPutRepository;
+use App\Repository\User\PasswordUpgraderRepository;
+use App\Security\UserChecker;
 use App\State\Currency\CurrencyPutProcessor;
+use App\Tests\Api\JWTTestCase;
 use PHPUnit\Framework\Attributes as PA;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the database crUd for the currency.
@@ -25,27 +28,39 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
     PA\UsesClass(CurrencyInput::class),
     PA\UsesClass(CurrencyPutRepository::class),
     PA\UsesClass(CurrencyPutProcessor::class),
+    PA\UsesClass(PasswordUpgraderRepository::class),
+    PA\UsesClass(User::class),
+    PA\UsesClass(UserChecker::class),
     PA\Group('e2e'),
     PA\Group('e2e_currency'),
     PA\Group('e2e_currency_update'),
     PA\Group('currency'),
-    PA\TestDox('Currency')
+    PA\TestDox('A currency')
 ]
-final class CurrencyUpdateTest extends WebTestCase
+final class CurrencyUpdateTest extends JWTTestCase
 {
     // Methods :
+
+    /**
+     * Adds a user with ROLE_PUT_CURRENCY.
+     */
+    private function addAUserWithRolePutCurrency(): void
+    {
+        $this->addAUserWithRole('ROLE_PUT_CURRENCY');
+    }
 
     /**
      * Tests that a currency can be updated in the database.
      */
     public function testIsUpdatedInTheDatabaseWithPut(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePutCurrency();
+        $this->authenticateClient($client);
 
         $currency = new Currency('EUR', 2);
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -58,9 +73,9 @@ final class CurrencyUpdateTest extends WebTestCase
         ];
         $client->request('PUT', '/currencies/' . $currency->getId(), content: json_encode($currencyToPut));
 
-        $entityManager->refresh($currency);
+        $savedCurrency = $entityManager->find(Currency::class, 1);
 
-        self::assertSame('GBP', $currency->getCode());
-        self::assertSame(3, $currency->getDecimals());
+        self::assertSame('GBP', $savedCurrency->getCode());
+        self::assertSame(3, $savedCurrency->getDecimals());
     }
 }

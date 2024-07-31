@@ -12,10 +12,14 @@ use App\ApiResource\Violations;
 use App\Controller\Locale\LocalePostController;
 use App\Controller\SendErrorController;
 use App\Entity\Locale;
+use App\Entity\User;
 use App\Repository\Locale\LocalePostRepository;
+use App\Repository\User\PasswordUpgraderRepository;
+use App\Security\AccessDeniedHandler;
+use App\Security\UserChecker;
 use App\State\Locale\LocalePostProcessor;
+use App\Tests\Api\JWTTestCase;
 use PHPUnit\Framework\Attributes as PA;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the locale POST.
@@ -23,29 +27,82 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 #[
     PA\CoversClass(LocalePostController::class),
     PA\CoversClass(SendErrorController::class),
+    PA\UsesClass(AccessDeniedHandler::class),
     PA\UsesClass(ApiResponse::class),
     PA\UsesClass(Locale::class),
     PA\UsesClass(LocaleInput::class),
     PA\UsesClass(LocalePostProcessor::class),
     PA\UsesClass(LocalePostRepository::class),
+    PA\UsesClass(PasswordUpgraderRepository::class),
     PA\UsesClass(ResourceLink::class),
+    PA\UsesClass(User::class),
+    PA\UsesClass(UserChecker::class),
     PA\UsesClass(Violation::class),
     PA\UsesClass(Violations::class),
     PA\Group('api'),
     PA\Group('api_locales'),
     PA\Group('api_locales_post'),
-    PA\Group('locale')
+    PA\Group('locale'),
+    PA\TestDox('A locale')
 ]
-final class LocalePostTest extends WebTestCase
+final class LocalePostTest extends JWTTestCase
 {
     // Methods :
 
     /**
-     * Tests that a locale can be created.
+     * Tests that a locale
+     * needs authentication to be posted.
      */
-    public function testCanPostALocale(): void
+    public function testNeedsAuthenticationToBePosted(): void
     {
         $client = static::createClient();
+
+        $client->request('POST', '/locales');
+
+        self::assertResponseStatusCodeSame(401);
+        self::assertSame(
+            '{"code":401,"message":"JWT Token not found"}',
+            $client->getResponse()->getContent()
+        );
+    }
+
+
+    /**
+     * Tests that a locale
+     * can not be posted
+     * without ROLE_POST_LOCALE.
+     */
+    public function testCanNotBePostedWithoutRolePostLocale(): void
+    {
+        $client = static::createClient();
+
+        $this->addAUserWithoutRole();
+        $this->authenticateClient($client);
+
+        $client->request('POST', '/locales');
+
+        self::assertResponseStatusCodeSame(403);
+        self::assertSame('', $client->getResponse()->getContent());
+    }
+
+
+    /**
+     * Adds a user with ROLE_POST_LOCALE.
+     */
+    private function addAUserWithRolePostLocale(): void
+    {
+        $this->addAUserWithRole('ROLE_POST_LOCALE');
+    }
+
+    /**
+     * Tests that a locale can be created.
+     */
+    public function testCanBePosted(): void
+    {
+        $client = static::createClient();
+
+        $this->addAUserWithRolePostLocale();
+        $this->authenticateClient($client);
 
         $locale = [
             'code' => 'en_GB'
@@ -66,12 +123,16 @@ final class LocalePostTest extends WebTestCase
      * Tests that a code of an already existing locale
      * can not be created.
      */
-    public function testCanNotPostACodeThatAlreadyExist(): void
+    public function testCanNotBePostedWithACodeThatAlreadyExist(): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePostLocale();
+        $this->authenticateClient($client);
+
         $locale = new Locale('en_GB');
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -101,12 +162,15 @@ final class LocalePostTest extends WebTestCase
      * Tests that a locale can not be created
      * from invalid json.
      */
-    public function testCanNotPostInvalidJson(): void
+    public function testCanNotBePostedWithInvalidJson(): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePostLocale();
+        $this->authenticateClient($client);
 
         $client->request('POST', '/locales', content: 'test:');
         $apiResponse = $client->getResponse()->getContent();
@@ -124,12 +188,15 @@ final class LocalePostTest extends WebTestCase
      * Tests that an empty body request
      * can not create a locale.
      */
-    public function testCanNotPostAnEmptyBodyRequest(): void
+    public function testCanNotBePostedWithAnEmptyBodyRequest(): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePostLocale();
+        $this->authenticateClient($client);
 
         $client->request('POST', '/locales', content: '[]');
         $apiResponse = $client->getResponse()->getContent();
@@ -150,9 +217,9 @@ final class LocalePostTest extends WebTestCase
     public static function getInvalidTypeCodes(): array
     {
         return [
-            'code is null' => [null],
-            'code is an integer (5)' => [5],
-            'code is an array ([])' => [[]]
+            'null' => [null],
+            'an integer (5)' => [5],
+            'an array ([])' => [[]]
         ];
     }
 
@@ -163,14 +230,17 @@ final class LocalePostTest extends WebTestCase
      */
     #[
         PA\DataProvider('getInvalidTypeCodes'),
-        PA\TestDox('Can not post when $_dataName')
+        PA\TestDox('Can not be posted when the code is $_dataName')
     ]
-    public function testCanNotPostAnInvalidTypeCode(mixed $invalidTypeCode): void
+    public function testCanNotBePostedWithAnInvalidTypeCode(mixed $invalidTypeCode): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePostLocale();
+        $this->authenticateClient($client);
 
         $locale = [
             'code' => $invalidTypeCode
@@ -192,12 +262,15 @@ final class LocalePostTest extends WebTestCase
      * Tests that an invalid code
      * can not be created.
      */
-    public function testCanNotPostAnInvalidCode(): void
+    public function testCanNotBePostedWithAnInvalidCode(): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePostLocale();
+        $this->authenticateClient($client);
 
         $locale = [
             'code' => 'aaa_AAA_aaa'
@@ -222,12 +295,15 @@ final class LocalePostTest extends WebTestCase
      * Tests that a locale can not be created
      * with a blank code.
      */
-    public function testCanNotPostABlankCode(): void
+    public function testCanNotBePostedWithABlankCode(): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePostLocale();
+        $this->authenticateClient($client);
 
         $locale = [
             'code' => ''

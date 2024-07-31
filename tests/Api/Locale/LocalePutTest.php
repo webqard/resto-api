@@ -11,11 +11,15 @@ use App\ApiResource\Violations;
 use App\Controller\Locale\LocalePutController;
 use App\Controller\SendErrorController;
 use App\Entity\Locale;
+use App\Entity\User;
 use App\Repository\Locale\LocaleGetRepository;
 use App\Repository\Locale\LocalePutRepository;
+use App\Repository\User\PasswordUpgraderRepository;
+use App\Security\AccessDeniedHandler;
+use App\Security\UserChecker;
 use App\State\Locale\LocalePutProcessor;
+use App\Tests\Api\JWTTestCase;
 use PHPUnit\Framework\Attributes as PA;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the locale PUT.
@@ -23,29 +27,83 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 #[
     PA\CoversClass(LocalePutController::class),
     PA\CoversClass(SendErrorController::class),
+    PA\UsesClass(AccessDeniedHandler::class),
     PA\UsesClass(ApiResponse::class),
     PA\UsesClass(Locale::class),
     PA\UsesClass(LocaleInput::class),
     PA\UsesClass(LocalePutProcessor::class),
     PA\UsesClass(LocaleGetRepository::class),
     PA\UsesClass(LocalePutRepository::class),
+    PA\UsesClass(PasswordUpgraderRepository::class),
+    PA\UsesClass(User::class),
+    PA\UsesClass(UserChecker::class),
     PA\UsesClass(Violation::class),
     PA\UsesClass(Violations::class),
     PA\Group('api'),
     PA\Group('api_locales'),
     PA\Group('api_locales_put'),
-    PA\Group('locale')
+    PA\Group('locale'),
+    PA\TestDox('A locale')
 ]
-final class LocalePutTest extends WebTestCase
+final class LocalePutTest extends JWTTestCase
 {
     // Methods :
 
     /**
-     * Tests that a locale can be updated.
+     * Tests that a locale
+     * needs authentication to be put.
      */
-    public function testCanPutALocale(): void
+    public function testNeedsAuthenticationToBePut(): void
     {
         $client = static::createClient();
+
+        $client->request('PUT', '/locales/1');
+
+        self::assertResponseStatusCodeSame(401);
+        self::assertSame(
+            '{"code":401,"message":"JWT Token not found"}',
+            $client->getResponse()->getContent()
+        );
+    }
+
+
+    /**
+     * Tests that a locale
+     * can not be put
+     * without ROLE_PUT_LOCALE.
+     */
+    public function testCanNotBePutWithoutRolePutLocale(): void
+    {
+        $client = static::createClient();
+
+        $this->addAUserWithoutRole();
+        $this->authenticateClient($client);
+
+        $client->request('PUT', '/locales/1');
+
+        self::assertResponseStatusCodeSame(403);
+        self::assertSame('', $client->getResponse()->getContent());
+    }
+
+
+    /**
+     * Adds a user with ROLE_PUT_LOCALE.
+     */
+    private function addAUserWithRolePutLocale(): void
+    {
+        $this->addAUserWithRole('ROLE_PUT_LOCALE');
+    }
+
+    /**
+     * Tests that a locale can be updated.
+     */
+    public function testCanBePut(): void
+    {
+        $client = static::createClient();
+
+        $this->addAUserWithRolePutLocale();
+        $this->authenticateClient($client);
+
         $locale = new Locale('en_GB');
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -69,12 +127,16 @@ final class LocalePutTest extends WebTestCase
      * Tests that a locale can not be updated
      * with the code of an other one.
      */
-    public function testCanNotPutALocaleWithTheCodeOfAnOtherOne(): void
+    public function testCanNotBePutWithTheCodeOfAnOtherOne(): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePutLocale();
+        $this->authenticateClient($client);
+
         $localeEN = new Locale('en_GB');
         $localeFR = new Locale('fr_FR');
 
@@ -106,12 +168,15 @@ final class LocalePutTest extends WebTestCase
      * Tests that a locale can not be updated
      * from an non existant identifier.
      */
-    public function testCanNotPutALocaleFromAnNonExistantId(): void
+    public function testCanNotBePutFromAnNonExistantId(): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePutLocale();
+        $this->authenticateClient($client);
 
         $locale = [
             'code' => 'en_GB'
@@ -133,12 +198,16 @@ final class LocalePutTest extends WebTestCase
      * Tests that a locale can not be updated
      * from invalid json.
      */
-    public function testCanNotPutInvalidJson(): void
+    public function testCanNotBePutWithInvalidJson(): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePutLocale();
+        $this->authenticateClient($client);
+
         $locale = new Locale('en_GB');
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -161,12 +230,16 @@ final class LocalePutTest extends WebTestCase
      * Tests that an empty body request
      * can not create a locale.
      */
-    public function testCanNotPutAnEmptyBodyRequest(): void
+    public function testCanNotBePutWithAnEmptyBodyRequest(): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePutLocale();
+        $this->authenticateClient($client);
+
         $locale = new Locale('en_GB');
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -192,9 +265,9 @@ final class LocalePutTest extends WebTestCase
     public static function getInvalidTypeCodes(): array
     {
         return [
-            'code is null' => [null],
-            'code is an integer (5)' => [5],
-            'code is an array ([])' => [[]]
+            'null' => [null],
+            'an integer (5)' => [5],
+            'an array ([])' => [[]]
         ];
     }
 
@@ -205,14 +278,18 @@ final class LocalePutTest extends WebTestCase
      */
     #[
         PA\DataProvider('getInvalidTypeCodes'),
-        PA\TestDox('Can not put a locale when $_dataName')
+        PA\TestDox('Can not be put when the code is $_dataName')
     ]
-    public function testCanNotPutAnInvalidTypeCode(mixed $invalidTypeCode): void
+    public function testCanNotBePutWithAnInvalidTypeCode(mixed $invalidTypeCode): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePutLocale();
+        $this->authenticateClient($client);
+
         $locale = new Locale('en_GB');
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -236,50 +313,19 @@ final class LocalePutTest extends WebTestCase
 
 
     /**
-     * Tests that an invalid code
-     * can not be updated.
-     */
-    public function testCanNotPutAnInvalidCode(): void
-    {
-        $server = [
-            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
-        ];
-        $client = static::createClient(server: $server);
-        $locale = new Locale('en_GB');
-
-        $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
-        $entityManager->persist($locale);
-        $entityManager->flush();
-
-        $localeWithInvalidCode = [
-            'code' => 'aaa_AAA_aaa'
-        ];
-
-        $client->request('PUT', '/locales/1', content: json_encode($localeWithInvalidCode));
-        $apiResponse = $client->getResponse()->getContent();
-
-        self::assertResponseStatusCodeSame(422, 'PUT did not failed for invalid code.');
-        self::assertJson($apiResponse);
-
-        $jsonResponse = json_decode($apiResponse, false);
-
-        self::assertCount(1, $jsonResponse, 'There must be one violation.');
-        self::assertArrayHasKey(0, $jsonResponse);
-        self::assertSame('code', $jsonResponse[0]->property);
-        self::assertSame('The code is invalid.', $jsonResponse[0]->message);
-    }
-
-
-    /**
      * Tests that a locale can not be updated
      * with a blank code.
      */
-    public function testCanNotPutABlankCode(): void
+    public function testCanNotBePutWithABlankCode(): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePutLocale();
+        $this->authenticateClient($client);
+
         $locale = new Locale('en_GB');
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -302,5 +348,44 @@ final class LocalePutTest extends WebTestCase
         self::assertArrayHasKey(0, $jsonResponse);
         self::assertSame('code', $jsonResponse[0]->property);
         self::assertSame('The code is blank.', $jsonResponse[0]->message);
+    }
+
+
+    /**
+     * Tests that an invalid code
+     * can not be updated.
+     */
+    public function testCanNotBePutWithAnInvalidCode(): void
+    {
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
+        ];
+        $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePutLocale();
+        $this->authenticateClient($client);
+
+        $locale = new Locale('en_GB');
+
+        $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
+        $entityManager->persist($locale);
+        $entityManager->flush();
+
+        $localeWithInvalidCode = [
+            'code' => 'aaa_AAA_aaa'
+        ];
+
+        $client->request('PUT', '/locales/1', content: json_encode($localeWithInvalidCode));
+        $apiResponse = $client->getResponse()->getContent();
+
+        self::assertResponseStatusCodeSame(422, 'PUT did not failed for invalid code.');
+        self::assertJson($apiResponse);
+
+        $jsonResponse = json_decode($apiResponse, false);
+
+        self::assertCount(1, $jsonResponse, 'There must be one violation.');
+        self::assertArrayHasKey(0, $jsonResponse);
+        self::assertSame('code', $jsonResponse[0]->property);
+        self::assertSame('The code is invalid.', $jsonResponse[0]->message);
     }
 }

@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -92,7 +93,8 @@ final class CurrencyGetController extends AbstractController
             response: '500'
         ),
         /** @infection-ignore-all */
-        Route('/currencies/{id}', methods: ['GET'], name: 'currency_get')
+        Route('/currencies/{id}', methods: ['GET'], name: 'currency_get'),
+        IsGranted('ROLE_GET_CURRENCY')
     ]
     public function get(Request $request, string $id): Response
     {

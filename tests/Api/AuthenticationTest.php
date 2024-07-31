@@ -6,6 +6,7 @@ namespace App\Tests\Api;
 
 use App\Entity\User;
 use App\Repository\User\PasswordUpgraderRepository;
+use App\Security\AuthenticationFailureHandler;
 use App\Security\UserChecker;
 use PHPUnit\Framework\Attributes as PA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -15,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 #[
     PA\CoversClass(UserChecker::class),
+    PA\UsesClass(AuthenticationFailureHandler::class),
     PA\UsesClass(PasswordUpgraderRepository::class),
     PA\UsesClass(User::class),
     PA\Group('api'),
@@ -110,9 +112,9 @@ final class AuthenticationTest extends WebTestCase
                 'password' => $password
             ]
         );
-        $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(401);
+        self::assertSame('', $client->getResponse()->getContent());
     }
 
 
@@ -157,12 +159,8 @@ final class AuthenticationTest extends WebTestCase
                 'password' => 'password'
             ]
         );
-        $apiResponse = $client->getResponse()->getContent();
 
-        self::assertResponseStatusCodeSame(401, 'POST to "/authentication" did not failed.');
-
-        $response = json_decode($apiResponse, false);
-
-        self::assertEmpty($response->message);
+        self::assertResponseStatusCodeSame(401);
+        self::assertSame('', $client->getResponse()->getContent());
     }
 }

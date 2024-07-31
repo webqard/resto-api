@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -99,7 +100,8 @@ final class LocaleCollectionController extends AbstractController
             response: '500'
         ),
         /** @infection-ignore-all */
-        Route('/locales', methods: ['GET'], name: 'locales_get')
+        Route('/locales', methods: ['GET'], name: 'locales_get'),
+        IsGranted('ROLE_GET_LOCALE_COLLECTION')
     ]
     public function get(
         Request $request,

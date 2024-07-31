@@ -11,11 +11,15 @@ use App\ApiResource\Violations;
 use App\Controller\Currency\CurrencyPutController;
 use App\Controller\SendErrorController;
 use App\Entity\Currency;
+use App\Entity\User;
 use App\Repository\Currency\CurrencyGetRepository;
 use App\Repository\Currency\CurrencyPutRepository;
+use App\Repository\User\PasswordUpgraderRepository;
+use App\Security\AccessDeniedHandler;
+use App\Security\UserChecker;
 use App\State\Currency\CurrencyPutProcessor;
+use App\Tests\Api\JWTTestCase;
 use PHPUnit\Framework\Attributes as PA;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the currency PUT.
@@ -23,29 +27,83 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 #[
     PA\CoversClass(CurrencyPutController::class),
     PA\CoversClass(SendErrorController::class),
+    PA\UsesClass(AccessDeniedHandler::class),
     PA\UsesClass(ApiResponse::class),
     PA\UsesClass(Currency::class),
     PA\UsesClass(CurrencyInput::class),
     PA\UsesClass(CurrencyPutProcessor::class),
     PA\UsesClass(CurrencyGetRepository::class),
     PA\UsesClass(CurrencyPutRepository::class),
+    PA\UsesClass(PasswordUpgraderRepository::class),
+    PA\UsesClass(User::class),
+    PA\UsesClass(UserChecker::class),
     PA\UsesClass(Violation::class),
     PA\UsesClass(Violations::class),
     PA\Group('api'),
     PA\Group('api_currencies'),
     PA\Group('api_currencies_put'),
-    PA\Group('currency')
+    PA\Group('currency'),
+    PA\TestDox('A currency')
 ]
-final class CurrencyPutTest extends WebTestCase
+final class CurrencyPutTest extends JWTTestCase
 {
     // Methods :
 
     /**
-     * Tests that a currency can be updated.
+     * Tests that a currency
+     * needs authentication to be put.
      */
-    public function testCanPutACurrency(): void
+    public function testNeedsAuthenticationToBePut(): void
     {
         $client = static::createClient();
+
+        $client->request('PUT', '/currencies/1');
+
+        self::assertResponseStatusCodeSame(401);
+        self::assertSame(
+            '{"code":401,"message":"JWT Token not found"}',
+            $client->getResponse()->getContent()
+        );
+    }
+
+
+    /**
+     * Tests that a currency
+     * can not be put
+     * without ROLE_PUT_CURRENCY.
+     */
+    public function testCanNotBePutWithoutRolePutCurrency(): void
+    {
+        $client = static::createClient();
+
+        $this->addAUserWithoutRole();
+        $this->authenticateClient($client);
+
+        $client->request('PUT', '/currencies/1');
+
+        self::assertResponseStatusCodeSame(403);
+        self::assertSame('', $client->getResponse()->getContent());
+    }
+
+
+    /**
+     * Adds a user with ROLE_PUT_CURRENCY.
+     */
+    private function addAUserWithRolePutCurrency(): void
+    {
+        $this->addAUserWithRole('ROLE_PUT_CURRENCY');
+    }
+
+    /**
+     * Tests that a currency can be updated.
+     */
+    public function testCanBePut(): void
+    {
+        $client = static::createClient();
+
+        $this->addAUserWithRolePutCurrency();
+        $this->authenticateClient($client);
+
         $currency = new Currency('EUR', 2);
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -70,12 +128,16 @@ final class CurrencyPutTest extends WebTestCase
      * Tests that a currency can not be updated
      * with the code of an other one.
      */
-    public function testCanNotPutACurrencyWithTheCodeOfAnOtherOne(): void
+    public function testCanNotBePutWithTheCodeOfAnOtherOne(): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePutCurrency();
+        $this->authenticateClient($client);
+
         $currencyEUR = new Currency('EUR', 2);
         $currencyGBP = new Currency('GBP', 2);
 
@@ -108,12 +170,15 @@ final class CurrencyPutTest extends WebTestCase
      * Tests that a currency can not be updated
      * from an non existant identifier.
      */
-    public function testCanNotPutACurrencyFromAnNonExistantId(): void
+    public function testCanNotBePutFromAnNonExistantId(): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePutCurrency();
+        $this->authenticateClient($client);
 
         $currency = [
             'code' => 'EUR',
@@ -136,12 +201,16 @@ final class CurrencyPutTest extends WebTestCase
      * Tests that a currency can not be updated
      * from invalid json.
      */
-    public function testCanNotPutInvalidJson(): void
+    public function testCanNotBePutWithInvalidJson(): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePutCurrency();
+        $this->authenticateClient($client);
+
         $currency = new Currency('EUR', 2);
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -164,12 +233,16 @@ final class CurrencyPutTest extends WebTestCase
      * Tests that an empty body request
      * can not create a currency.
      */
-    public function testCanNotPutAnEmptyBodyRequest(): void
+    public function testCanNotBePutWithAnEmptyBodyRequest(): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePutCurrency();
+        $this->authenticateClient($client);
+
         $currency = new Currency('EUR', 2);
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -213,14 +286,18 @@ final class CurrencyPutTest extends WebTestCase
      */
     #[
         PA\DataProvider('getInvalidTypeValues'),
-        PA\TestDox('Can not put a currency when $_dataName')
+        PA\TestDox('Can not be put when the $_dataName')
     ]
-    public function testCanNotPutAnInvalidTypeValue(string $property, mixed $invalidTypeValue): void
+    public function testCanNotBePutWithAnInvalidTypeValue(string $property, mixed $invalidTypeValue): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePutCurrency();
+        $this->authenticateClient($client);
+
         $currency = new Currency('EUR', 2);
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -249,12 +326,16 @@ final class CurrencyPutTest extends WebTestCase
      * Tests that a currency can not be updated
      * with a negative decimal.
      */
-    public function testCanNotPutANegativeDecimal(): void
+    public function testCanNotBePutWithANegativeDecimal(): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePutCurrency();
+        $this->authenticateClient($client);
+
         $currency = new Currency('EUR', 2);
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -285,12 +366,16 @@ final class CurrencyPutTest extends WebTestCase
      * Tests that a currency can not be updated
      * with a blank code.
      */
-    public function testCanNotPutABlankCode(): void
+    public function testCanNotBePutWithABlankCode(): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePutCurrency();
+        $this->authenticateClient($client);
+
         $currency = new Currency('EUR', 2);
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
@@ -321,12 +406,16 @@ final class CurrencyPutTest extends WebTestCase
      * Tests that an invalid code
      * can not be updated.
      */
-    public function testCanNotPutAnInvalidCode(): void
+    public function testCanNotBePutWithAnInvalidCode(): void
     {
         $server = [
             'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
         $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePutCurrency();
+        $this->authenticateClient($client);
+
         $currency = new Currency('EUR', 2);
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();

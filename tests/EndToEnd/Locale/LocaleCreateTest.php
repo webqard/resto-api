@@ -9,10 +9,13 @@ use App\ApiResource\ResourceLink;
 use App\Controller\Locale\LocalePostController;
 use App\Controller\SendErrorController;
 use App\Entity\Locale;
+use App\Entity\User;
 use App\Repository\Locale\LocalePostRepository;
+use App\Repository\User\PasswordUpgraderRepository;
+use App\Security\UserChecker;
 use App\State\Locale\LocalePostProcessor;
+use App\Tests\Api\JWTTestCase;
 use PHPUnit\Framework\Attributes as PA;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the database Crud for the locale.
@@ -24,28 +27,40 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
     PA\UsesClass(LocaleInput::class),
     PA\UsesClass(LocalePostProcessor::class),
     PA\UsesClass(LocalePostRepository::class),
+    PA\UsesClass(PasswordUpgraderRepository::class),
     PA\UsesClass(ResourceLink::class),
+    PA\UsesClass(User::class),
+    PA\UsesClass(UserChecker::class),
     PA\Group('e2e'),
     PA\Group('e2e_locale'),
     PA\Group('e2e_locale_create'),
     PA\Group('locale'),
-    PA\TestDox('Locale')
+    PA\TestDox('A locale')
 ]
-final class LocaleCreateTest extends WebTestCase
+final class LocaleCreateTest extends JWTTestCase
 {
     // Methods :
+
+    /**
+     * Adds a user with ROLE_POST_LOCALE.
+     */
+    private function addAUserWithRolePostLocale(): void
+    {
+        $this->addAUserWithRole('ROLE_POST_LOCALE');
+    }
 
     /**
      * Tests that a locale can be created in the database.
      */
     public function testIsCreatedInTheDatabaseWithPost(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePostLocale();
+        $this->authenticateClient($client);
 
         $localeToPost = [
             'code' => 'en_GB'

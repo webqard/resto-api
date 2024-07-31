@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -92,7 +93,8 @@ final class LocaleGetController extends AbstractController
             response: '500'
         ),
         /** @infection-ignore-all */
-        Route('/locales/{id}', methods: ['GET'], name: 'locale_get')
+        Route('/locales/{id}', methods: ['GET'], name: 'locale_get'),
+        IsGranted('ROLE_GET_LOCALE')
     ]
     public function get(Request $request, string $id): Response
     {

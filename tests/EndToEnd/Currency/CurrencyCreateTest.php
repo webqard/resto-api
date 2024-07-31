@@ -9,10 +9,13 @@ use App\ApiResource\ResourceLink;
 use App\Controller\Currency\CurrencyPostController;
 use App\Controller\SendErrorController;
 use App\Entity\Currency;
+use App\Entity\User;
 use App\Repository\Currency\CurrencyPostRepository;
+use App\Repository\User\PasswordUpgraderRepository;
+use App\Security\UserChecker;
 use App\State\Currency\CurrencyPostProcessor;
+use App\Tests\Api\JWTTestCase;
 use PHPUnit\Framework\Attributes as PA;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Tests the database Crud for the currency.
@@ -24,28 +27,40 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
     PA\UsesClass(CurrencyInput::class),
     PA\UsesClass(CurrencyPostProcessor::class),
     PA\UsesClass(CurrencyPostRepository::class),
+    PA\UsesClass(PasswordUpgraderRepository::class),
     PA\UsesClass(ResourceLink::class),
+    PA\UsesClass(User::class),
+    PA\UsesClass(UserChecker::class),
     PA\Group('e2e'),
     PA\Group('e2e_currency'),
     PA\Group('e2e_currency_create'),
     PA\Group('currency'),
-    PA\TestDox('Currency')
+    PA\TestDox('A currency')
 ]
-final class CurrencyCreateTest extends WebTestCase
+final class CurrencyCreateTest extends JWTTestCase
 {
     // Methods :
+
+    /**
+     * Adds a user with ROLE_POST_CURRENCY.
+     */
+    private function addAUserWithRolePostCurrency(): void
+    {
+        $this->addAUserWithRole('ROLE_POST_CURRENCY');
+    }
 
     /**
      * Tests that a currency can be created in the database.
      */
     public function testIsCreatedInTheDatabaseWithPost(): void
     {
-        $params = [
-            'headers' => [
-                'Accept-Language' => 'en-GB',
-            ],
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'en-GB',
         ];
-        $client = static::createClient($params);
+        $client = static::createClient(server: $server);
+
+        $this->addAUserWithRolePostCurrency();
+        $this->authenticateClient($client);
 
         $currencyToPost = [
             'code' => 'EUR',
