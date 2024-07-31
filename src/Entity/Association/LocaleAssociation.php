@@ -25,4 +25,16 @@ trait LocaleAssociation
         ORM\ManyToOne(targetEntity: Locale::class)
     ]
     protected Locale $locale;
+
+
+    // Accessors :
+
+    /**
+     * Returns the locale.
+     * @return \App\Entity\Locale the locale.
+     */
+    public function getLocale(): Locale
+    {
+        return $this->locale;
+    }
 }
