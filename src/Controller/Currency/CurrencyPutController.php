@@ -162,7 +162,12 @@ final class CurrencyPutController extends SendErrorController
         $unicityViolations = $this->validator->validate($updatedCurrency);
 
         if (count($unicityViolations) > 0) {
-            return $this->sendViolations($unicityViolations, 'currency', $request->getLocale(), Response::HTTP_CONFLICT);
+            return $this->sendViolations(
+                $unicityViolations,
+                'currency',
+                $request->getLocale(),
+                Response::HTTP_CONFLICT
+            );
         }
 
         $this->repository->save($updatedCurrency);
