@@ -57,13 +57,13 @@ class RoleTranslation
     /**
      * The constructor.
      * @param \App\Entity\Role $role the role.
-     * @param string $description the description.
      * @param \App\Entity\Locale $locale the locale.
+     * @param string $description the description.
      */
     public function __construct(
         Role $role,
-        string $description,
-        Locale $locale
+        Locale $locale,
+        string $description
     ) {
         $this->id = null;
         $this->role = $role;
