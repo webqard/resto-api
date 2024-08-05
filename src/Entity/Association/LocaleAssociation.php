@@ -37,4 +37,16 @@ trait LocaleAssociation
     {
         return $this->locale;
     }
+
+
+    // Mutators :
+
+    /**
+     * Changes the locale.
+     * @param \App\Entity\Locale $locale the locale.
+     */
+    public function setLocale(Locale $locale): void
+    {
+        $this->locale = $locale;
+    }
 }
