@@ -57,7 +57,8 @@ class Group
     /**
      * The constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->id = null;
         $this->translations = new ArrayCollection();
         $this->users = new ArrayCollection();
