@@ -6,10 +6,8 @@ namespace App\Entity;
 
 use App\Entity\User;
 use CyrilVerloop\DoctrineEntities\IntId;
-use CyrilVerloop\DoctrineEntities\Slug;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,28 +21,23 @@ class Group
 {
     // Traits :
     use IntId;
-    use Slug;
 
 
     // Properties :
 
     /**
-     * @var string the name.
+     * @var \Doctrine\Common\Collections\Collection the translations.
      */
-    #[ORM\Column(type: Types::TEXT, unique: true)]
-    private string $name;
-
-    /**
-     * @var string the slug.
-     */
-//    #[ORM\Column(type: Types::TEXT, unique: true)]
-//    private string $slug;
-
-    /**
-     * @var string|null the description.
-     */
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $description;
+    #[
+        ORM\JoinColumn(onDelete: "CASCADE"),
+        ORM\OneToMany(
+            targetEntity: GroupTranslation::class,
+            mappedBy: 'group',
+            cascade: ["persist"],
+            fetch: "EXTRA_LAZY"
+        )
+    ]
+    private Collection $translations;
 
     /**
      * @var \Doctrine\Common\Collections\Collection the users.
@@ -63,19 +56,10 @@ class Group
 
     /**
      * The constructor.
-     * @param string $name the name.
-     * @param string|null $slug the slug.
-     * @param string|null $description the description.
      */
-    public function __construct(
-        string $name,
-        ?string $slug,
-        ?string $description
-    ) {
+    public function __construct() {
         $this->id = null;
-        $this->name = $name;
-        $this->slug = $slug;
-        $this->description = $description;
+        $this->translations = new ArrayCollection();
         $this->users = new ArrayCollection();
         $this->roles = new ArrayCollection();
     }
@@ -84,21 +68,12 @@ class Group
     // Accessors :
 
     /**
-     * Returns the name.
-     * @return string the name.
+     * Returns the translations.
+     * @return \Doctrine\Common\Collections\Collection the translations.
      */
-    public function getName(): string
+    public function getTranslations(): Collection
     {
-        return $this->name;
-    }
-
-    /**
-     * Returns the description.
-     * @return string|null the description.
-     */
-    public function getDescription(): ?string
-    {
-        return $this->description;
+        return $this->translations;
     }
 
     /**
@@ -120,28 +95,27 @@ class Group
     }
 
 
-    // Mutators :
-
-    /**
-     * Changes the name.
-     * @param string $name the name.
-     */
-    public function setName(string $name): void
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * Changes the description.
-     * @param string|null $description the description.
-     */
-    public function setDescription(?string $description): void
-    {
-        $this->description = $description;
-    }
-
-
     // Collections :
+
+    /**
+     * Adds a translation.
+     * @param \App\Entity\GroupTranslation $translation a translation.
+     */
+    public function addTranslation(GroupTranslation $translation): void
+    {
+        if ($this->translations->contains($translation) === false) {
+            $this->translations->add($translation);
+        }
+    }
+
+    /**
+     * Removes a translation.
+     * @param \App\Entity\GroupTranslation $translation a translation.
+     */
+    public function removeTranslation(GroupTranslation $translation): void
+    {
+        $this->translations->removeElement($translation);
+    }
 
     /**
      * Adds a user.
