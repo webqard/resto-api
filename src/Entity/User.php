@@ -67,7 +67,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @param string $login the login.
      * @param string $password the password.
      * @param \DateTimeImmutable $createdAt the date and time of the creation.
-     * @param null|\DateTimeImmutable $connectedAt the date and time of the connection
+     * @param \DateTimeImmutable|null $connectedAt the date and time of the connection
      * @param string[] $roles the roles.
      * @param bool $active the active state.
      */
