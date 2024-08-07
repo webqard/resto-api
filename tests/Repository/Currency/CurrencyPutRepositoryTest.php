@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Repository\Currency;
 
 use App\Entity\Currency;
+use App\Repository\Currency\CurrencyGetRepository;
 use App\Repository\Currency\CurrencyPutRepository;
-use App\Repository\Currency\CurrencyRepository;
 use PHPUnit\Framework\Attributes as PA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -16,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 #[
     PA\CoversClass(CurrencyPutRepository::class),
     PA\UsesClass(Currency::class),
-    PA\UsesClass(CurrencyRepository::class),
+    PA\UsesClass(CurrencyGetRepository::class),
     PA\Group('repositories'),
     PA\Group('repository_currencies'),
     PA\Group('repository_currencies_put'),

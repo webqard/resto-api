@@ -6,7 +6,6 @@ namespace App\Tests\Repository\Locale;
 
 use App\Entity\Locale;
 use App\Repository\Locale\LocaleGetRepository;
-use App\Repository\Locale\LocaleRepository;
 use PHPUnit\Framework\Attributes as PA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -16,7 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 #[
     PA\CoversClass(LocaleGetRepository::class),
     PA\UsesClass(Locale::class),
-    PA\UsesClass(LocaleRepository::class),
     PA\Group('repositories'),
     PA\Group('repository_locales'),
     PA\Group('repository_locales_get'),

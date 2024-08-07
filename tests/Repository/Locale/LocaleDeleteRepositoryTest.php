@@ -6,7 +6,7 @@ namespace App\Tests\Repository\Locale;
 
 use App\Entity\Locale;
 use App\Repository\Locale\LocaleDeleteRepository;
-use App\Repository\Locale\LocaleRepository;
+use App\Repository\Locale\LocaleGetRepository;
 use PHPUnit\Framework\Attributes as PA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -16,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 #[
     PA\CoversClass(LocaleDeleteRepository::class),
     PA\UsesClass(Locale::class),
-    PA\UsesClass(LocaleRepository::class),
+    PA\UsesClass(LocaleGetRepository::class),
     PA\Group('repositories'),
     PA\Group('repository_locales'),
     PA\Group('repository_locales_delete'),

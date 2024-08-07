@@ -6,7 +6,7 @@ namespace App\Tests\Repository\Currency;
 
 use App\Entity\Currency;
 use App\Repository\Currency\CurrencyDeleteRepository;
-use App\Repository\Currency\CurrencyRepository;
+use App\Repository\Currency\CurrencyGetRepository;
 use PHPUnit\Framework\Attributes as PA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -16,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 #[
     PA\CoversClass(CurrencyDeleteRepository::class),
     PA\UsesClass(Currency::class),
-    PA\UsesClass(CurrencyRepository::class),
+    PA\UsesClass(CurrencyGetRepository::class),
     PA\Group('repositories'),
     PA\Group('repository_currencies'),
     PA\Group('repository_currencies_delete'),
