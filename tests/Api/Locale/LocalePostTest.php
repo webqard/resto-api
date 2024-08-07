@@ -108,7 +108,7 @@ final class LocalePostTest extends JWTTestCase
             'code' => 'en_GB'
         ];
 
-        $client->request('POST', '/locales', content: json_encode($locale));
+        $client->jsonRequest('POST', '/locales', $locale);
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(201, 'POST to "/locales" failed.');
@@ -139,11 +139,11 @@ final class LocalePostTest extends JWTTestCase
         $entityManager->persist($locale);
         $entityManager->flush();
 
-        $sameLocale = json_encode([
+        $sameLocale = [
             'code' => 'en_GB'
-        ]);
+        ];
 
-        $client->request('POST', '/locales', content: $sameLocale);
+        $client->jsonRequest('POST', '/locales', $sameLocale);
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(409, 'POST same locale twice did not failed.');
@@ -198,7 +198,7 @@ final class LocalePostTest extends JWTTestCase
         $this->addAUserWithRolePostLocale();
         $this->authenticateClient($client);
 
-        $client->request('POST', '/locales', content: '[]');
+        $client->jsonRequest('POST', '/locales');
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(400, 'POST did not failed with an empty body request.');
@@ -246,7 +246,7 @@ final class LocalePostTest extends JWTTestCase
             'code' => $invalidTypeCode
         ];
 
-        $client->request('POST', '/locales', content: json_encode($locale));
+        $client->jsonRequest('POST', '/locales', $locale);
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(400, 'POST did not failed for invalid code.');
@@ -276,7 +276,7 @@ final class LocalePostTest extends JWTTestCase
             'code' => 'aaa_AAA_aaa'
         ];
 
-        $client->request('POST', '/locales', content: json_encode($locale));
+        $client->jsonRequest('POST', '/locales', $locale);
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(422, 'POST did not failed for invalid code.');
@@ -309,7 +309,7 @@ final class LocalePostTest extends JWTTestCase
             'code' => ''
         ];
 
-        $client->request('POST', '/locales', content: json_encode($locale));
+        $client->jsonRequest('POST', '/locales', $locale);
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(422, 'POST did not failed for invalid code.');

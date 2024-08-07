@@ -109,7 +109,7 @@ final class CurrencyPostTest extends JWTTestCase
             'decimals' => 2
         ];
 
-        $client->request('POST', '/currencies', content: json_encode($currency));
+        $client->jsonRequest('POST', '/currencies', $currency);
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(201, 'POST to "/currencies" failed.');
@@ -140,12 +140,12 @@ final class CurrencyPostTest extends JWTTestCase
         $entityManager->persist($currency);
         $entityManager->flush();
 
-        $sameCurrency = json_encode([
+        $sameCurrency = [
             'code' => 'EUR',
             'decimals' => 2
-        ]);
+        ];
 
-        $client->request('POST', '/currencies', content: $sameCurrency);
+        $client->jsonRequest('POST', '/currencies', $sameCurrency);
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(409, 'POST same currency twice did not failed.');
@@ -200,7 +200,7 @@ final class CurrencyPostTest extends JWTTestCase
         $this->addAUserWithRolePostCurrency();
         $this->authenticateClient($client);
 
-        $client->request('POST', '/currencies', content: '[]');
+        $client->jsonRequest('POST', '/currencies');
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(400, 'POST did not failed with an empty body request.');
@@ -254,7 +254,7 @@ final class CurrencyPostTest extends JWTTestCase
             'decimals' => 2
         ];
         $currency[$property] = $invalidTypeValue;
-        $client->request('POST', '/currencies', content: json_encode($currency));
+        $client->jsonRequest('POST', '/currencies', $currency);
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(400, 'POST did not failed for invalid ' . $property . '.');
@@ -284,7 +284,7 @@ final class CurrencyPostTest extends JWTTestCase
             'code' => 'EUR',
             'decimals' => -2
         ];
-        $client->request('POST', '/currencies', content: json_encode($currency));
+        $client->jsonRequest('POST', '/currencies', $currency);
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(422, 'POST did not failed for invalid code.');
@@ -318,7 +318,7 @@ final class CurrencyPostTest extends JWTTestCase
             'decimals' => 2
         ];
 
-        $client->request('POST', '/currencies', content: json_encode($currency));
+        $client->jsonRequest('POST', '/currencies', $currency);
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(422, 'POST did not failed for invalid code.');
@@ -351,7 +351,7 @@ final class CurrencyPostTest extends JWTTestCase
             'code' => 'aaa_AAA_aaa',
             'decimals' => 2
         ];
-        $client->request('POST', '/currencies', content: json_encode($currency));
+        $client->jsonRequest('POST', '/currencies', $currency);
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(422, 'POST did not failed for invalid code.');

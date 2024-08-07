@@ -114,7 +114,7 @@ final class LocalePutTest extends JWTTestCase
             'code' => 'fr_FR'
         ];
 
-        $client->request('PUT', '/locales/1', content: json_encode($localeToPut));
+        $client->jsonRequest('PUT', '/locales/1', $localeToPut);
 
         self::assertResponseStatusCodeSame(204, 'PUT to "/locales/1" failed.');
 
@@ -145,11 +145,11 @@ final class LocalePutTest extends JWTTestCase
         $entityManager->persist($localeFR);
         $entityManager->flush();
 
-        $sameLocale = json_encode([
+        $sameLocale = [
             'code' => 'fr_FR'
-        ]);
+        ];
 
-        $client->request('PUT', '/locales/1', content: $sameLocale);
+        $client->jsonRequest('PUT', '/locales/1', $sameLocale);
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(409, 'PUT same locale twice did not failed.');
@@ -182,7 +182,7 @@ final class LocalePutTest extends JWTTestCase
             'code' => 'en_GB'
         ];
 
-        $client->request('PUT', '/locales/1', content: json_encode($locale));
+        $client->jsonRequest('PUT', '/locales/1', $locale);
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(404, 'PUT "/locales/1" did not failed.');
@@ -246,7 +246,7 @@ final class LocalePutTest extends JWTTestCase
         $entityManager->persist($locale);
         $entityManager->flush();
 
-        $client->request('PUT', '/locales/1', content: '[]');
+        $client->jsonRequest('PUT', '/locales/1');
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(400, 'PUT did not failed with an empty body request.');
@@ -300,7 +300,7 @@ final class LocalePutTest extends JWTTestCase
             'code' => $invalidTypeCode
         ];
 
-        $client->request('PUT', '/locales/1', content: json_encode($localeWithInvalidTypeCode));
+        $client->jsonRequest('PUT', '/locales/1', $localeWithInvalidTypeCode);
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(400, 'PUT did not failed for invalid code.');
@@ -336,7 +336,7 @@ final class LocalePutTest extends JWTTestCase
             'code' => ''
         ];
 
-        $client->request('PUT', '/locales/1', content: json_encode($localeWithABlankCode));
+        $client->jsonRequest('PUT', '/locales/1', $localeWithABlankCode);
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(422, 'PUT did not failed for invalid code.');
@@ -375,7 +375,7 @@ final class LocalePutTest extends JWTTestCase
             'code' => 'aaa_AAA_aaa'
         ];
 
-        $client->request('PUT', '/locales/1', content: json_encode($localeWithInvalidCode));
+        $client->jsonRequest('PUT', '/locales/1', $localeWithInvalidCode);
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(422, 'PUT did not failed for invalid code.');

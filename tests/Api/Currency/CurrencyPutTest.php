@@ -115,7 +115,7 @@ final class CurrencyPutTest extends JWTTestCase
             'decimals' => 3
         ];
 
-        $client->request('PUT', '/currencies/1', content: json_encode($currencyToPut));
+        $client->jsonRequest('PUT', '/currencies/1', $currencyToPut);
 
         self::assertResponseStatusCodeSame(204, 'PUT to "/currencies/1" failed.');
 
@@ -146,12 +146,12 @@ final class CurrencyPutTest extends JWTTestCase
         $entityManager->persist($currencyGBP);
         $entityManager->flush();
 
-        $sameCurrency = json_encode([
+        $sameCurrency = [
             'code' => 'GBP',
             'decimals' => 2
-        ]);
+        ];
 
-        $client->request('PUT', '/currencies/1', content: $sameCurrency);
+        $client->jsonRequest('PUT', '/currencies/1', $sameCurrency);
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(409, 'PUT same currency twice did not failed.');
@@ -185,7 +185,7 @@ final class CurrencyPutTest extends JWTTestCase
             'decimals' => 2
         ];
 
-        $client->request('PUT', '/currencies/1', content: json_encode($currency));
+        $client->jsonRequest('PUT', '/currencies/1', $currency);
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(404, 'PUT "/currencies/1" did not failed.');
@@ -249,7 +249,7 @@ final class CurrencyPutTest extends JWTTestCase
         $entityManager->persist($currency);
         $entityManager->flush();
 
-        $client->request('PUT', '/currencies/1', content: '[]');
+        $client->jsonRequest('PUT', '/currencies/1');
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(400, 'PUT did not failed with an empty body request.');
@@ -310,7 +310,7 @@ final class CurrencyPutTest extends JWTTestCase
         ];
         $currencyWithInvalidTypeCode[$property] = $invalidTypeValue;
 
-        $client->request('PUT', '/currencies/1', content: json_encode($currencyWithInvalidTypeCode));
+        $client->jsonRequest('PUT', '/currencies/1', $currencyWithInvalidTypeCode);
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(400, 'PUT did not failed for invalid ' . $property . '.');
@@ -347,7 +347,7 @@ final class CurrencyPutTest extends JWTTestCase
             'decimals' => -2
         ];
 
-        $client->request('PUT', '/currencies/1', content: json_encode($currencyWithABlankCode));
+        $client->jsonRequest('PUT', '/currencies/1', $currencyWithABlankCode);
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(422, 'PUT did not failed for invalid code.');
@@ -387,7 +387,7 @@ final class CurrencyPutTest extends JWTTestCase
             'decimals' => 2
         ];
 
-        $client->request('PUT', '/currencies/1', content: json_encode($currencyWithABlankCode));
+        $client->jsonRequest('PUT', '/currencies/1', $currencyWithABlankCode);
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(422, 'PUT did not failed for invalid code.');
@@ -427,7 +427,7 @@ final class CurrencyPutTest extends JWTTestCase
             'decimals' => 2
         ];
 
-        $client->request('PUT', '/currencies/1', content: json_encode($currencyWithInvalidCode));
+        $client->jsonRequest('PUT', '/currencies/1', $currencyWithInvalidCode);
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(422, 'PUT did not failed for invalid code.');
