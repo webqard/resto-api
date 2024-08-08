@@ -118,7 +118,7 @@ final class LocaleCollectionController extends AbstractController
                 $limit,
                 $offset
             );
-        } catch (UnexpectedFieldException | \UnexpectedValueException $exception) {
+        } catch (\UnexpectedValueException $exception) {
             $parameters = [];
 
             if (($exception instanceof UnexpectedFieldException) === true) {
