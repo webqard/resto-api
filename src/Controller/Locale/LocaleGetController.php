@@ -93,7 +93,7 @@ final class LocaleGetController extends AbstractController
             response: '500'
         ),
         /** @infection-ignore-all */
-        Route('/locales/{id}', methods: ['GET'], name: 'locale_get'),
+        Route('/locales/{id}', methods: ['GET'], name: 'locale_get', format: 'json'),
         IsGranted('ROLE_GET_LOCALE')
     ]
     public function get(Request $request, string $id): Response

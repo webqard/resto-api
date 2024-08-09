@@ -83,7 +83,7 @@ final class LocaleDeleteController extends AbstractController
             response: '500'
         ),
         /** @infection-ignore-all */
-        Route('/locales/{id}', methods: ['DELETE'], name: 'locale_delete'),
+        Route('/locales/{id}', methods: ['DELETE'], name: 'locale_delete', format: 'json'),
         IsGranted('ROLE_DELETE_LOCALE')
     ]
     public function delete(Request $request, string $id): Response

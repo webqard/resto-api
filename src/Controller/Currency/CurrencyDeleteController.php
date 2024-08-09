@@ -83,7 +83,7 @@ final class CurrencyDeleteController extends AbstractController
             response: '500'
         ),
         /** @infection-ignore-all */
-        Route('/currencies/{id}', methods: ['DELETE'], name: 'currency_delete'),
+        Route('/currencies/{id}', methods: ['DELETE'], name: 'currency_delete', format: 'json'),
         IsGranted('ROLE_DELETE_CURRENCY')
     ]
     public function delete(Request $request, string $id): Response

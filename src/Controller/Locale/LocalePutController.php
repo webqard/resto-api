@@ -126,7 +126,7 @@ final class LocalePutController extends SendErrorController
             response: '500'
         ),
         /** @infection-ignore-all */
-        Route('/locales/{id}', methods: ['PUT'], name: 'locale_put'),
+        Route('/locales/{id}', methods: ['PUT'], name: 'locale_put', format: 'json'),
         IsGranted('ROLE_PUT_LOCALE')
     ]
     public function put(Request $request, string $id): Response

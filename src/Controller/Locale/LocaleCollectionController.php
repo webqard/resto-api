@@ -100,7 +100,7 @@ final class LocaleCollectionController extends AbstractController
             response: '500'
         ),
         /** @infection-ignore-all */
-        Route('/locales', methods: ['GET'], name: 'locales_get'),
+        Route('/locales', methods: ['GET'], name: 'locales_get', format: 'json'),
         IsGranted('ROLE_GET_LOCALE_COLLECTION')
     ]
     public function get(

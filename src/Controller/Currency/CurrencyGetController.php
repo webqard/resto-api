@@ -93,7 +93,7 @@ final class CurrencyGetController extends AbstractController
             response: '500'
         ),
         /** @infection-ignore-all */
-        Route('/currencies/{id}', methods: ['GET'], name: 'currency_get'),
+        Route('/currencies/{id}', methods: ['GET'], name: 'currency_get', format: 'json'),
         IsGranted('ROLE_GET_CURRENCY')
     ]
     public function get(Request $request, string $id): Response

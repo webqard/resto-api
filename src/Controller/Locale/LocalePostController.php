@@ -120,7 +120,7 @@ final class LocalePostController extends SendErrorController
             response: '500'
         ),
         /** @infection-ignore-all */
-        Route('/locales', methods: ['POST'], name: 'locale_post'),
+        Route('/locales', methods: ['POST'], name: 'locale_post', format: 'json'),
         IsGranted('ROLE_POST_LOCALE')
     ]
     public function post(Request $request): Response

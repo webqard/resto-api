@@ -122,7 +122,7 @@ final class CurrencyPostController extends SendErrorController
             response: '500'
         ),
         /** @infection-ignore-all */
-        Route('/currencies', methods: ['POST'], name: 'currency_post'),
+        Route('/currencies', methods: ['POST'], name: 'currency_post', format: 'json'),
         IsGranted('ROLE_POST_CURRENCY')
     ]
     public function post(Request $request): Response

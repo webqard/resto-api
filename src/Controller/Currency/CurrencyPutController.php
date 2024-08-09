@@ -128,7 +128,7 @@ final class CurrencyPutController extends SendErrorController
             response: '500'
         ),
         /** @infection-ignore-all */
-        Route('/currencies/{id}', methods: ['PUT'], name: 'currency_put'),
+        Route('/currencies/{id}', methods: ['PUT'], name: 'currency_put', format: 'json'),
         IsGranted('ROLE_PUT_CURRENCY')
     ]
     public function put(Request $request, string $id): Response
