@@ -12,16 +12,18 @@ use OpenApi\Attributes as OA;
 #[
     OA\Schema(
         type: "object",
-        schema: "AuthenticationToken"
+        schema: "AuthenticationToken",
+        description: "The authentication token.",
+        properties: [
+            new OA\Property(
+                property: 'token',
+                type: 'string',
+                description: 'the token.',
+                example : "icDY0MjgslsiUDY0MjgsX0dF"
+            )
+        ]
     )
 ]
 class AuthenticationToken
 {
-    // Properties :
-
-    /**
-     * @var string the token.
-     */
-    #[OA\Property(example : "icDY0MjgslsiUDY0MjgsX0dF")]
-    private string $token;
 }
