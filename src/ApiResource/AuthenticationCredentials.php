@@ -12,22 +12,24 @@ use OpenApi\Attributes as OA;
 #[
     OA\Schema(
         type: "object",
-        schema: "AuthenticationCredentials"
+        schema: "AuthenticationCredentials",
+        description: "The authentication credentials.",
+        properties: [
+            new OA\Property(
+                property: 'login',
+                type: 'string',
+                description: 'the login.',
+                example : "login"
+            ),
+            new OA\Property(
+                property: 'password',
+                type: 'string',
+                description: 'the password.',
+                example : "password"
+            )
+        ]
     )
 ]
 class AuthenticationCredentials
 {
-    // Properties :
-
-    /**
-     * @var string the login.
-     */
-    #[OA\Property(example : "login")]
-    private string $login;
-
-    /**
-     * @var string the password.
-     */
-    #[OA\Property(example : "password")]
-    private string $password;
 }
