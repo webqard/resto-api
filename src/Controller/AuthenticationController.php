@@ -9,6 +9,7 @@ use OpenApi\Attributes as OA;
 /**
  * Dummy class to document API authentication route.
  */
+// @codeCoverageIgnoreStart
 #[
     OA\Post(
         description: 'Authenticates.',
@@ -48,6 +49,7 @@ use OpenApi\Attributes as OA;
         response: '500'
     )
 ]
+// @codeCoverageIgnoreEnd
 final class AuthenticationController
 {
 }

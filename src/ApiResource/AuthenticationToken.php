@@ -9,6 +9,7 @@ use OpenApi\Attributes as OA;
 /**
  * The authentication token.
  */
+// @codeCoverageIgnoreStart
 #[
     OA\Schema(
         type: "object",
@@ -24,6 +25,7 @@ use OpenApi\Attributes as OA;
         ]
     )
 ]
+// @codeCoverageIgnoreEnd
 class AuthenticationToken
 {
 }

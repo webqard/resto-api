@@ -9,6 +9,7 @@ use OpenApi\Attributes as OA;
 /**
  * The authentication credentials.
  */
+// @codeCoverageIgnoreStart
 #[
     OA\Schema(
         type: "object",
@@ -30,6 +31,7 @@ use OpenApi\Attributes as OA;
         ]
     )
 ]
+// @codeCoverageIgnoreEnd
 class AuthenticationCredentials
 {
 }
