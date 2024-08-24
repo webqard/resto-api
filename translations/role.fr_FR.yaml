@@ -1,0 +1,13 @@
+name:
+    alreadyExist: Le nom existe déjà.
+    blankError: Le nom est vide.
+    tooLong: Le nom est trop long.
+
+description:
+    blankError: La description est vide.
+
+translation:
+    alreadyExist: La traduction existe déjà.
+
+translationLocale:
+    notFound: Le language "indentifier" n'existe pas.
