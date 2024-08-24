@@ -23,7 +23,7 @@ class ApiResponse implements \JsonSerializable
      * @var string the message.
      */
     #[OA\Property(example : "Here is some information.")]
-    private string $message;
+    private readonly string $message;
 
 
     // Magic methods :

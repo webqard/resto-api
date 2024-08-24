@@ -23,13 +23,13 @@ class LocaleOutput implements \JsonSerializable
      * @var int the identifier/primary key.
      */
     #[OA\Property(example : 1)]
-    private int $id;
+    private readonly int $id;
 
     /**
      * @var string the code.
      */
     #[OA\Property(example : "en_GB")]
-    private string $code;
+    private readonly string $code;
 
 
     // Magic methods :

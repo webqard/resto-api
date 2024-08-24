@@ -23,7 +23,7 @@ class ResourceLink implements \JsonSerializable
      * @var string the link to a resource.
      */
     #[OA\Property(example : "/courses/1")]
-    private string $link;
+    private readonly string $link;
 
 
     // Magic methods :

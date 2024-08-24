@@ -28,7 +28,7 @@ class CurrencyInput
         Assert\NotBlank(message: "code.blankError"),
         OA\Property(example : "EUR")
     ]
-    private string $code;
+    private readonly string $code;
 
     /**
      * @var int the number of decimals.
@@ -37,7 +37,7 @@ class CurrencyInput
         Assert\PositiveOrZero(message: "decimals.negativeError"),
         OA\Property(example : 2)
     ]
-    private int $decimals;
+    private readonly int $decimals;
 
 
     // Magic methods :

@@ -23,13 +23,13 @@ class Violation implements \JsonSerializable
      * @var string the property name.
      */
     #[OA\Property(example : 'name')]
-    private string $property;
+    private readonly string $property;
 
     /**
      * @var string the message.
      */
     #[OA\Property(example : 'Some error message.')]
-    private string $message;
+    private readonly string $message;
 
 
     // Magic methods :

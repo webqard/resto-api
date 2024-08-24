@@ -31,7 +31,7 @@ class LocaleInput
         Assert\NotBlank(message: "code.blankError"),
         OA\Property(example : "en_GB")
     ]
-    private string $code;
+    private readonly string $code;
 
 
     // Magic methods :
