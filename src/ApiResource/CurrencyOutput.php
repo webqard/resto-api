@@ -23,13 +23,13 @@ class CurrencyOutput implements \JsonSerializable
      * @var string the code.
      */
     #[OA\Property(example : "en_GB")]
-    private string $code;
+    private readonly string $code;
 
     /**
      * @var int the number of decimals.
      */
     #[OA\Property(example : 2)]
-    private int $decimals;
+    private readonly int $decimals;
 
 
     // Magic methods :
