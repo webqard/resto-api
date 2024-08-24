@@ -41,7 +41,7 @@ final class LocaleProviderTest extends TestCase
 
 
     /**
-     * Test that the code can be returned.
+     * Test that the locale output can be provided.
      */
     public function testCanProvideLocaleOutput(): void
     {

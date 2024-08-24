@@ -26,7 +26,7 @@ final class CurrencyProviderTest extends TestCase
     // Methods :
 
     /**
-     * Test that the code can be returned.
+     * Test that the currency output can be provided.
      */
     public function testCanProvideCurrencyOutput(): void
     {
