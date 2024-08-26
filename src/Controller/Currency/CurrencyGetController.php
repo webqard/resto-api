@@ -70,6 +70,11 @@ final class CurrencyGetController extends AbstractController
         OA\Get(
             description: 'Fetches a currency.',
             path: '/currencies/{id}',
+            security: [
+                new OA\SecurityScheme(
+                    ref: '#/components/securitySchemes'
+                )
+            ],
             summary: 'Fetches a currency.',
             tags: ['Currency']
         ),

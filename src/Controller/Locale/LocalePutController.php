@@ -85,6 +85,11 @@ final class LocalePutController extends SendErrorController
         OA\Put(
             description: 'Updates a locale.',
             path: '/locales/{id}',
+            security: [
+                new OA\SecurityScheme(
+                    ref: '#/components/securitySchemes'
+                )
+            ],
             summary: 'Updates a locale.',
             /** @infection-ignore-all */
             tags: ['Locale']

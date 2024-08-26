@@ -84,6 +84,11 @@ final class LocalePostController extends SendErrorController
         OA\Post(
             description: 'Adds a locale.',
             path: '/locales',
+            security: [
+                new OA\SecurityScheme(
+                    ref: '#/components/securitySchemes'
+                )
+            ],
             summary: 'Adds a locale.',
             /** @infection-ignore-all */
             tags: ['Locale']

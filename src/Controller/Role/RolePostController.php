@@ -86,6 +86,11 @@ final class RolePostController extends UnprocessableTranslationController
         OA\Post(
             description: 'Adds a role.',
             path: '/roles',
+            security: [
+                new OA\SecurityScheme(
+                    ref: '#/components/securitySchemes'
+                )
+            ],
             summary: 'Adds a role.',
             /** @infection-ignore-all */
             tags: ['Role']

@@ -86,6 +86,11 @@ final class CurrencyPostController extends SendErrorController
         OA\Post(
             description: 'Adds a currency.',
             path: '/currencies',
+            security: [
+                new OA\SecurityScheme(
+                    ref: '#/components/securitySchemes'
+                )
+            ],
             summary: 'Adds a currency.',
             /** @infection-ignore-all */
             tags: ['Currency']

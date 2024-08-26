@@ -70,6 +70,11 @@ final class RoleGetController extends AbstractController
         OA\Get(
             description: 'Fetches a role.',
             path: '/roles/{id}',
+            security: [
+                new OA\SecurityScheme(
+                    ref: '#/components/securitySchemes'
+                )
+            ],
             summary: 'Fetches a role.',
             tags: ['Role']
         ),

@@ -87,6 +87,11 @@ final class CurrencyPutController extends SendErrorController
         OA\Put(
             description: 'Updates a currency.',
             path: '/currencies/{id}',
+            security: [
+                new OA\SecurityScheme(
+                    ref: '#/components/securitySchemes'
+                )
+            ],
             summary: 'Updates a currency.',
             /** @infection-ignore-all */
             tags: ['Currency']

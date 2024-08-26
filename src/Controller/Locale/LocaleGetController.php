@@ -70,6 +70,11 @@ final class LocaleGetController extends AbstractController
         OA\Get(
             description: 'Fetches a locale.',
             path: '/locales/{id}',
+            security: [
+                new OA\SecurityScheme(
+                    ref: '#/components/securitySchemes'
+                )
+            ],
             summary: 'Fetches a locale.',
             tags: ['Locale']
         ),

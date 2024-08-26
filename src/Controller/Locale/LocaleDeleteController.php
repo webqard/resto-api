@@ -61,6 +61,11 @@ final class LocaleDeleteController extends AbstractController
         OA\Delete(
             description: 'Deletes a locale.',
             path: '/locales/{id}',
+            security: [
+                new OA\SecurityScheme(
+                    ref: '#/components/securitySchemes'
+                )
+            ],
             summary: 'Deletes a locale.',
             tags: ['Locale']
         ),

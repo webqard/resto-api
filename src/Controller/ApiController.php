@@ -18,6 +18,14 @@ use Symfony\Component\Routing\Annotation\Route;
         title: "Resto API",
         version: "alpha"
     ),
+    OA\SecurityScheme(
+        bearerFormat: 'Bearer API_TOKEN',
+        description: 'Authentication with a JWT.',
+        in: 'header',
+        name: 'Authorization',
+        securityScheme: "token",
+        type: 'apiKey'
+    ),
     OA\Parameter(
         description: 'The locale in which the messages (not the items) will be translated into.',
         example: 'en-GB, fr-FR',

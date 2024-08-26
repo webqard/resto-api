@@ -75,6 +75,11 @@ final class LocaleCollectionController extends AbstractController
         OA\Get(
             description: 'Fetches a collection of locales.',
             path: '/locales',
+            security: [
+                new OA\SecurityScheme(
+                    ref: '#/components/securitySchemes'
+                )
+            ],
             summary: 'Fetches a collection of locales.',
             tags: ['Locale']
         ),

@@ -61,6 +61,11 @@ final class CurrencyDeleteController extends AbstractController
         OA\Delete(
             description: 'Deletes a currency.',
             path: '/currencies/{id}',
+            security: [
+                new OA\SecurityScheme(
+                    ref: '#/components/securitySchemes'
+                )
+            ],
             summary: 'Deletes a currency.',
             tags: ['Currency']
         ),
