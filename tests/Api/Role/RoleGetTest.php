@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Api\Role;
 
 use App\ApiResource\ApiResponse;
+use App\ApiResource\LocaleOutput;
 use App\ApiResource\RoleOutput;
 use App\ApiResource\RoleTranslationOutput;
 use App\Controller\Role\RoleGetController;
@@ -28,6 +29,7 @@ use PHPUnit\Framework\Attributes as PA;
     PA\UsesClass(AccessDeniedHandler::class),
     PA\UsesClass(ApiResponse::class),
     PA\UsesClass(Locale::class),
+    PA\UsesClass(LocaleOutput::class),
     PA\UsesClass(Role::class),
     PA\UsesClass(RoleGetRepository::class),
     PA\UsesClass(RoleOutput::class),
@@ -94,127 +96,75 @@ final class RoleGetTest extends JWTTestCase
     }
 
     /**
-     * Adds an EN locale.
+     * Adds a role with translations.
      */
-    private function addAnENLocale(): void
+    public function addARoleWithTranslations(): void
     {
-        $container = self::getContainer();
-
-        $locale = new Locale('en_GB');
-
-        $manager = $container->get('doctrine')->getManager();
-
-        $manager->persist($locale);
-        $manager->flush();
-    }
-
-    /**
-     * Adds a FR locale.
-     */
-    private function addAFRLocale(): void
-    {
-        $container = self::getContainer();
-
-        $locale = new Locale('fr_FR');
-
-        $manager = $container->get('doctrine')->getManager();
-
-        $manager->persist($locale);
-        $manager->flush();
-    }
-
-    /**
-     * Tests that a role can be returned
-     * without translation.
-     */
-    public function testCanBeReturnedWithoutTranslation(): void
-    {
-        $client = static::createClient();
-
-        $this->addAUserWithRoleGetRole();
-        $this->authenticateClient($client);
-
-        $role = new Role('name');
-
-        $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
-        $entityManager->persist($role);
-        $entityManager->flush();
-
-        $client->request('GET', '/roles/1');
-        $apiResponse = $client->getResponse()->getContent();
-
-        self::assertResponseStatusCodeSame(200);
-        self::assertJson($apiResponse);
-
-        $jsonResponse = json_decode($apiResponse, false);
-
-        self::assertSame('name', $jsonResponse->name);
-        self::assertSame([], $jsonResponse->translations);
-    }
-
-    /**
-     * Tests that a role can be returned
-     * with a translation.
-     */
-    public function testCanBeReturnedWithATranslation(): void
-    {
-        $client = static::createClient();
-
-        $this->addAUserWithRoleGetRole();
-        $this->authenticateClient($client);
-
-        $locale = new Locale('en_GB');
-        $role = new Role('name');
-        $roleTranslationEN = new RoleTranslation($role, $locale, 'description');
-
-        $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
-        $entityManager->persist($role);
-        $entityManager->persist($roleTranslationEN);
-        $entityManager->persist($locale);
-        $entityManager->flush();
-
-        $client->request('GET', '/roles/1');
-        $apiResponse = $client->getResponse()->getContent();
-
-        self::assertResponseStatusCodeSame(200);
-        self::assertJson($apiResponse);
-
-        $jsonResponse = json_decode($apiResponse, false);
-
-        self::assertSame('name', $jsonResponse->name);
-        self::assertCount(1, $jsonResponse->translations);
-        self::assertArrayHasKey(0, $jsonResponse->translations);
-        self::assertSame(1, $jsonResponse->translations[0]->localeId);
-        self::assertSame(1, $jsonResponse->translations[0]->id);
-        self::assertSame('description', $jsonResponse->translations[0]->description);
-    }
-
-    /**
-     * Tests that a role can be returned
-     * with many translations.
-     */
-    public function testCanBeReturnedWithManyTranslations(): void
-    {
-        $client = static::createClient();
-
-        $this->addAUserWithRoleGetRole();
-        $this->authenticateClient($client);
-
         $localeEN = new Locale('en_GB');
         $localeFR = new Locale('fr_FR');
-        $role = new Role('name');
+        $localeDE = new Locale('de_DE');
+        $role = new Role('ROLE_GET_ROLE');
         $roleTranslationEN = new RoleTranslation($role, $localeEN, 'en-description');
         $roleTranslationFR = new RoleTranslation($role, $localeFR, 'fr-description');
+        $roleTranslationDE = new RoleTranslation($role, $localeDE, 'de-description');
+        $role->addTranslation($roleTranslationEN);
+        $role->addTranslation($roleTranslationFR);
+        $role->addTranslation($roleTranslationDE);
 
         $entityManager = static::$kernel->getContainer()->get('doctrine')->getManager();
         $entityManager->persist($role);
         $entityManager->persist($roleTranslationEN);
         $entityManager->persist($roleTranslationFR);
+        $entityManager->persist($roleTranslationDE);
         $entityManager->persist($localeEN);
         $entityManager->persist($localeFR);
+        $entityManager->persist($localeDE);
         $entityManager->flush();
+    }
 
-        $client->request('GET', '/roles/1');
+    /**
+     * Tests that a role can be returned filtered
+     * for no translation.
+     */
+    public function testCanBeReturnedWithFilterForNoTranslation(): void
+    {
+        $client = static::createClient();
+
+        $this->addAUserWithRoleGetRole();
+        $this->authenticateClient($client);
+
+        $this->addARoleWithTranslations();
+
+        $client->request('GET', '/roles/1?translations[]=');
+        $apiResponse = $client->getResponse()->getContent();
+
+        self::assertResponseStatusCodeSame(200);
+        self::assertJson($apiResponse);
+
+        $jsonResponse = json_decode($apiResponse, true);
+
+        self::assertArrayHasKey('name', $jsonResponse);
+        self::assertSame('ROLE_GET_ROLE', $jsonResponse['name']);
+        self::assertArrayNotHasKey('translations', $jsonResponse);
+    }
+
+    /**
+     * Tests that a role can be returned filtered
+     * for a translation.
+     */
+    public function testCanBeReturnedWithFilterForATranslation(): void
+    {
+        $client = static::createClient();
+
+        $this->addAUserWithRoleGetRole();
+        $this->authenticateClient($client);
+
+        $this->addARoleWithTranslations();
+
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'fr-FR',
+        ];
+        $client->request('GET', '/roles/1?translations[]=fr_FR', server: $server);
         $apiResponse = $client->getResponse()->getContent();
 
         self::assertResponseStatusCodeSame(200);
@@ -222,20 +172,107 @@ final class RoleGetTest extends JWTTestCase
 
         $jsonResponse = json_decode($apiResponse, false);
 
-        self::assertSame('name', $jsonResponse->name);
+        self::assertSame('ROLE_GET_ROLE', $jsonResponse->name);
+        self::assertCount(1, $jsonResponse->translations);
+        self::assertArrayHasKey(0, $jsonResponse->translations);
+
+        $translationFR = $jsonResponse->translations[0];
+        self::assertSame(2, $translationFR->id);
+        self::assertSame('fr-description', $translationFR->description);
+        self::assertSame(2, $translationFR->locale->id);
+        self::assertSame('fr_FR', $translationFR->locale->code);
+    }
+
+    /**
+     * Tests that a role can be returned filtered
+     * for many translations.
+     */
+    public function testCanBeReturnedWithFilterForManyTranslations(): void
+    {
+        $client = static::createClient();
+
+        $this->addAUserWithRoleGetRole();
+        $this->authenticateClient($client);
+
+        $this->addARoleWithTranslations();
+
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'fr-FR',
+        ];
+        $client->request('GET', '/roles/1?translations[]=fr_FR&translations[]=de_DE', server: $server);
+        $apiResponse = $client->getResponse()->getContent();
+
+        self::assertResponseStatusCodeSame(200);
+        self::assertJson($apiResponse);
+
+        $jsonResponse = json_decode($apiResponse, false);
+
+        self::assertSame('ROLE_GET_ROLE', $jsonResponse->name);
         self::assertCount(2, $jsonResponse->translations);
         self::assertArrayHasKey(0, $jsonResponse->translations);
         self::assertArrayHasKey(1, $jsonResponse->translations);
 
-        $translationEN = $jsonResponse->translations[0];
-        self::assertSame(1, $translationEN->localeId);
-        self::assertSame(1, $translationEN->id);
-        self::assertSame('en-description', $translationEN->description);
-
-        $translationFR = $jsonResponse->translations[1];
-        self::assertSame(2, $translationFR->localeId);
+        $translationFR = $jsonResponse->translations[0];
         self::assertSame(2, $translationFR->id);
         self::assertSame('fr-description', $translationFR->description);
+        self::assertSame(2, $translationFR->locale->id);
+        self::assertSame('fr_FR', $translationFR->locale->code);
+
+        $translationDE = $jsonResponse->translations[1];
+        self::assertSame(3, $translationDE->id);
+        self::assertSame('de-description', $translationDE->description);
+        self::assertSame(3, $translationDE->locale->id);
+        self::assertSame('de_DE', $translationDE->locale->code);
+    }
+
+
+    /**
+     * Tests that a role can be returned
+     * with all translations.
+     */
+    public function testCanBeReturnedWithAllTranslations(): void
+    {
+        $client = static::createClient();
+
+        $this->addAUserWithRoleGetRole();
+        $this->authenticateClient($client);
+
+        $this->addARoleWithTranslations();
+
+        $server = [
+            'HTTP_ACCEPT_LANGUAGE' => 'fr-FR',
+        ];
+        $client->request('GET', '/roles/1', server: $server);
+        $apiResponse = $client->getResponse()->getContent();
+
+        self::assertResponseStatusCodeSame(200);
+        self::assertJson($apiResponse);
+
+        $jsonResponse = json_decode($apiResponse, false);
+
+        self::assertSame('ROLE_GET_ROLE', $jsonResponse->name);
+        self::assertCount(3, $jsonResponse->translations);
+        self::assertArrayHasKey(0, $jsonResponse->translations);
+        self::assertArrayHasKey(1, $jsonResponse->translations);
+        self::assertArrayHasKey(2, $jsonResponse->translations);
+
+        $translationEN = $jsonResponse->translations[0];
+        self::assertSame(1, $translationEN->id);
+        self::assertSame('en-description', $translationEN->description);
+        self::assertSame(1, $translationEN->locale->id);
+        self::assertSame('en_GB', $translationEN->locale->code);
+
+        $translationFR = $jsonResponse->translations[1];
+        self::assertSame(2, $translationFR->id);
+        self::assertSame('fr-description', $translationFR->description);
+        self::assertSame(2, $translationFR->locale->id);
+        self::assertSame('fr_FR', $translationFR->locale->code);
+
+        $translationDE = $jsonResponse->translations[2];
+        self::assertSame(3, $translationDE->id);
+        self::assertSame('de-description', $translationDE->description);
+        self::assertSame(3, $translationDE->locale->id);
+        self::assertSame('de_DE', $translationDE->locale->code);
     }
 
 

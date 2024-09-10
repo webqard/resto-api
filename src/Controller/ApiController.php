@@ -33,6 +33,12 @@ use Symfony\Component\Routing\Annotation\Route;
         name: 'Accept-Language'
     ),
     OA\Parameter(
+        description: 'The filtered translations.',
+        example : "translations[]=en_GB&translations[]=fr_FR",
+        in: 'query',
+        name: 'translations'
+    ),
+    OA\Parameter(
         description: 'The identifier of the item.',
         example : 1,
         in: 'path',

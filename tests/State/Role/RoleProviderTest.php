@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\State\Role;
 
+use App\ApiResource\LocaleOutput;
 use App\ApiResource\RoleOutput;
 use App\ApiResource\RoleTranslationOutput;
 use App\Entity\Locale;
@@ -20,6 +21,7 @@ use PHPUnit\Framework\TestCase;
 #[
     PA\CoversClass(RoleProvider::class),
     PA\UsesClass(Locale::class),
+    PA\UsesClass(LocaleOutput::class),
     PA\UsesClass(Role::class),
     PA\UsesClass(RoleOutput::class),
     PA\UsesClass(RoleTranslation::class),
@@ -106,43 +108,17 @@ final class RoleProviderTest extends TestCase
 
 
     /**
-     * Test that the role output can be provided
-     * without translation.
+     * Return a stubbed role with 3 translations.
+     * @return \App\Entity\Role a stubbed role with 3 translations.
      */
-    public function testCanProvideRoleOutputWithoutTranslation(): void
+    private function getStubbedRoleWithThreeTranslations(): Role
     {
-        $role = $this->createStub(Role::class);
-        $role->method('getId')
-            ->willReturn(1);
-        $role->method('getName')
-            ->willReturn('name');
-        $role->method('getTranslations')
-            ->willReturn(new ArrayCollection());
-
-        $roleProvider = new RoleProvider();
-        $roleOutput = $roleProvider->provideRoleOutput($role);
-
-        $serialisedRoleOutput = $roleOutput->jsonSerialize();
-
-        self::assertIsArray($serialisedRoleOutput);
-        self::assertArrayHasKey('id', $serialisedRoleOutput);
-        self::assertSame(1, $serialisedRoleOutput['id']);
-        self::assertArrayHasKey('name', $serialisedRoleOutput);
-        self::assertSame('name', $serialisedRoleOutput['name']);
-        self::assertArrayHasKey('translations', $serialisedRoleOutput);
-        self::assertSame([], $serialisedRoleOutput['translations']);
-    }
-
-
-    /**
-     * Test that the role output can be provided
-     * with a translation.
-     */
-    public function testCanProvideRoleOutputWithATranslation(): void
-    {
+        // EN :
         $localeEN = $this->createStub(Locale::class);
         $localeEN->method('getId')
             ->willReturn(1);
+        $localeEN->method('getCode')
+            ->willReturn('en_GB');
 
         $roleTranslationEN = $this->createStub(RoleTranslation::class);
         $roleTranslationEN->method('getId')
@@ -152,59 +128,12 @@ final class RoleProviderTest extends TestCase
         $roleTranslationEN->method('getLocale')
             ->willReturn($localeEN);
 
-        $role = $this->createStub(Role::class);
-        $role->method('getId')
-            ->willReturn(1);
-        $role->method('getName')
-            ->willReturn('name');
-        $role->method('getTranslations')
-            ->willReturn(new ArrayCollection([
-                $roleTranslationEN
-            ]));
-
-        $roleProvider = new RoleProvider();
-        $roleOutput = $roleProvider->provideRoleOutput($role);
-
-        $serialisedRoleOutput = $roleOutput->jsonSerialize();
-
-        self::assertIsArray($serialisedRoleOutput);
-        self::assertArrayHasKey('id', $serialisedRoleOutput);
-        self::assertSame(1, $serialisedRoleOutput['id']);
-        self::assertArrayHasKey('name', $serialisedRoleOutput);
-        self::assertSame('name', $serialisedRoleOutput['name']);
-        self::assertArrayHasKey('translations', $serialisedRoleOutput);
-
-        $translations = $serialisedRoleOutput['translations'];
-        self::assertArrayHasKey(0, $translations);
-
-        $serialisedTranslationEN = $translations[0]->jsonSerialize();
-        self::assertSame(1, $serialisedTranslationEN['id']);
-        self::assertSame('en-description', $serialisedTranslationEN['description']);
-        self::assertSame(1, $serialisedTranslationEN['localeId']);
-    }
-
-
-    /**
-     * Test that the role output can be provided
-     * with many translations.
-     */
-    public function testCanProvideRoleOutputWithManyTranslations(): void
-    {
-        $localeEN = $this->createStub(Locale::class);
-        $localeEN->method('getId')
-            ->willReturn(1);
-
-        $roleTranslationEN = $this->createStub(RoleTranslation::class);
-        $roleTranslationEN->method('getId')
-            ->willReturn(1);
-        $roleTranslationEN->method('getDescription')
-            ->willReturn('en-description');
-        $roleTranslationEN->method('getLocale')
-            ->willReturn($localeEN);
-
+        // FR :
         $localeFR = $this->createStub(Locale::class);
         $localeFR->method('getId')
             ->willReturn(2);
+        $localeFR->method('getCode')
+            ->willReturn('fr_FR');
 
         $roleTranslationFR = $this->createStub(RoleTranslation::class);
         $roleTranslationFR->method('getId')
@@ -214,6 +143,22 @@ final class RoleProviderTest extends TestCase
         $roleTranslationFR->method('getLocale')
             ->willReturn($localeFR);
 
+        // DE :
+        $localeDE = $this->createStub(Locale::class);
+        $localeDE->method('getId')
+            ->willReturn(3);
+        $localeDE->method('getCode')
+            ->willReturn('de_DE');
+
+        $roleTranslationDE = $this->createStub(RoleTranslation::class);
+        $roleTranslationDE->method('getId')
+            ->willReturn(2);
+        $roleTranslationDE->method('getDescription')
+            ->willReturn('de-description');
+        $roleTranslationDE->method('getLocale')
+            ->willReturn($localeDE);
+
+
         $role = $this->createStub(Role::class);
         $role->method('getId')
             ->willReturn(1);
@@ -222,11 +167,47 @@ final class RoleProviderTest extends TestCase
         $role->method('getTranslations')
             ->willReturn(new ArrayCollection([
                 $roleTranslationEN,
-                $roleTranslationFR
+                $roleTranslationFR,
+                $roleTranslationDE
             ]));
 
+        return $role;
+    }
+
+    /**
+     * Test that the role output can be provided
+     * without translation.
+     */
+    public function testCanProvideRoleOutputWithoutTranslation(): void
+    {
         $roleProvider = new RoleProvider();
-        $roleOutput = $roleProvider->provideRoleOutput($role);
+        $roleOutput = $roleProvider->provideRoleOutput(
+            $this->getStubbedRoleWithThreeTranslations(),
+            []
+        );
+
+        $serialisedRoleOutput = $roleOutput->jsonSerialize();
+
+        self::assertIsArray($serialisedRoleOutput);
+        self::assertArrayHasKey('id', $serialisedRoleOutput);
+        self::assertSame(1, $serialisedRoleOutput['id']);
+        self::assertArrayHasKey('name', $serialisedRoleOutput);
+        self::assertSame('name', $serialisedRoleOutput['name']);
+        self::assertArrayNotHasKey('translations', $serialisedRoleOutput);
+    }
+
+
+    /**
+     * Test that the role output can be provided
+     * with a translation.
+     */
+    public function testCanProvideRoleOutputWithATranslation(): void
+    {
+        $roleProvider = new RoleProvider();
+        $roleOutput = $roleProvider->provideRoleOutput(
+            $this->getStubbedRoleWithThreeTranslations(),
+            ['en_GB']
+        );
 
         $serialisedRoleOutput = $roleOutput->jsonSerialize();
 
@@ -238,17 +219,71 @@ final class RoleProviderTest extends TestCase
         self::assertArrayHasKey('translations', $serialisedRoleOutput);
 
         $translations = $serialisedRoleOutput['translations'];
+        self::assertCount(1, $translations);
+        self::assertArrayHasKey(0, $translations);
+
+        $serialisedTranslationEN = $translations[0]->jsonSerialize();
+        self::assertSame(1, $serialisedTranslationEN['id']);
+        self::assertSame('en-description', $serialisedTranslationEN['description']);
+        self::assertArrayHasKey('locale', $serialisedTranslationEN);
+
+        $serialisedLocaleEN = $serialisedTranslationEN['locale']->jsonSerialize();
+        self::assertArrayHasKey('id', $serialisedLocaleEN);
+        self::assertSame(1, $serialisedLocaleEN['id']);
+        self::assertArrayHasKey('code', $serialisedLocaleEN);
+        self::assertSame('en_GB', $serialisedLocaleEN['code']);
+    }
+
+
+    /**
+     * Test that the role output can be provided
+     * with many translations.
+     */
+    public function testCanProvideRoleOutputWithManyTranslations(): void
+    {
+        $roleProvider = new RoleProvider();
+        $roleOutput = $roleProvider->provideRoleOutput(
+            $this->getStubbedRoleWithThreeTranslations(),
+            [
+                'en_GB',
+                'fr_FR'
+            ]
+        );
+
+        $serialisedRoleOutput = $roleOutput->jsonSerialize();
+
+        self::assertIsArray($serialisedRoleOutput);
+        self::assertArrayHasKey('id', $serialisedRoleOutput);
+        self::assertSame(1, $serialisedRoleOutput['id']);
+        self::assertArrayHasKey('name', $serialisedRoleOutput);
+        self::assertSame('name', $serialisedRoleOutput['name']);
+        self::assertArrayHasKey('translations', $serialisedRoleOutput);
+
+        $translations = $serialisedRoleOutput['translations'];
+        self::assertCount(2, $translations);
         self::assertArrayHasKey(0, $translations);
         self::assertArrayHasKey(1, $translations);
 
         $serialisedTranslationEN = $translations[0]->jsonSerialize();
         self::assertSame(1, $serialisedTranslationEN['id']);
         self::assertSame('en-description', $serialisedTranslationEN['description']);
-        self::assertSame(1, $serialisedTranslationEN['localeId']);
+        self::assertArrayHasKey('locale', $serialisedTranslationEN);
+
+        $serialisedLocaleEN = $serialisedTranslationEN['locale']->jsonSerialize();
+        self::assertArrayHasKey('id', $serialisedLocaleEN);
+        self::assertSame(1, $serialisedLocaleEN['id']);
+        self::assertArrayHasKey('code', $serialisedLocaleEN);
+        self::assertSame('en_GB', $serialisedLocaleEN['code']);
 
         $serialisedTranslationFR = $translations[1]->jsonSerialize();
         self::assertSame(2, $serialisedTranslationFR['id']);
         self::assertSame('fr-description', $serialisedTranslationFR['description']);
-        self::assertSame(2, $serialisedTranslationFR['localeId']);
+        self::assertArrayHasKey('locale', $serialisedTranslationFR);
+
+        $serialisedLocaleFR = $serialisedTranslationFR['locale']->jsonSerialize();
+        self::assertArrayHasKey('id', $serialisedLocaleFR);
+        self::assertSame(2, $serialisedLocaleFR['id']);
+        self::assertArrayHasKey('code', $serialisedLocaleFR);
+        self::assertSame('fr_FR', $serialisedLocaleFR['code']);
     }
 }

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Repository\Role;
 
+use App\Entity\Locale;
 use App\Entity\Role;
+use App\Entity\RoleTranslation;
 use App\Repository\Role\RoleGetRepository;
 use PHPUnit\Framework\Attributes as PA;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -14,7 +16,9 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 #[
     PA\CoversClass(RoleGetRepository::class),
+    PA\UsesClass(Locale::class),
     PA\UsesClass(Role::class),
+    PA\UsesClass(RoleTranslation::class),
     PA\Group('repositories'),
     PA\Group('repository_roles'),
     PA\Group('repository_roles_get'),

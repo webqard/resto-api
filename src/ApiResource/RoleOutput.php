@@ -40,6 +40,7 @@ class RoleOutput implements \JsonSerializable
      */
     #[OA\Property(
         type: 'array',
+        nullable: true,
         items: new OA\Items(RoleTranslationOutput::class)
     )]
     private readonly ?array $translations;
@@ -71,10 +72,15 @@ class RoleOutput implements \JsonSerializable
      */
     public function jsonSerialize(): mixed
     {
-        return [
+        $serializedRole = [
             'id' => $this->id,
-            'name' => $this->name,
-            'translations' => $this->translations
+            'name' => $this->name
         ];
+
+        if ($this->translations !== null) {
+            $serializedRole['translations'] = $this->translations;
+        }
+
+        return $serializedRole;
     }
 }

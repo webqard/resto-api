@@ -26,16 +26,16 @@ class RoleTranslationOutput implements \JsonSerializable
     private readonly int $id;
 
     /**
-     * @var string|null the description.
+     * @var string the description.
      */
-    #[OA\Property(example: "A role description.")]
-    private readonly ?string $description;
+    #[OA\Property(example: "A role to do something.")]
+    private readonly string $description;
 
     /**
-     * @var int the locale identifier.
+     * @var \App\ApiResource\LocaleOutput the locale.
      */
-    #[OA\Property(example: 1)]
-    private readonly int $localeId;
+    #[OA\Property()]
+    private readonly LocaleOutput $locale;
 
 
     // Magic methods :
@@ -43,17 +43,17 @@ class RoleTranslationOutput implements \JsonSerializable
     /**
      * The constructor.
      * @param int $id the identifier/primary key.
-     * @param string|null $description the description.
-     * @param int $localeId the locale identifier.
+     * @param string $description the description.
+     * @param \App\ApiResource\LocaleOutput $locale the locale.
      */
     public function __construct(
         int $id,
-        ?string $description,
-        int $localeId
+        string $description,
+        LocaleOutput $locale
     ) {
         $this->id = $id;
         $this->description = $description;
-        $this->localeId = $localeId;
+        $this->locale = $locale;
     }
 
 
@@ -67,7 +67,7 @@ class RoleTranslationOutput implements \JsonSerializable
         return [
             'id' => $this->id,
             'description' => $this->description,
-            'localeId' => $this->localeId
+            'locale' => $this->locale
         ];
     }
 }

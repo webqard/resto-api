@@ -11,6 +11,7 @@ use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -62,7 +63,8 @@ final class RoleGetController extends AbstractController
     /**
      * Gets a role.
      * @param \Symfony\Component\HttpFoundation\Request $request the request.
-     * @param string $id the identifier.
+     * @param int $id the identifier.
+     * @param string[]|null $translations the translation to be filtered.
      * @return \Symfony\Component\HttpFoundation\Response the response.
      */
     #[
@@ -80,6 +82,7 @@ final class RoleGetController extends AbstractController
         ),
         OA\Parameter(ref: '#/components/parameters/id'),
         OA\Parameter(ref: '#/components/parameters/Accept-Language'),
+        OA\Parameter(ref: '#/components/parameters/translations'),
         OA\Response(
             content: new OA\JsonContent(ref: '#/components/schemas/RoleOutput'),
             description: 'When the role is found.',
@@ -101,8 +104,11 @@ final class RoleGetController extends AbstractController
         Route('/roles/{id}', methods: ['GET'], name: 'role_get', format: 'json'),
         IsGranted('ROLE_GET_ROLE')
     ]
-    public function get(Request $request, string $id): Response
-    {
+    public function get(
+        Request $request,
+        int $id,
+        #[MapQueryParameter] ?array $translations = null
+    ): Response {
         $role = $this->repository->find($id);
 
         if ($role === null) {
@@ -114,6 +120,11 @@ final class RoleGetController extends AbstractController
             );
         }
 
-        return $this->json($this->provider->provideRoleOutput($role));
+        $roleOutput = $this->provider->provideRoleOutput(
+            $role,
+            $translations
+        );
+
+        return $this->json($roleOutput);
     }
 }
