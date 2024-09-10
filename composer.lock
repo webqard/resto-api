@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d65523f142d09cb308e0c16465b067e9",
+    "content-hash": "730dd0dabfa15e60fd3f7a9016580ca3",
     "packages": [
         {
             "name": "cyril-verloop/doctrine-entities",
-            "version": "9.0.0",
+            "version": "10.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cyrilverloop/doctrine-entities.git",
-                "reference": "e7c9548d1f977aabfa6309a7d2b309cf51259279"
+                "reference": "e288e38d6f165b04ca22216cdacb58f1515fcfbd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cyrilverloop/doctrine-entities/zipball/e7c9548d1f977aabfa6309a7d2b309cf51259279",
-                "reference": "e7c9548d1f977aabfa6309a7d2b309cf51259279",
+                "url": "https://api.github.com/repos/cyrilverloop/doctrine-entities/zipball/e288e38d6f165b04ca22216cdacb58f1515fcfbd",
+                "reference": "e288e38d6f165b04ca22216cdacb58f1515fcfbd",
                 "shasum": ""
             },
             "require": {
@@ -43,7 +43,7 @@
             "description": "Some default doctrine entity/fields requiring PHP >=8.2 and Doctrine ORM 3.2.",
             "support": {
                 "issues": "https://github.com/cyrilverloop/doctrine-entities/issues",
-                "source": "https://github.com/cyrilverloop/doctrine-entities/tree/9.0.0"
+                "source": "https://github.com/cyrilverloop/doctrine-entities/tree/10.0.0"
             },
             "funding": [
                 {
@@ -51,7 +51,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-07-19T20:33:25+00:00"
+            "time": "2024-09-10T17:28:39+00:00"
         },
         {
             "name": "doctrine/cache",

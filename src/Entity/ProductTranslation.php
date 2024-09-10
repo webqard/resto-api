@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\Entity\Association\LocaleAssociation;
 use CyrilVerloop\DoctrineEntities\IntId;
+use CyrilVerloop\DoctrineEntities\NullableDescription;
 use CyrilVerloop\DoctrineEntities\Slug;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -20,6 +21,7 @@ abstract class ProductTranslation
     use IntId;
     use LocaleAssociation;
     use Slug;
+    use NullableDescription;
 
 
     // Properties :
@@ -29,19 +31,6 @@ abstract class ProductTranslation
      */
     #[ORM\Column(length: 100)]
     protected string $name;
-
-    /**
-     * @var string|null the description.
-     */
-    #[
-        ORM\Column(
-            nullable: true,
-            options: [
-                "default" => null
-            ]
-        )
-    ]
-    protected ?string $description;
 
 
     // Magic methods :

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Entity\Association\LocaleAssociation;
-use CyrilVerloop\DoctrineEntities\Description;
+use CyrilVerloop\DoctrineEntities\NullableDescription;
 use CyrilVerloop\DoctrineEntities\IntId;
 use CyrilVerloop\DoctrineEntities\Name;
 use Doctrine\ORM\Mapping as ORM;
@@ -39,7 +39,7 @@ class GroupTranslation
 {
     // Traits :
     use IntId;
-    use Description;
+    use NullableDescription;
     use LocaleAssociation;
     use Name;
 

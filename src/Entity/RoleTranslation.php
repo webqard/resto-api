@@ -15,14 +15,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 #[
     ORM\Entity(),
-    ORM\AttributeOverrides([
-        new ORM\AttributeOverride(
-            'description',
-            new ORM\Column(
-                nullable: false
-            )
-        )
-    ]),
     UniqueEntity(
         fields: ["role", "locale"],
         message: "translation.alreadyExist"
