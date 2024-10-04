@@ -19,7 +19,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * The user entity.
  */
-#[ORM\Entity(repositoryClass: PasswordUpgraderRepository::class)]
+#[
+    ORM\Entity(repositoryClass: PasswordUpgraderRepository::class),
+    ORM\Table(name: '`user`')
+]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     // Traits :
