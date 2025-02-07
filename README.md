@@ -1,5 +1,8 @@
 # Resto API
 
+**This project has been moved to https://gitlab.com/webqard/resto**
+**This repository will no longer be maintained.**
+
 This is a restaurant API.
 
 [![License](https://img.shields.io/github/license/webqard/resto-api)](https://github.com/webqard/resto-api/blob/trunk/LICENSE)
